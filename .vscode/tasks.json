@@ -9,8 +9,9 @@
         "-g", // Enable debug symbols
         "-std=c++17",
         "-I${workspaceFolder}/include",
+        "-I${workspaceFolder}/src/Sandbox",
         "-L${workspaceFolder}/lib",
-        "${workspaceFolder}/src/*.cpp",
+        "${workspaceFolder}/src/Sandbox/*.cpp",
         "${workspaceFolder}/src/dependencies/*.c",
         "${workspaceFolder}/src/dependencies/*.cpp",
         "${workspaceFolder}/src/Vengine/Core/*.cpp",
