@@ -34,10 +34,10 @@ namespace Vengine
         if (m_Window)
             glfwDestroyWindow(m_Window);
     }
-}
 
-void Vengine::Window::OnUpdate()
-{
-    glfwSwapBuffers(m_Window);
-    glfwPollEvents();
+    void Window::OnUpdate()
+    {
+        glfwSwapBuffers(m_Window);
+        glfwPollEvents();
+    }
 }

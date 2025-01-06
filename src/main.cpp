@@ -1,4 +1,3 @@
-#include <iostream>
 #include <Vengine/Vengine.h>
 
 int main()

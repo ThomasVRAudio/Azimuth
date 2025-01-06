@@ -1,7 +1,6 @@
 #pragma once
 #include <Vengine/Renderer/Window.h>
-#include <iostream>
-#include <memory>
+#include <Vengine/Common.h>
 
 namespace Vengine
 {
