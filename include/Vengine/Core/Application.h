@@ -1,6 +1,7 @@
 #pragma once
-
+#include <Vengine/Renderer/Window.h>
 #include <iostream>
+#include <memory>
 
 namespace Vengine
 {
@@ -14,5 +15,6 @@ namespace Vengine
 
     private:
         bool m_isRunning = false;
+        std::unique_ptr<Window> m_Window;
     };
 }
