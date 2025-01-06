@@ -1,5 +1,5 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <dependencies/glad/glad.h>
+#include <dependencies/GLFW/glfw3.h>
 #include <Vengine/Common.h>
 
 namespace Vengine
