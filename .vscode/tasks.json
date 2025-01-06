@@ -1,0 +1,57 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "C/C++: Debug Build",
+      "command": "D:\\MinGW\\bin\\g++.exe",
+      "args": [
+        "-g", // Enable debug symbols
+        "-std=c++17",
+        "-I${workspaceFolder}/include",
+        "-L${workspaceFolder}/lib",
+        "${workspaceFolder}/src/*.cpp",
+        "${workspaceFolder}/src/Vengine/Core/*.cpp",
+        "-lglfw3dll",
+        "-lassimp",
+        "-o",
+        "${workspaceFolder}/bin/main_debug.exe"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Debug build configuration"
+    },
+    {
+      "type": "cppbuild",
+      "label": "C/C++: Release Build",
+      "command": "D:\\MinGW\\bin\\g++.exe",
+      "args": [
+        "-O3", // Optimize for performance
+        "-std=c++17",
+        "-I${workspaceFolder}/include",
+        "-L${workspaceFolder}/lib",
+        "${workspaceFolder}/src/*.cpp",
+        "${workspaceFolder}/src/*.c",
+        "-lglfw3dll",
+        "-lassimp",
+        "-o",
+        "${workspaceFolder}/main_release.exe"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "detail": "Release build configuration"
+    }
+  ]
+}
