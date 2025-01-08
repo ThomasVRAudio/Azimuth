@@ -1,0 +1,1 @@
+#define TYPE_NAME(type) #type

@@ -1,6 +1,6 @@
-#include "Vengine/Core/Application.h"
+#include "Azimuth/Core/Application.h"
 
-namespace Vengine
+namespace Azimuth
 {
 
     Application::Application()

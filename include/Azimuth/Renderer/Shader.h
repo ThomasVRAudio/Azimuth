@@ -2,9 +2,9 @@
 
 #include <dependencies/glad/glad.h>
 #include <dependencies/glm/glm.hpp>
-#include <Vengine/Common.h>
+#include <Azimuth/Common.h>
 
-namespace Vengine
+namespace Azimuth
 {
 
     class Shader

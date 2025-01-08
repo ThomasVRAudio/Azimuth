@@ -2,15 +2,15 @@
 
 #include <dependencies/glad/glad.h>
 #include <dependencies/GLFW/glfw3.h>
-#include <Vengine/Common.h>
+#include <Azimuth/Common.h>
 
-namespace Vengine
+namespace Azimuth
 {
 
     class Window
     {
     public:
-        Window(unsigned int width = 800, unsigned int height = 600, const char *name = "Vengine");
+        Window(unsigned int width = 800, unsigned int height = 600, const char *name = "Azimuth");
         ~Window();
         void OnUpdate();
 

@@ -1,10 +1,13 @@
 #pragma once
 
-#include <Vengine/Vengine.h>
+#include <Azimuth/Azimuth.h>
 #include <iostream>
 
-class Sandbox : public Vengine::Layer
+using namespace Azimuth;
+
+class Sandbox : public Azimuth::Layer
 {
-    virtual void OnStart() const override;
-    virtual void OnUpdate() const override;
+public:
+    virtual void OnStart() override;
+    virtual void OnUpdate() override;
 };

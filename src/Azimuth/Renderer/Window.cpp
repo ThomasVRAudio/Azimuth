@@ -1,6 +1,6 @@
-#include "Vengine/Renderer/Window.h"
+#include "Azimuth/Renderer/Window.h"
 
-namespace Vengine
+namespace Azimuth
 {
     Window::Window(unsigned int width, unsigned int height, const char *name)
         : m_Width(width), m_Height(height), m_Name(name)

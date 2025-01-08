@@ -1,6 +1,6 @@
-#include <Vengine/Renderer/Shader.h>
+#include <Azimuth/Renderer/Shader.h>
 
-namespace Vengine
+namespace Azimuth
 {
 
     unsigned int Shader::ProcessFile(const char *path, GLenum type)
