@@ -2,18 +2,19 @@
 #include <Sandbox.h>
 #include <Azimuth/ECS/ECSManager.h>
 #include <Azimuth/Scene/Scene.h>
+#include <Azimuth/Editor/EditorLayer.h>
 
 int main()
 {
     Azimuth::Application *app = new Azimuth::Application();
 
-    Sandbox *sandbox = new Sandbox();
-
-    app->AddLayer(sandbox);
+    EditorLayer *editorLayer = new EditorLayer();
+    app->AddLayer(editorLayer);
 
     app->Run();
 
     delete app;
+    delete editorLayer;
 
     return 0;
 }

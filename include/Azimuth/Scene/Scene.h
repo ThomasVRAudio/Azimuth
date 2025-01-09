@@ -9,6 +9,5 @@ namespace Azimuth
     {
     public:
         Scene();
-        ECSManager ECS;
     };
 }

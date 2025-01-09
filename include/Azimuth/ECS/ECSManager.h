@@ -4,6 +4,7 @@
 #include <Azimuth/ECS/ComponentManager.h>
 #include <Azimuth/ECS/EntityManager.h>
 #include <Azimuth/ECS/Entity.h>
+#include <Azimuth/ECS/System.h>
 
 namespace Azimuth
 {
@@ -15,6 +16,11 @@ namespace Azimuth
             m_ComponentManager = std::make_unique<ComponentManager>();
             m_EntityManager = std::make_unique<EntityManager>();
             m_SystemManager = std::make_unique<SystemManager>();
+
+            // Register Components
+            RegisterComponent<TransformComponent>();
+            RegisterComponent<MeshComponent>();
+            RegisterComponent<AudioComponent>();
         }
 
         Entity CreateEntity()
@@ -84,11 +90,20 @@ namespace Azimuth
             m_SystemManager->SetComponentMask<T>(componentMask);
         }
 
+        ECSManager(const ECSManager &) = delete;
+        ECSManager &operator=(const ECSManager &) = delete;
+
+        static ECSManager &getInstance()
+        {
+            static ECSManager instance;
+            return instance;
+        }
+
     private:
         std::unique_ptr<ComponentManager> m_ComponentManager;
         std::unique_ptr<EntityManager> m_EntityManager;
         std::unique_ptr<SystemManager> m_SystemManager;
-        ;
+        ECSManager() {}
     };
 
 }

@@ -3,8 +3,8 @@
 
 namespace Azimuth
 {
-    Scene::Scene()
-    {
+    Scene::Scene() {
+        /*
         ECS.Init();
         ECS.RegisterComponent<TransformComponent>();
         ECS.RegisterComponent<MeshComponent>();
@@ -16,15 +16,18 @@ namespace Azimuth
         mask.set(ECS.GetComponentBitType<TransformComponent>(), true);
         ECS.SetSystemComponentMask<RenderSystem>(mask);
 
+        // Entity shouldn't be added in the scene
+
         Entity entity = ECS.CreateEntity();
         TransformComponent transform;
         transform.Position = glm::vec3(0.1f, 0.2f, 0.3f);
-        ECS.AddComponent<TransformComponent>(entity, transform);
+        ECS.AddComponent<TransformComponent>(entity, transform); // this without transform (maybe with typeid(T))
 
         ECS.GetComponent<TransformComponent>(entity).Position = glm::vec3(0.1f, 0.1f, 0.5f);
 
         std::cout << ECS.GetComponent<TransformComponent>(entity).Position.z << std::endl;
 
+        */
         // std::cout << ECS.GetComponent<TransformComponent>(entity).Position << std::endl;
     };
 }

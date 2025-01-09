@@ -7,6 +7,8 @@ namespace Azimuth
         : m_isRunning(true)
     {
         m_Window = std::make_unique<Window>();
+
+        ECS.Init();
     }
 
     Application::~Application()
