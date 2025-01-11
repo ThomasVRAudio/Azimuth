@@ -1,13 +1,13 @@
-#include "MoveScript.h"
+#include "PlayerMovement.h"
 #include <dependencies/GLFW/glfw3.h>
 
-void Azimuth::MoveScript::OnStart()
+void Azimuth::PlayerMovement::OnStart()
 {
     AddComponent<TransformComponent>();
     m_Transform = GetComponent<TransformComponent>();
 }
 
-void Azimuth::MoveScript::OnUpdate()
+void Azimuth::PlayerMovement::OnUpdate()
 {
     m_Transform.Position = glm::vec3(glm::sin(glfwGetTime()), 0.0f, 0.0f);
     print("x: " << m_Transform.Position.x);

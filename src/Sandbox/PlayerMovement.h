@@ -3,7 +3,7 @@
 namespace Azimuth
 {
 
-    class MoveScript : public MonoScript
+    class PlayerMovement : public MonoScript
     {
     public:
         void OnStart();

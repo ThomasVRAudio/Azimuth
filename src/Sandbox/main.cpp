@@ -1,5 +1,5 @@
 #include <Azimuth/Azimuth.h>
-#include <MoveScript.h>
+#include <PlayerMovement.h>
 
 using namespace Azimuth;
 
@@ -10,8 +10,7 @@ int main()
 
     Entity entity = scene->CreateObject();
 
-    auto moveScript = std::make_shared<MoveScript>();
-    scene->AddScript(entity, std::static_pointer_cast<MonoScript>(std::move(moveScript)));
+    scene->AddScript(entity, std::make_shared<PlayerMovement>());
 
     app->Run();
 
