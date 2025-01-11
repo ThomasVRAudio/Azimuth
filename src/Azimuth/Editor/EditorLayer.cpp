@@ -1,11 +1,12 @@
 #include <Azimuth/Editor/EditorLayer.h>
+#include <Azimuth/ECS/Component.h>
 
 namespace Azimuth
 {
 
-    void EditorLayer::OnStart()
+    void EditorLayer::Init()
     {
-        ECSManager &ECS = ECSManager::getInstance();
+        ECSManager &ECS = ECSManager::GetInstance();
 
         ComponentMask mask;
         mask.set(ECS.GetComponentBitType<TransformComponent>(), true);
@@ -13,6 +14,10 @@ namespace Azimuth
         ECS.SetSystemComponentMask<RenderSystem>(mask);
 
         m_RenderSystem->Init();
+    }
+
+    void EditorLayer::OnStart()
+    {
     }
 
     void EditorLayer::OnUpdate()

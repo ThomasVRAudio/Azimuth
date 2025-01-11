@@ -16,11 +16,6 @@ namespace Azimuth
             m_ComponentManager = std::make_unique<ComponentManager>();
             m_EntityManager = std::make_unique<EntityManager>();
             m_SystemManager = std::make_unique<SystemManager>();
-
-            // Register Components
-            RegisterComponent<TransformComponent>();
-            RegisterComponent<MeshComponent>();
-            RegisterComponent<AudioComponent>();
         }
 
         Entity CreateEntity()
@@ -30,15 +25,13 @@ namespace Azimuth
 
         void DestroyEntity(Entity entity)
         {
-
             m_EntityManager->DestroyEntity(entity);
             m_SystemManager->EntityDestroyed(entity);
             m_ComponentManager->EntityDestroyed(entity);
         }
 
         template <typename T>
-        typename std::enable_if<std::is_base_of<IComponent, T>::value, void>::type
-        RegisterComponent()
+        void RegisterComponent()
         {
             m_ComponentManager->RegisterComponent<T>();
         }
@@ -56,8 +49,7 @@ namespace Azimuth
         }
 
         template <typename T>
-        typename std::enable_if<std::is_base_of<IComponent, T>::value, void>::type
-        RemoveComponent(Entity entity)
+        void RemoveComponent(Entity entity)
         {
             m_ComponentManager->RemoveComponent<T>(entity);
 
@@ -69,15 +61,13 @@ namespace Azimuth
         }
 
         template <typename T>
-        typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
-        GetComponent(Entity entity)
+        T &GetComponent(Entity entity)
         {
             return m_ComponentManager->GetComponent<T>(entity);
         }
 
         template <typename T>
-        typename std::enable_if<std::is_base_of<IComponent, T>::value, ComponentBitType>::type
-        GetComponentBitType()
+        ComponentBitType GetComponentBitType()
         {
             return m_ComponentManager->GetComponentBitType<T>();
         }
@@ -98,7 +88,7 @@ namespace Azimuth
         ECSManager(const ECSManager &) = delete;
         ECSManager &operator=(const ECSManager &) = delete;
 
-        static ECSManager &getInstance()
+        static ECSManager &GetInstance()
         {
             static ECSManager instance;
             return instance;

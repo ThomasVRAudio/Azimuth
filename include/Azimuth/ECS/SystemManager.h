@@ -43,17 +43,22 @@ namespace Azimuth
 
         void EntityComponentMaskChanged(Entity entity, ComponentMask entityComponentMask)
         {
+            print("mask changed for entity: " << entity);
             for (auto const &[typeName, system] : m_Systems)
             {
                 auto const &systemComponentMask = m_ComponentMasks[typeName];
+                print("mask changed: " << entityComponentMask << "vs\n"
+                                       << systemComponentMask)
 
-                // bit comparison, e.g. entity= 010101 and system= 00100, would become 00100
-                if ((entityComponentMask & systemComponentMask) == systemComponentMask)
+                    // bit comparison, e.g. entity= 010101 and system= 00100, would become 00100
+                    if ((entityComponentMask & systemComponentMask) == systemComponentMask)
                 {
+                    print("inserted");
                     system->m_Entities.insert(entity);
                 }
                 else
                 {
+                    print("erased");
                     system->m_Entities.erase(entity);
                 }
             }

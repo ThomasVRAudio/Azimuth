@@ -1,6 +1,5 @@
 #pragma once
 #include <Azimuth/Common.h>
-#include <Azimuth/ECS/Component.h>
 #include <Azimuth/ECS/ComponentArray.h>
 
 namespace Azimuth

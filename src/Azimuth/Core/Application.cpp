@@ -6,9 +6,9 @@ namespace Azimuth
     Application::Application()
         : m_isRunning(true)
     {
+        MainScene = new Scene(*this);
         m_Window = std::make_unique<Window>();
-
-        ECS.Init();
+        Init();
     }
 
     Application::~Application()
@@ -16,6 +16,17 @@ namespace Azimuth
         for (auto const layer : m_Layers)
         {
             delete layer;
+        }
+
+        delete MainScene;
+    }
+
+    void Application::Init()
+    {
+        MainScene->Init();
+        for (auto const layer : m_Layers)
+        {
+            layer->Init();
         }
     }
 

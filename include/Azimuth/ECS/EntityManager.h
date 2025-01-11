@@ -18,7 +18,7 @@ namespace Azimuth
     private:
         std::queue<Entity> m_AvailableEntitiesPool{};
         std::array<ComponentMask, MAX_ENTITIES> m_ComponentMasks{};
-        uint32_t m_LivingEntityCount{};
+        uint32_t m_LivingEntityCount = 0;
     };
 
 }

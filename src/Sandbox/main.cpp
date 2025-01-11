@@ -1,20 +1,25 @@
 #include <Azimuth/Azimuth.h>
 #include <Sandbox.h>
-#include <Azimuth/ECS/ECSManager.h>
-#include <Azimuth/Scene/Scene.h>
-#include <Azimuth/Editor/EditorLayer.h>
+#include <MoveScript.h>
 
 int main()
 {
     Azimuth::Application *app = new Azimuth::Application();
 
-    EditorLayer *editorLayer = new EditorLayer();
-    app->AddLayer(editorLayer);
+    Entity entity = app->MainScene->ECS.CreateEntity();
+
+    ScriptsComponent objectScripts;
+    std::shared_ptr<MoveScript> moveScript = std::make_shared<MoveScript>();
+
+    moveScript->SetScene(app->MainScene);
+    moveScript->SetEntity(entity);
+
+    objectScripts.AddScript(std::static_pointer_cast<MonoScript>(moveScript));
+    app->MainScene->ECS.AddComponent<ScriptsComponent>(entity, std::move(objectScripts));
 
     app->Run();
 
     delete app;
-    delete editorLayer;
 
     return 0;
 }

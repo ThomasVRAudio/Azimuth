@@ -3,7 +3,7 @@
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Common.h>
-#include <Azimuth/ECS/ECSManager.h>
+#include <Azimuth/Scene/Scene.h>
 
 namespace Azimuth
 {
@@ -12,10 +12,11 @@ namespace Azimuth
     public:
         Application();
         ~Application();
+        void Init();
         void Start();
         void Run();
         void AddLayer(Layer *layer);
-        ECSManager &ECS = ECSManager::getInstance();
+        Scene *MainScene;
 
     private:
         bool m_isRunning = false;

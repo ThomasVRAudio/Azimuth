@@ -19,6 +19,7 @@
         "${workspaceFolder}/src/Azimuth/Scene/*.cpp",
         "${workspaceFolder}/src/Azimuth/ECS/*.cpp",
         "${workspaceFolder}/src/Azimuth/Editor/*.cpp",
+        "${workspaceFolder}/src/Azimuth/Scripts/*.cpp",
         "-lglfw3dll",
         "-lassimp",
         "-o",
