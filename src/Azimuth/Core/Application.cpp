@@ -6,7 +6,7 @@ namespace Azimuth
     Application::Application()
         : m_isRunning(true)
     {
-        MainScene = new Scene(*this);
+        ActiveScene = new Scene(*this);
         m_Window = std::make_unique<Window>();
         Init();
     }
@@ -18,12 +18,12 @@ namespace Azimuth
             delete layer;
         }
 
-        delete MainScene;
+        delete ActiveScene;
     }
 
     void Application::Init()
     {
-        MainScene->Init();
+        ActiveScene->Init();
         for (auto const layer : m_Layers)
         {
             layer->Init();

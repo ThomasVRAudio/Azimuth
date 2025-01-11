@@ -16,7 +16,7 @@ namespace Azimuth
         void Start();
         void Run();
         void AddLayer(Layer *layer);
-        Scene *MainScene;
+        Scene *ActiveScene;
 
     private:
         bool m_isRunning = false;

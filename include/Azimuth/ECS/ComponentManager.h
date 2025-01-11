@@ -49,6 +49,12 @@ namespace Azimuth
             return GetComponentArray<T>()->GetData(entity);
         }
 
+        template <typename T>
+        bool HasComponent(Entity entity)
+        {
+            return GetComponentArray<T>()->HasData(entity);
+        }
+
         void EntityDestroyed(Entity entity)
         {
             for (auto const &[_, component] : m_ComponentArrays)

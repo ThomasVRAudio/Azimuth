@@ -58,6 +58,12 @@ namespace Azimuth
             return m_ComponentArray[m_EntityToComponentIndexMap[entity]];
         }
 
+        bool HasData(Entity entity)
+        {
+            auto it = m_EntityToComponentIndexMap.find(entity);
+            return it != m_EntityToComponentIndexMap.end();
+        }
+
         void EntityDestroyed(Entity entity) override
         {
             if (m_EntityToComponentIndexMap.find(entity) != m_EntityToComponentIndexMap.end())

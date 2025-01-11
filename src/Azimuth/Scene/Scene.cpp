@@ -30,4 +30,32 @@ namespace Azimuth
         delete m_EditorLayer;
         delete m_ScriptLayer;
     }
+
+    void Scene::InitScriptsIfNotExist(Entity entity)
+    {
+        ECSManager &ECS = ECSManager::GetInstance();
+        bool hasScriptBase = ECS.HasComponent<ScriptsComponent>(entity);
+
+        if (!hasScriptBase)
+        {
+            ScriptsComponent component;
+            ECS.AddComponent<ScriptsComponent>(entity, std::move(component));
+        }
+    }
+
+    void Scene::AddScript(Entity entity, std::shared_ptr<MonoScript> script)
+    {
+        InitScriptsIfNotExist(entity);
+        ECSManager &ECS = ECSManager::GetInstance();
+        ScriptsComponent &baseComponent = ECS.GetComponent<ScriptsComponent>(entity);
+
+        if (!script->HasParent())
+        {
+            std::shared_ptr sharedBase = std::make_shared<ScriptsComponent>(baseComponent);
+            script->SetParent(sharedBase);
+        }
+
+        baseComponent.AddScript(script);
+    }
+
 }

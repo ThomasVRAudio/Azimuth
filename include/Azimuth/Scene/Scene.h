@@ -7,6 +7,7 @@
 namespace Azimuth
 {
     class Application;
+    class MonoScript;
     class Scene
     {
 
@@ -33,9 +34,19 @@ namespace Azimuth
             ECSManager::GetInstance().RemoveComponent<T>(entity);
         }
 
-        static ECSManager &ECS;
+        Entity CreateObject()
+        {
+            Entity entity = ECSManager::GetInstance().CreateEntity();
+
+            return entity;
+        }
+
+        void InitScriptsIfNotExist(Entity entity);
+
+        void AddScript(Entity entity, std::shared_ptr<MonoScript> script);
 
     private:
+        static ECSManager &ECS;
         Application &m_Application;
         EditorLayer *m_EditorLayer;
         ScriptLayer *m_ScriptLayer;

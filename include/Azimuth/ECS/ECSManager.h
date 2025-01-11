@@ -67,6 +67,12 @@ namespace Azimuth
         }
 
         template <typename T>
+        bool HasComponent(Entity entity)
+        {
+            return m_ComponentManager->HasComponent<T>(entity);
+        }
+
+        template <typename T>
         ComponentBitType GetComponentBitType()
         {
             return m_ComponentManager->GetComponentBitType<T>();

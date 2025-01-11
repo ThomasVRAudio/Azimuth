@@ -17,6 +17,5 @@ namespace Azimuth
 
     private:
         std::shared_ptr<RenderSystem> m_RenderSystem;
-        std::shared_ptr<ScriptSystem> m_ScriptSystem;
     };
 }

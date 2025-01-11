@@ -1,25 +1,20 @@
 #include <Azimuth/Azimuth.h>
-#include <Sandbox.h>
 #include <MoveScript.h>
+
+using namespace Azimuth;
 
 int main()
 {
-    Azimuth::Application *app = new Azimuth::Application();
+    Application *app = new Azimuth::Application();
+    Scene *scene = app->ActiveScene;
 
-    Entity entity = app->MainScene->ECS.CreateEntity();
+    Entity entity = scene->CreateObject();
 
-    ScriptsComponent objectScripts;
-    std::shared_ptr<MoveScript> moveScript = std::make_shared<MoveScript>();
-
-    moveScript->SetScene(app->MainScene);
-    moveScript->SetEntity(entity);
-
-    objectScripts.AddScript(std::static_pointer_cast<MonoScript>(moveScript));
-    app->MainScene->ECS.AddComponent<ScriptsComponent>(entity, std::move(objectScripts));
+    auto moveScript = std::make_shared<MoveScript>();
+    scene->AddScript(entity, std::static_pointer_cast<MonoScript>(std::move(moveScript)));
 
     app->Run();
 
     delete app;
-
     return 0;
 }
