@@ -10,7 +10,8 @@ namespace Azimuth
 
     public:
         template <typename T>
-        std::shared_ptr<T> RegisterSystem()
+        typename std::enable_if<std::is_base_of<System, T>::value, std::shared_ptr<T>>::type
+        RegisterSystem()
         {
             const char *typeName = typeid(T).name();
 
@@ -22,7 +23,8 @@ namespace Azimuth
         }
 
         template <typename T>
-        void SetComponentMask(ComponentMask componentMask)
+        typename std::enable_if<std::is_base_of<System, T>::value, void>::type
+        SetComponentMask(ComponentMask componentMask)
         {
             const char *typeName = typeid(T).name();
 

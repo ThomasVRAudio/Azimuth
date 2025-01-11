@@ -37,7 +37,8 @@ namespace Azimuth
         }
 
         template <typename T>
-        void RegisterComponent()
+        typename std::enable_if<std::is_base_of<IComponent, T>::value, void>::type
+        RegisterComponent()
         {
             m_ComponentManager->RegisterComponent<T>();
         }
@@ -55,7 +56,8 @@ namespace Azimuth
         }
 
         template <typename T>
-        void RemoveComponent(Entity entity)
+        typename std::enable_if<std::is_base_of<IComponent, T>::value, void>::type
+        RemoveComponent(Entity entity)
         {
             m_ComponentManager->RemoveComponent<T>(entity);
 
@@ -67,13 +69,15 @@ namespace Azimuth
         }
 
         template <typename T>
-        T &GetComponent(Entity entity)
+        typename std::enable_if<std::is_base_of<IComponent, T>::value, T &>::type
+        GetComponent(Entity entity)
         {
             return m_ComponentManager->GetComponent<T>(entity);
         }
 
         template <typename T>
-        ComponentBitType GetComponentBitType()
+        typename std::enable_if<std::is_base_of<IComponent, T>::value, ComponentBitType>::type
+        GetComponentBitType()
         {
             return m_ComponentManager->GetComponentBitType<T>();
         }
@@ -85,7 +89,8 @@ namespace Azimuth
         }
 
         template <typename T>
-        void SetSystemComponentMask(ComponentMask componentMask)
+        typename std::enable_if<std::is_base_of<System, T>::value, void>::type
+        SetSystemComponentMask(ComponentMask componentMask)
         {
             m_SystemManager->SetComponentMask<T>(componentMask);
         }
