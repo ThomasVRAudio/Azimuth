@@ -14,8 +14,22 @@ namespace Azimuth
         glm::vec3 Position;
     };
 
-    struct MeshComponent : public IComponent
+    class MeshComponent : public IComponent
     {
+    public:
+        MeshComponent();
+        ~MeshComponent();
+
+        void CreateMesh(const std::vector<float> &verts, std::shared_ptr<Shader> shader);
+        void DrawMesh();
+
+        std::shared_ptr<Shader> shader;
+
+    private:
+        unsigned int m_VAO, m_VBO;
+        std::vector<float> m_Vertices;
+        uint32_t maxPrints = 10;
+        uint32_t prints = 0;
     };
 
     struct AudioComponent : public IComponent
@@ -31,7 +45,7 @@ namespace Azimuth
 
         void AddScript(std::shared_ptr<MonoScript> script)
         {
-            m_Scripts.emplace_back(std::move(script));
+            m_Scripts.emplace_back(script);
         }
 
         void OnStart();

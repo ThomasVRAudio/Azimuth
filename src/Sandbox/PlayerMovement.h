@@ -11,6 +11,6 @@ namespace Azimuth
         void OnUpdate();
 
     private:
-        TransformComponent m_Transform;
+        std::shared_ptr<Shader> m_Shader;
     };
 }

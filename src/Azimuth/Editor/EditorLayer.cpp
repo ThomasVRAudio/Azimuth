@@ -10,6 +10,7 @@ namespace Azimuth
 
         ComponentMask mask;
         mask.set(ECS.GetComponentBitType<TransformComponent>(), true);
+        mask.set(ECS.GetComponentBitType<MeshComponent>(), true);
         m_RenderSystem = ECS.RegisterSystem<RenderSystem>();
         ECS.SetSystemComponentMask<RenderSystem>(mask);
 

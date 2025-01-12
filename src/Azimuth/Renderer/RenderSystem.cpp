@@ -6,14 +6,34 @@ namespace Azimuth
 
     void RenderSystem::Init()
     {
-        ECSManager &ECS = ECSManager::GetInstance();
+        glEnable(GL_DEPTH_TEST);
     }
 
     void RenderSystem::DrawScene()
     {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         ECSManager &ECS = ECSManager::GetInstance();
         for (auto &entity : m_Entities)
         {
+            MeshComponent &mesh = ECS.GetComponent<MeshComponent>(entity);
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, ECS.GetComponent<TransformComponent>(entity).Position);
+            if (mesh.shader)
+            {
+                mesh.shader->use();
+                mesh.shader->setMat4("model", model);
+                mesh.shader->setMat4("view", view);
+                mesh.shader->setMat4("projection", projection);
+                mesh.DrawMesh();
+            }
         }
     };
+
+    RenderSystem::~RenderSystem()
+    {
+        if (activeShader)
+            delete activeShader;
+    }
 }
