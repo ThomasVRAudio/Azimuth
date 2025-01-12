@@ -1,6 +1,7 @@
 #pragma once
 #include <Azimuth/Common.h>
 #include <Azimuth/Scene/Scene.h>
+#include <Azimuth/Renderer/PrimitiveMeshes.h>
 
 namespace Azimuth
 {
@@ -11,7 +12,18 @@ namespace Azimuth
 
     struct TransformComponent : public IComponent
     {
-        glm::vec3 Position;
+        glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    };
+
+    enum PRIMITIVE_TYPE
+    {
+        PRIMITIVE_POINT,
+        PRIMITIVE_LINE,
+        PRIMITIVE_TRIANGLE,
+        PRIMITIVE_PLANE,
+        PRIMITIVE_SQUARE,
+        PRIMITIVE_CUBE,
+        PRIMITIVE_SPHERE
     };
 
     class MeshComponent : public IComponent
@@ -20,16 +32,17 @@ namespace Azimuth
         MeshComponent();
         ~MeshComponent();
 
+        void CreateMesh(PRIMITIVE_TYPE primitive, std::shared_ptr<Shader> shader);
         void CreateMesh(const std::vector<float> &verts, std::shared_ptr<Shader> shader);
         void DrawMesh();
 
         std::shared_ptr<Shader> shader;
 
     private:
-        unsigned int m_VAO, m_VBO;
+        void GenerateBuffers();
+        unsigned int m_VAO, m_VBO, m_EBO;
         std::vector<float> m_Vertices;
-        uint32_t maxPrints = 10;
-        uint32_t prints = 0;
+        std::vector<int> m_Indices;
     };
 
     struct AudioComponent : public IComponent
