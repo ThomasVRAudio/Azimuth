@@ -1,5 +1,4 @@
 #include "PlayerMovement.h"
-#include <dependencies/GLFW/glfw3.h>
 
 void Azimuth::PlayerMovement::OnStart()
 {

@@ -1,3 +1,4 @@
+#pragma once
 #include "Azimuth/Core/Application.h"
 #include "Azimuth/Core/Layer.h"
 #include "Azimuth/ECS/Component.h"

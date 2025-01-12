@@ -1,5 +1,4 @@
 #include <Azimuth/Renderer/RenderSystem.h>
-#include <dependencies/GLFW/glfw3.h>
 #include <Azimuth/ECS/Component.h>
 
 namespace Azimuth

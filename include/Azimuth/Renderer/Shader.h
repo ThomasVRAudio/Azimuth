@@ -1,7 +1,4 @@
 #pragma once
-
-#include <dependencies/glad/glad.h>
-#include <dependencies/glm/glm.hpp>
 #include <Azimuth/Common.h>
 
 namespace Azimuth

@@ -1,6 +1,4 @@
 #pragma once
-
-#include <dependencies/glm/glm.hpp>
 #include <Azimuth/Common.h>
 #include <Azimuth/Scene/Scene.h>
 

@@ -3,10 +3,33 @@
   "tasks": [
     {
       "type": "cppbuild",
+      "label": "Generate PCH",
+      "command": "D:\\MinGW\\bin\\g++.exe",
+      "args": [
+        "-x",
+        "c++-header",
+        "-std=c++17",
+        "-I${workspaceFolder}/include",
+        "${workspaceFolder}/include/Azimuth/Common.h",
+        "-o",
+        "${workspaceFolder}/include/Azimuth/Common.h.gch"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "detail": "Generate precompiled header"
+    },
+    {
+      "type": "cppbuild",
       "label": "C/C++: Debug Build",
       "command": "D:\\MinGW\\bin\\g++.exe",
       "args": [
-        "-g", // Enable debug symbols
+        "-g",
         "-std=c++17",
         "-I${workspaceFolder}/include",
         "-I${workspaceFolder}/src/Sandbox",
@@ -20,6 +43,8 @@
         "${workspaceFolder}/src/Azimuth/ECS/*.cpp",
         "${workspaceFolder}/src/Azimuth/Editor/*.cpp",
         "${workspaceFolder}/src/Azimuth/Scripts/*.cpp",
+        "-include",
+        "${workspaceFolder}/include/Azimuth/Common.h",
         "-lglfw3dll",
         "-lassimp",
         "-o",
@@ -46,6 +71,8 @@
         "-L${workspaceFolder}/lib",
         "${workspaceFolder}/src/*.cpp",
         "${workspaceFolder}/src/*.c",
+        "-include",
+        "${workspaceFolder}/include/Azimuth/Common.h",
         "-lglfw3dll",
         "-lassimp",
         "-o",

@@ -2,7 +2,6 @@
 
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Layer.h>
-#include <Azimuth/Common.h>
 #include <Azimuth/Scene/Scene.h>
 
 namespace Azimuth

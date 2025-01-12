@@ -1,5 +1,4 @@
 #pragma once
-#include <Azimuth/Common.h>
 #include <Azimuth/ECS/Entity.h>
 #include <Azimuth/ECS/System.h>
 

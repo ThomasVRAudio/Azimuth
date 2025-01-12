@@ -1,10 +1,8 @@
 #pragma once
-#include <Azimuth/Common.h>
 #include <Azimuth/ECS/SystemManager.h>
 #include <Azimuth/ECS/ComponentManager.h>
 #include <Azimuth/ECS/EntityManager.h>
 #include <Azimuth/ECS/Entity.h>
-#include <Azimuth/ECS/System.h>
 
 namespace Azimuth
 {

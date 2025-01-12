@@ -1,3 +1,4 @@
+#pragma once
 #include <Azimuth/Azimuth.h>
 
 namespace Azimuth
