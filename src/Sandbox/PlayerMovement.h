@@ -9,8 +9,5 @@ namespace Azimuth
     public:
         void OnStart();
         void OnUpdate();
-
-    private:
-        std::shared_ptr<Shader> m_Shader;
     };
 }

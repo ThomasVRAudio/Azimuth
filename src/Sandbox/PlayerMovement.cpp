@@ -5,10 +5,10 @@ void Azimuth::PlayerMovement::OnStart()
     AddComponent<TransformComponent>();
     AddComponent<MeshComponent>();
 
-    MeshComponent &m_Mesh = GetComponent<MeshComponent>();
-    m_Shader = std::make_shared<Shader>("src/Sandbox/shader.vert", "src/Sandbox/shader.frag");
+    MeshComponent &mesh = GetComponent<MeshComponent>();
+    auto shader = std::make_shared<Shader>("src/Sandbox/shader.vert", "src/Sandbox/shader.frag");
 
-    m_Mesh.CreateMesh(PRIMITIVE_TRIANGLE, m_Shader);
+    mesh.CreateMesh(PRIMITIVE_TRIANGLE, shader);
 }
 
 void Azimuth::PlayerMovement::OnUpdate()

@@ -34,7 +34,7 @@ namespace Azimuth
             ECSManager::GetInstance().RemoveComponent<T>(entity);
         }
 
-        Entity CreateObject()
+        Entity CreateEntity()
         {
             Entity entity = ECSManager::GetInstance().CreateEntity();
 
