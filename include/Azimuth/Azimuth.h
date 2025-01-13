@@ -6,3 +6,4 @@
 #include "Azimuth/ECS/System.h"
 #include "Azimuth/Editor/EditorLayer.h"
 #include "Azimuth/helper.h"
+#include "Azimuth/Core/Time.h"

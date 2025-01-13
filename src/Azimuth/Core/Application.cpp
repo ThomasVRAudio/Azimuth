@@ -1,4 +1,5 @@
 #include "Azimuth/Core/Application.h"
+#include "Azimuth/Core/Time.h"
 
 namespace Azimuth
 {
@@ -23,6 +24,9 @@ namespace Azimuth
 
     void Application::Init()
     {
+        Time::StartGlobalTime();
+        Time::AddTimeStep();
+
         ActiveScene->Init();
         for (auto const layer : m_Layers)
         {
@@ -49,6 +53,7 @@ namespace Azimuth
             }
 
             m_Window->OnUpdate();
+            Time::AddTimeStep();
         }
     }
 

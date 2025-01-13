@@ -13,7 +13,6 @@ void Azimuth::PlayerMovement::OnStart()
 
 void Azimuth::PlayerMovement::OnUpdate()
 {
-    float speed = glm::sin(glfwGetTime()) * 0.5f + 0.5f;
-    float sine = glm::sin(glfwGetTime() * speed * 2.0f);
+    float sine = glm::sin(Time::time() * 5.0f);
     GetComponent<TransformComponent>().Position = glm::vec3(sine, 0.0f, 0.0f);
 }
