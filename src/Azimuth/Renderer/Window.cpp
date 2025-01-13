@@ -2,9 +2,17 @@
 
 namespace Azimuth
 {
-    Window::Window(unsigned int width, unsigned int height, const char *name)
-        : m_Width(width), m_Height(height), m_Name(name)
+    GLFWwindow *Window::m_Window;
+    unsigned int Window::m_Width;
+    unsigned int Window::m_Height;
+    const char *Window::m_Name;
+
+    void Window::Create(unsigned int width, unsigned int height, const char *name)
     {
+        m_Width = width;
+        m_Height = height;
+        m_Name = name;
+
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -22,19 +30,13 @@ namespace Azimuth
 
         glfwMakeContextCurrent(m_Window);
 
-        glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow *m_Window, int width, int height)
-                                       { glViewport(0, 0, width, height); });
+        glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow *m_Window, int m_Width, int m_Height)
+                                       { glViewport(0, 0, m_Width, m_Height); });
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
             std::cout << "Failed to initialize GLAD" << std::endl;
         }
-    }
-
-    Window::~Window()
-    {
-        if (m_Window)
-            glfwDestroyWindow(m_Window);
     }
 
     void Window::OnUpdate()

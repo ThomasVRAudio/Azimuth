@@ -1,5 +1,6 @@
-#include "Azimuth/Core/Application.h"
-#include "Azimuth/Core/Time.h"
+#include <Azimuth/Core/Application.h>
+#include <Azimuth/Core/Time.h>
+#include <Azimuth/Core/Input.h>
 
 namespace Azimuth
 {
@@ -8,7 +9,6 @@ namespace Azimuth
         : m_isRunning(true)
     {
         ActiveScene = new Scene(*this);
-        m_Window = std::make_unique<Window>();
         Init();
     }
 
@@ -26,6 +26,7 @@ namespace Azimuth
     {
         Time::StartGlobalTime();
         Time::AddTimeStep();
+        Window::Create();
 
         ActiveScene->Init();
         for (auto const layer : m_Layers)
@@ -52,7 +53,7 @@ namespace Azimuth
                 layer->OnUpdate();
             }
 
-            m_Window->OnUpdate();
+            Window::OnUpdate();
             Time::AddTimeStep();
         }
     }

@@ -5,18 +5,21 @@
 namespace Azimuth
 {
 
+    class Input;
     class Window
     {
     public:
-        Window(unsigned int width = 800, unsigned int height = 600, const char *name = "Azimuth");
-        ~Window();
-        void OnUpdate();
+        static void Create(unsigned int width = 800, unsigned int height = 600, const char *name = "Azimuth");
+        static void OnUpdate();
+        static float GetWidth() { return m_Width; }
+        static float GetHeight() { return m_Height; }
 
     private:
-        GLFWwindow *m_Window;
-        const char *m_Name;
-        unsigned int m_Width;
-        unsigned int m_Height;
+        static GLFWwindow *m_Window;
+        static const char *m_Name;
+        static unsigned int m_Width;
+        static unsigned int m_Height;
+        friend Input;
     };
 
 }

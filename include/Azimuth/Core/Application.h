@@ -19,7 +19,6 @@ namespace Azimuth
 
     private:
         bool m_isRunning = false;
-        std::unique_ptr<Window> m_Window;
         std::vector<Layer *> m_Layers;
     };
 }

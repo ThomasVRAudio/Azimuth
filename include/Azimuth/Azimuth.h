@@ -7,3 +7,5 @@
 #include "Azimuth/Editor/EditorLayer.h"
 #include "Azimuth/helper.h"
 #include "Azimuth/Core/Time.h"
+#include "Azimuth/Core/Input.h"
+#include "Azimuth/Core/KeyCodes.h"
