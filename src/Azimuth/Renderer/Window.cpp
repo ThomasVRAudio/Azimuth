@@ -2,6 +2,7 @@
 
 namespace Azimuth
 {
+    ImVec4 Window::clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     GLFWwindow *Window::m_Window;
     unsigned int Window::m_Width;
     unsigned int Window::m_Height;
@@ -37,10 +38,29 @@ namespace Azimuth
         {
             std::cout << "Failed to initialize GLAD" << std::endl;
         }
+
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGui::StyleColorsDark();
+        ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
+        ImGui_ImplOpenGL3_Init("#version 330");
     }
 
     void Window::OnUpdate()
     {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Hello, world!");
+        ImGui::Text("This is some useful text.");
+        ImGui::ColorEdit3("clear color", (float *)&clear_color);
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
     }

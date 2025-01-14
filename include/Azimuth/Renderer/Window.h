@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Azimuth/Common.h>
 
 namespace Azimuth
@@ -20,6 +19,7 @@ namespace Azimuth
         static unsigned int m_Width;
         static unsigned int m_Height;
         friend Input;
+        static ImVec4 clear_color;
     };
 
 }
