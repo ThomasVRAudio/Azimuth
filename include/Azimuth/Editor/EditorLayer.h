@@ -1,4 +1,5 @@
 #pragma once
+#include <Azimuth/Common.h>
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/ECS/ECSManager.h>
@@ -15,5 +16,6 @@ namespace Azimuth
 
     private:
         std::shared_ptr<RenderSystem> m_RenderSystem;
+        ImVec4 m_ClearColor = ImVec4(0.4f, 0.2f, 0.3f, 1.0f); // test
     };
 }
