@@ -2,6 +2,8 @@
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/Common.h>
 #include <Azimuth/Renderer/Window.h>
+#include <Azimuth/Renderer/FrameBuffer.h>
+#include <Azimuth/Editor/ImGuiStyling.h>
 
 namespace Azimuth
 {
@@ -24,26 +26,63 @@ namespace Azimuth
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
+        ImGuiStyling::SetStyling();
         ImGui_ImplGlfw_InitForOpenGL(Window::m_Window, true);
         ImGui_ImplOpenGL3_Init("#version 330");
+
+        ImGuiIO &io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        m_WindowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        m_WindowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiConfigFlags_ViewportsEnable;
+
+        FrameBuffer::CreateFramebuffer(&frameBuffer, &texture, width, height);
     }
 
     void EditorLayer::OnUpdate()
     {
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        glViewport(0, 0, width, height);
+
+        glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         m_RenderSystem->DrawScene();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is some useful text.");
-        ImGui::ColorEdit3("clear color", (float *)&m_ClearColor);
+        ImGuiViewport *viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImGui::Begin("DockSpace", nullptr, m_WindowFlags);
+
+        ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+
+        ImGui::End();
+
+        ImGui::Begin("Hierarchy");
+        ImGui::Text("Entities");
+        ImGui::Text("Components");
+        ImGui::End();
+
+        ImGui::Begin("Settings");
+        static bool gizmos;
+        ImGui::Checkbox("Gizmos", &gizmos);
+        ImGui::ColorEdit4("Solid Background Color", (float *)&m_ClearColor);
+        ImGui::End();
+
+        ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+        ImVec2 size = ImGui::GetContentRegionAvail();
+        ImGui::Image((ImTextureID)(intptr_t)texture, size, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
     }
-
 }
