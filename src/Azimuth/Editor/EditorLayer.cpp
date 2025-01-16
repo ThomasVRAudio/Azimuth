@@ -1,9 +1,5 @@
 #include <Azimuth/Editor/EditorLayer.h>
 #include <Azimuth/ECS/Component.h>
-#include <Azimuth/Common.h>
-#include <Azimuth/Renderer/Window.h>
-#include <Azimuth/Renderer/FrameBuffer.h>
-#include <Azimuth/Editor/ImGuiStyling.h>
 
 namespace Azimuth
 {
@@ -37,6 +33,12 @@ namespace Azimuth
         m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiConfigFlags_ViewportsEnable;
 
         FrameBuffer::CreateFramebuffer(&frameBuffer, &texture, width, height);
+
+        ImFontConfig fontConfig;
+        fontConfig.OversampleH = 4;
+        fontConfig.OversampleV = 4;
+        fontConfig.PixelSnapH = false;
+        io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-SemiBold.ttf", 18.0f, &fontConfig);
     }
 
     void EditorLayer::OnUpdate()

@@ -1,8 +1,13 @@
 #pragma once
 #include <Azimuth/Common.h>
 #include <Azimuth/Core/Layer.h>
-#include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/ECS/ECSManager.h>
+#include <Azimuth/Renderer/RenderSystem.h>
+
+#include <Azimuth/Common.h>
+#include <Azimuth/Renderer/Window.h>
+#include <Azimuth/Renderer/FrameBuffer.h>
+#include <Azimuth/Editor/ImGuiStyling.h>
 
 namespace Azimuth
 {
