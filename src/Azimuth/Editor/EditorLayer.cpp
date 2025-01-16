@@ -66,22 +66,46 @@ namespace Azimuth
         ImGuiID dockspace_id = ImGui::GetID("DockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
 
+        float left_padding = 10.0f;
         ImGui::End();
-
         ImGui::Begin("Hierarchy");
+        ImGui::Dummy(ImVec2(4.0f, 4.0f));
+        ImGui::Indent(left_padding);
         ImGui::Text("Entities");
         ImGui::Text("Components");
+        ImGui::Unindent(left_padding);
+        ImGui::End();
+
+        ImGui::Begin("Properties");
+        ImGui::Dummy(ImVec2(4.0f, 4.0f));
+        ImGui::Indent(left_padding);
+        ImGui::Text("Transform");
+        ImGui::Separator();
+        ImGui::Text("Mesh");
+        ImGui::Unindent(left_padding);
         ImGui::End();
 
         ImGui::Begin("Settings");
         static bool gizmos;
+        ImGui::Indent(left_padding);
+        ImGui::Dummy(ImVec2(4.0f, 4.0f));
         ImGui::Checkbox("Gizmos", &gizmos);
-        ImGui::ColorEdit4("Solid Background Color", (float *)&m_ClearColor);
+        ImGui::ColorEdit4("Solid BG Color", (float *)&m_ClearColor);
+        ImGui::Unindent(left_padding);
         ImGui::End();
 
         ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
         ImVec2 size = ImGui::GetContentRegionAvail();
         ImGui::Image((ImTextureID)(intptr_t)texture, size, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::End();
+
+        ImGui::Begin("Logs");
+        ImGui::Dummy(ImVec2(4.0f, 4.0f));
+        ImGui::Indent(left_padding);
+        ImGui::Text("Right click!");
+        ImGui::Text("Loaded entity");
+        ImGui::Text("Printing ..");
+        ImGui::Unindent(left_padding);
         ImGui::End();
 
         ImGui::Render();
