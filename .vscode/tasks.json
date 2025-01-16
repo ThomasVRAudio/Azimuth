@@ -2,93 +2,40 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "cppbuild",
-      "label": "Generate PCH",
-      "command": "D:\\MinGW\\bin\\g++.exe",
-      "args": [
-        "-x",
-        "c++-header",
-        "-std=c++17",
-        "-I${workspaceFolder}/include",
-        "${workspaceFolder}/include/Azimuth/Common.h",
-        "-o",
-        "${workspaceFolder}/include/Azimuth/Common.h.gch"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": ["$gcc"],
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "detail": "Generate precompiled header"
+      "type": "cmake",
+      "label": "CMake: build",
+      "command": "build",
+      "targets": ["all"],
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "CMake template build task"
     },
     {
-      "type": "cppbuild",
-      "label": "C/C++: Debug Build",
-      "command": "D:\\MinGW\\bin\\g++.exe",
-      "args": [
-        "-g",
-        "-std=c++17",
-        "-I${workspaceFolder}/include",
-        "-I${workspaceFolder}/src/Sandbox",
-        "-L${workspaceFolder}/lib",
-        "${workspaceFolder}/src/Sandbox/*.cpp",
-        "${workspaceFolder}/src/dependencies/*.c",
-        "${workspaceFolder}/src/dependencies/*.cpp",
-        "${workspaceFolder}/src/dependencies/imgui/*.cpp",
-        "${workspaceFolder}/src/Azimuth/Core/*.cpp",
-        "${workspaceFolder}/src/Azimuth/Renderer/*.cpp",
-        "${workspaceFolder}/src/Azimuth/Scene/*.cpp",
-        "${workspaceFolder}/src/Azimuth/ECS/*.cpp",
-        "${workspaceFolder}/src/Azimuth/Editor/*.cpp",
-        "${workspaceFolder}/src/Azimuth/Scripts/*.cpp",
-        "-include",
-        "${workspaceFolder}/include/Azimuth/Common.h",
-        "-lglfw3dll",
-        "-lassimp",
-        "-o",
-        "${workspaceFolder}/bin/main_debug.exe"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": ["$gcc"],
+      "label": "build-debug",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["--build", "${workspaceFolder}/build", "--target", "main_debug"],
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "detail": "Debug build configuration"
+      "problemMatcher": []
     },
     {
-      "type": "cppbuild",
-      "label": "C/C++: Release Build",
-      "command": "D:\\MinGW\\bin\\g++.exe",
+      "label": "build-release",
+      "type": "shell",
+      "command": "cmake",
       "args": [
-        "-O3", // Optimize for performance
-        "-std=c++17",
-        "-I${workspaceFolder}/include",
-        "-L${workspaceFolder}/lib",
-        "${workspaceFolder}/src/*.cpp",
-        "${workspaceFolder}/src/*.c",
-        "-include",
-        "${workspaceFolder}/include/Azimuth/Common.h",
-        "-DIMGUI_IMPL_OPENGL_LOADER_GLAD",
-        "-lglfw3dll",
-        "-lassimp",
-        "-o",
-        "${workspaceFolder}/main_release.exe"
+        "--build",
+        "${workspaceFolder}/build",
+        "--target",
+        "main_release"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": ["$gcc"],
       "group": {
         "kind": "build",
         "isDefault": false
       },
-      "detail": "Release build configuration"
+      "problemMatcher": []
     }
   ]
 }
