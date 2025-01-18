@@ -11,31 +11,31 @@ namespace Azimuth
     public:
         static bool IsKeyPressed(KeyCode key)
         {
-            auto keyState = glfwGetKey(Window::m_Window, static_cast<int>(key));
+            auto keyState = glfwGetKey(Window::GetMainWindow(), static_cast<int>(key));
             return keyState == GLFW_PRESS;
         }
 
         static bool IsMouseButtonPressed(MouseButtonCode mouseButton)
         {
-            auto mouseState = glfwGetMouseButton(Window::m_Window, static_cast<int>(mouseButton));
+            auto mouseState = glfwGetMouseButton(Window::GetMainWindow(), static_cast<int>(mouseButton));
             return mouseState == GLFW_PRESS;
         }
 
         static glm::vec2 GetMouseXY()
         {
-            glfwGetCursorPos(Window::m_Window, &mousePosX, &mousePosY);
+            glfwGetCursorPos(Window::GetMainWindow(), &mousePosX, &mousePosY);
             return {mousePosX, mousePosY};
         }
 
         static double GetMouseX()
         {
-            glfwGetCursorPos(Window::m_Window, &mousePosX, &mousePosY);
+            glfwGetCursorPos(Window::GetMainWindow(), &mousePosX, &mousePosY);
             return mousePosX;
         }
 
         static double GetMouseY()
         {
-            glfwGetCursorPos(Window::m_Window, &mousePosX, &mousePosY);
+            glfwGetCursorPos(Window::GetMainWindow(), &mousePosX, &mousePosY);
             return mousePosY;
         }
 

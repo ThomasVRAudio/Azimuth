@@ -4,6 +4,8 @@ namespace Azimuth
 {
     ImGuiIO *EditorUI::io = nullptr;
     ImGuiWindowFlags EditorUI::m_WindowFlags;
+    ImVec2 EditorUI::m_SceneWindowPos;
+    ImVec2 EditorUI::m_SceneWindowSize;
 
     void EditorUI::Init()
     {
@@ -12,7 +14,7 @@ namespace Azimuth
         ImGui::StyleColorsDark();
         ImGuiStyling::SetStyling();
 
-        bool success = ImGui_ImplGlfw_InitForOpenGL(Window::m_Window, true);
+        bool success = ImGui_ImplGlfw_InitForOpenGL(Window::GetMainWindow(), true);
         assert(success && "ImGui_ImplGlfw_InitForOpenGL failed!");
 
         success = ImGui_ImplOpenGL3_Init("#version 330");
@@ -74,8 +76,10 @@ namespace Azimuth
     void EditorUI::DrawEditorScene(unsigned int *texture)
     {
         ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-        ImVec2 size = ImGui::GetContentRegionAvail();
-        ImGui::Image((ImTextureID)(*texture), size, ImVec2(0, 1), ImVec2(1, 0));
+        m_SceneWindowSize = ImGui::GetContentRegionAvail();
+        m_SceneWindowPos = ImGui::GetWindowPos();
+
+        ImGui::Image((ImTextureID)(*texture), m_SceneWindowSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
 

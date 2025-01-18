@@ -17,13 +17,8 @@ namespace Azimuth
 
         m_RenderSystem->Init();
         EditorUI::Init();
-        glfwSetInputMode(Window::m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        glfwSetScrollCallback(Window::m_Window, [](GLFWwindow *window, double xOffset, double yOffset)
-                              { g_ScrollEvent.Dispatch(xOffset, yOffset); });
-
-        glfwSetCursorPosCallback(Window::m_Window, [](GLFWwindow *window, double xOffset, double yOffset)
-                                 { g_CursorEvent.Dispatch(xOffset, yOffset); });
+        glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     void EditorLayer::OnStart()
@@ -48,6 +43,6 @@ namespace Azimuth
         m_EditorCamera.ProcessKeyboard();
 
         if (Input::IsKeyPressed(Escape))
-            glfwSetInputMode(Window::m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }

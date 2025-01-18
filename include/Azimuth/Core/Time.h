@@ -8,16 +8,16 @@ namespace Azimuth
     class Time
     {
     public:
-        static float time()
+        static double time()
         {
             auto time = std::chrono::high_resolution_clock::now() - m_StartTime;
-            return std::chrono::duration<float>(time).count();
+            return std::chrono::duration<double>(time).count();
         }
-        static float deltaTime()
+        static double deltaTime()
         {
             auto time = std::chrono::high_resolution_clock::now() - m_LastTimeStep;
             m_LastTimeStep += time;
-            return std::chrono::duration<float>(time).count();
+            return std::chrono::duration<double>(time).count();
         }
 
     private:

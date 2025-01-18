@@ -35,10 +35,14 @@ namespace Azimuth
 
         static void EndDraw();
         static void CreateDocker();
+        inline static ImVec2 GetSceneWindowPos() { return m_SceneWindowPos; }
+        inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
 
     private:
         static ImGuiIO *io;
         static ImGuiWindowFlags m_WindowFlags;
+        static ImVec2 m_SceneWindowPos;
+        static ImVec2 m_SceneWindowSize;
     };
 
 }

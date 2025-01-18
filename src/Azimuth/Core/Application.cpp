@@ -28,6 +28,9 @@ namespace Azimuth
         Time::AddTimeStep();
         Window::Create();
 
+        g_ScrollEvent.InitializeCallbacks();
+        g_CursorEvent.InitializeCallbacks();
+
         ActiveScene->Init();
         for (auto const layer : m_Layers)
         {

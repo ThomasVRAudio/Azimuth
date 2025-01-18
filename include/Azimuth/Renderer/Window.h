@@ -3,10 +3,6 @@
 
 namespace Azimuth
 {
-
-    class EditorLayer;
-    class Input;
-    class EditorUI;
     class Window
     {
     public:
@@ -15,14 +11,12 @@ namespace Azimuth
         static float GetWidth() { return m_Width; }
         static float GetHeight() { return m_Height; }
 
+        inline static GLFWwindow *GetMainWindow() { return m_Window; }
+
     private:
         static GLFWwindow *m_Window;
         static const char *m_Name;
         static unsigned int m_Width;
         static unsigned int m_Height;
-        friend Input;
-        friend EditorUI;
-        friend EditorLayer;
     };
-
 }
