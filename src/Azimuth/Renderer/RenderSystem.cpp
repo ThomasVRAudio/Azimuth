@@ -8,12 +8,9 @@ namespace Azimuth
     {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
-        // Needs custom width / height
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     }
 
-    void RenderSystem::DrawScene()
+    void RenderSystem::DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -28,8 +25,8 @@ namespace Azimuth
 
                 mesh.shader->use();
                 mesh.shader->setMat4("model", model);
-                mesh.shader->setMat4("view", view);
-                mesh.shader->setMat4("projection", projection);
+                mesh.shader->setMat4("view", viewMatrix);
+                mesh.shader->setMat4("projection", projectionMatrix);
 
                 mesh.DrawMesh();
             }

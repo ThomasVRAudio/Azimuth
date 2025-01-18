@@ -4,6 +4,7 @@
 namespace Azimuth
 {
 
+    class EditorLayer;
     class Input;
     class EditorUI;
     class Window
@@ -21,6 +22,7 @@ namespace Azimuth
         static unsigned int m_Height;
         friend Input;
         friend EditorUI;
+        friend EditorLayer;
     };
 
 }

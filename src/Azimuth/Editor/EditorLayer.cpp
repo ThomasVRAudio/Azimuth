@@ -1,5 +1,6 @@
 #include <Azimuth/Editor/EditorLayer.h>
 #include <Azimuth/ECS/Component.h>
+#include <Azimuth/Events/MouseEvents.h>
 
 namespace Azimuth
 {
@@ -16,6 +17,13 @@ namespace Azimuth
 
         m_RenderSystem->Init();
         EditorUI::Init();
+        glfwSetInputMode(Window::m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+        glfwSetScrollCallback(Window::m_Window, [](GLFWwindow *window, double xOffset, double yOffset)
+                              { g_ScrollEvent.Dispatch(xOffset, yOffset); });
+
+        glfwSetCursorPosCallback(Window::m_Window, [](GLFWwindow *window, double xOffset, double yOffset)
+                                 { g_CursorEvent.Dispatch(xOffset, yOffset); });
     }
 
     void EditorLayer::OnStart()
@@ -29,12 +37,17 @@ namespace Azimuth
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
         EditorUI::DrawToBuffer(&m_FrameBuffer, [&]()
-                               { m_RenderSystem->DrawScene(); });
+                               { m_RenderSystem->DrawScene(m_EditorCamera.GetViewMatrix(), m_EditorCamera.GetProjectionMatrix()); });
 
         EditorUI::CreateDocker();
         EditorUI::DrawEditorScene(&m_EditorSceneTexture);
         EditorUI::DrawUI();
 
         EditorUI::EndDraw();
+
+        m_EditorCamera.ProcessKeyboard();
+
+        if (Input::IsKeyPressed(Escape))
+            glfwSetInputMode(Window::m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }

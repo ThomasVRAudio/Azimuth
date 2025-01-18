@@ -14,6 +14,7 @@
 #include <string>
 
 #include <vector>
+#include <list>
 #include <bitset>
 #include <queue>
 #include <unordered_map>
@@ -22,6 +23,7 @@
 #include <dependencies/glad/glad.h>
 #include <dependencies/GLFW/glfw3.h>
 #include <dependencies/glm/glm.hpp>
+#include <dependencies/glm/gtc/matrix_transform.hpp>
 
 #include "dependencies/imgui/imgui.h"
 #include "dependencies/imgui/imgui_impl_glfw.h"
