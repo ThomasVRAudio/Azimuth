@@ -5,6 +5,7 @@
 #include <Azimuth/Renderer/Shader.h>
 #include <dependencies/glm/gtc/matrix_transform.hpp>
 #include <Azimuth/Renderer/Camera.h>
+#include <Azimuth/Renderer/Cubemap.h>
 
 namespace Azimuth
 {
@@ -21,5 +22,6 @@ namespace Azimuth
         unsigned int VBO, VAO;
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
+        unsigned int m_CubemapId;
     };
 }

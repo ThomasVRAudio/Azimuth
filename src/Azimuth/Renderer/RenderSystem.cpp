@@ -7,12 +7,25 @@ namespace Azimuth
     void RenderSystem::Init()
     {
         glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
         glEnable(GL_MULTISAMPLE);
+
+        std::vector<std::string> faces = {
+            "assets/skybox/ice/right.jpg",
+            "assets/skybox/ice/left.jpg",
+            "assets/skybox/ice/top.jpg",
+            "assets/skybox/ice/bottom.jpg",
+            "assets/skybox/ice/front.jpg",
+            "assets/skybox/ice/back.jpg"};
+
+        m_CubemapId = Cubemap::LoadCubemap(faces);
     }
 
     void RenderSystem::DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+        Cubemap::DrawCubemap(m_CubemapId, viewMatrix, projectionMatrix);
 
         ECSManager &ECS = ECSManager::GetInstance();
         for (auto &entity : m_Entities)

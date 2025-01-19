@@ -21,7 +21,7 @@ namespace Azimuth
         }
         catch (std::ifstream::failure e)
         {
-            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << type << std::endl;
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << path << std::endl;
         }
 
         unsigned int shader;

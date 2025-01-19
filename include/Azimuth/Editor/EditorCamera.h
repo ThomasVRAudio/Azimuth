@@ -31,6 +31,8 @@ namespace Azimuth
 
             g_ScrollEvent.Attach(this, &ProcessMouseScroll);
             g_CursorEvent.Attach(this, &ProcessMouseMovement);
+
+            Position = glm::vec3(0.0f, 0.0f, 3.0f);
         }
 
         void SetEditorSceneCenter(WindowOffset offset, WindowOffset size);
