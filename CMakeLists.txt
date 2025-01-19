@@ -36,14 +36,30 @@ file(GLOB_RECURSE SOURCES
 # Libraries directory
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
-# Debug Build
-add_executable(main_debug ${SOURCES})
-target_compile_options(main_debug PRIVATE -g)
-target_link_libraries(main_debug glfw3dll assimp)
-add_dependencies(main_debug precompiled_header)
+# Debug Editor Build
+add_executable(editor_debug ${SOURCES})
+target_compile_options(editor_debug PRIVATE -g)
+target_compile_definitions(editor_debug PRIVATE AZIMUTH_EDITOR)
+target_link_libraries(editor_debug glfw3dll assimp)
+add_dependencies(editor_debug precompiled_header)
 
-# Release Build
-add_executable(main_release ${SOURCES})
-target_compile_options(main_release PRIVATE -O3 -DIMGUI_IMPL_OPENGL_LOADER_GLAD)
-target_link_libraries(main_release glfw3dll assimp)
-add_dependencies(main_release precompiled_header)
+# Release Editor Build
+add_executable(editor_release ${SOURCES})
+target_compile_options(editor_release PRIVATE -O3 -g -DIMGUI_IMPL_OPENGL_LOADER_GLAD)
+target_compile_definitions(editor_release PRIVATE AZIMUTH_EDITOR)
+target_link_libraries(editor_release glfw3dll assimp)
+add_dependencies(editor_release precompiled_header)
+
+# Debug Game Build (without the editor code)
+add_executable(game_debug ${SOURCES})
+target_compile_options(game_debug PRIVATE -g)
+target_compile_definitions(game_debug PRIVATE AZIMUTH_GAME)  # No AZIMUTH_EDITOR
+target_link_libraries(game_debug glfw3dll assimp)
+add_dependencies(game_debug precompiled_header)
+
+# Release Game Build (without the editor code)
+add_executable(game_release ${SOURCES})
+target_compile_options(game_release PRIVATE -O3 -g -DIMGUI_IMPL_OPENGL_LOADER_GLAD)
+target_compile_definitions(game_release PRIVATE AZIMUTH_GAME)  # No AZIMUTH_EDITOR
+target_link_libraries(game_release glfw3dll assimp)
+add_dependencies(game_release precompiled_header)

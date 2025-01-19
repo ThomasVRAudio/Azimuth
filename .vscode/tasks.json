@@ -14,10 +14,15 @@
       "label": "build-debug",
       "type": "shell",
       "command": "cmake",
-      "args": ["--build", "${workspaceFolder}/build", "--target", "main_debug"],
+      "args": [
+        "--build",
+        "${workspaceFolder}/build",
+        "--target",
+        "editor_debug"
+      ],
       "group": {
         "kind": "build",
-        "isDefault": true
+        "isDefault": false
       },
       "problemMatcher": []
     },
@@ -29,7 +34,34 @@
         "--build",
         "${workspaceFolder}/build",
         "--target",
-        "main_release"
+        "editor_release"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build-game-debug",
+      "type": "shell",
+      "command": "cmake",
+      "args": ["--build", "${workspaceFolder}/build", "--target", "game_debug"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build-game-release",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "${workspaceFolder}/build",
+        "--target",
+        "game_release"
       ],
       "group": {
         "kind": "build",

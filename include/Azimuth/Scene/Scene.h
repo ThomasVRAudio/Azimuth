@@ -8,6 +8,8 @@ namespace Azimuth
 {
     class Application;
     class MonoScript;
+    class EditorLayer;
+
     class Scene
     {
 
@@ -48,7 +50,7 @@ namespace Azimuth
     private:
         static ECSManager &ECS;
         Application &m_Application;
-        EditorLayer *m_EditorLayer;
+
         ScriptLayer *m_ScriptLayer;
     };
 }

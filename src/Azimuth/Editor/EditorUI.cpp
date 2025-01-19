@@ -55,13 +55,14 @@ namespace Azimuth
         ImGui::Unindent(left_padding);
         ImGui::End();
 
+#ifdef AZIMUTH_EDITOR
         ImGui::Begin("Settings");
-        static bool gizmos;
         ImGui::Indent(left_padding);
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
-        ImGui::Checkbox("Gizmos", &gizmos);
+        ImGui::Checkbox("Play Scene", &Application::s_PlayingEditorScene);
         ImGui::Unindent(left_padding);
         ImGui::End();
+#endif
 
         ImGui::Begin("Logs");
         ImGui::Dummy(ImVec2(4.0f, 4.0f));

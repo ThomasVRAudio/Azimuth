@@ -18,11 +18,27 @@ namespace Azimuth
 
     void ScriptLayer::OnStart()
     {
+#ifdef AZIMUTH_EDITOR
+        if (!Application::s_PlayingEditorScene)
+            return;
+#endif
+
         m_ScriptSystem->OnStart();
     }
 
     void ScriptLayer::OnUpdate()
     {
+#ifdef AZIMUTH_EDITOR
+        if (!Application::s_PlayingEditorScene)
+            return;
+
+        if (Application::s_IsFirstPlayFrame)
+        {
+            OnStart();
+            Application::s_IsFirstPlayFrame = false;
+        }
+#endif
+
         m_ScriptSystem->OnUpdate();
     }
 

@@ -15,11 +15,13 @@ namespace Azimuth
     Application::~Application()
     {
         for (auto const layer : m_Layers)
-        {
             delete layer;
-        }
 
-        delete ActiveScene;
+        if (ActiveScene)
+            delete ActiveScene;
+
+        if (m_GameLayer)
+            delete m_GameLayer;
     }
 
     void Application::Init()
@@ -32,6 +34,14 @@ namespace Azimuth
         g_CursorEvent.InitializeCallbacks();
 
         ActiveScene->Init();
+
+#ifdef AZIMUTH_EDITOR
+        m_GameLayer = new EditorLayer();
+#else
+        m_GameLayer = new GameModeLayer();
+#endif
+        AddLayer(m_GameLayer);
+
         for (auto const layer : m_Layers)
         {
             layer->Init();

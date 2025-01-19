@@ -19,16 +19,14 @@ namespace Azimuth
         ECS.RegisterComponent<AudioComponent>();
         ECS.RegisterComponent<ScriptsComponent>();
 
-        m_EditorLayer = new EditorLayer();
         m_ScriptLayer = new ScriptLayer();
-        m_Application.AddLayer(m_EditorLayer);
         m_Application.AddLayer(m_ScriptLayer);
     }
 
     Scene::~Scene()
     {
-        delete m_EditorLayer;
-        delete m_ScriptLayer;
+        if (m_ScriptLayer)
+            delete m_ScriptLayer;
     }
 
     void Scene::InitScriptsIfNotExist(Entity entity)

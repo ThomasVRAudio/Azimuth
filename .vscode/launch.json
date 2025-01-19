@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Debug",
+      "name": "Run Debug Editor",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/main_debug.exe",
+      "program": "${workspaceFolder}/build/editor_debug.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -21,10 +21,29 @@
       "preLaunchTask": "build-debug"
     },
     {
-      "name": "Run Release",
+      "name": "Run Release Editor",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/main_release.exe",
+      "program": "${workspaceFolder}/build/editor_release.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "PATH",
+          "value": "${workspaceFolder}/lib;${env:PATH}"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "D:/MinGW/bin/gdb.exe",
+      "preLaunchTask": "build-release"
+    },
+    {
+      "name": "Run Debug Game",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/game_debug.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -37,7 +56,26 @@
       "externalConsole": true,
       "MIMode": "gdb",
       "miDebuggerPath": "D:/MinGW/bin/gdb.exe",
-      "preLaunchTask": "build-release"
+      "preLaunchTask": "build-game-debug"
+    },
+    {
+      "name": "Run Release Game",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/game_release.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "PATH",
+          "value": "${workspaceFolder}/lib;${env:PATH}"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "D:/MinGW/bin/gdb.exe",
+      "preLaunchTask": "build-game-release"
     }
   ]
 }

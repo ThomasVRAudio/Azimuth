@@ -13,13 +13,7 @@ void Azimuth::PlayerMovement::OnStart()
 
 void Azimuth::PlayerMovement::OnUpdate()
 {
-    return; // testing
     auto mousePos = Input::GetMouseXYScreen();
-    auto movePosition = glm::vec3(mousePos.x * 2.0f - 1.0f, mousePos.y * 2.0f - 1.0f, 0.0f);
-    movePosition.x += glm::sin(Time::time() * glm::radians(360.0f)) * 0.05f;
-
-    GetComponent<TransformComponent>().Position = movePosition;
-
-    if (Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
-        print("Mouse Right is pressed");
+    auto &position = GetComponent<TransformComponent>().Position;
+    position.x = glm::sin(Time::time() * glm::radians(360.0f)) * 1.0f;
 }

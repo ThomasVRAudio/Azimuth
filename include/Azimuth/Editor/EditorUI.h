@@ -2,6 +2,7 @@
 #include <Azimuth/Common.h>
 #include <Azimuth/Editor/ImGuiStyling.h>
 #include <Azimuth/Renderer/Window.h>
+#include <Azimuth/Core/Application.h>
 
 namespace Azimuth
 {

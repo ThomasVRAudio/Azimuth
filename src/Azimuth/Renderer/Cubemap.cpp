@@ -5,15 +5,15 @@ namespace Azimuth
 
     unsigned int Cubemap::LoadCubemap(std::vector<std::string> &faces)
     {
-        if (!Cubemap::isInitialized)
+        if (!Cubemap::m_isInitialized)
         {
             Cubemap::m_CubemapShader = new Shader("built_in_shaders/cubemap.vert", "built_in_shaders/cubemap.frag");
 
-            glGenVertexArrays(1, &Cubemap::VAO);
-            glGenBuffers(1, &Cubemap::VBO);
+            glGenVertexArrays(1, &Cubemap::m_VAO);
+            glGenBuffers(1, &Cubemap::m_VBO);
 
-            glBindVertexArray(Cubemap::VAO);
-            glBindBuffer(GL_ARRAY_BUFFER, Cubemap::VBO);
+            glBindVertexArray(Cubemap::m_VAO);
+            glBindBuffer(GL_ARRAY_BUFFER, Cubemap::m_VBO);
 
             PrimitiveMesh mesh;
             Mesh cubeMesh = mesh.CubeNonIndexed();
@@ -35,7 +35,7 @@ namespace Azimuth
                 std::cout << "OpenGL Cubemap error: " << error << std::endl;
             }
 
-            Cubemap::isInitialized = true;
+            Cubemap::m_isInitialized = true;
         }
 
         unsigned int textureID;
@@ -79,7 +79,7 @@ namespace Azimuth
         m_CubemapShader->setMat4("view", view);
         m_CubemapShader->setMat4("projection", projectionMatrix);
 
-        glBindVertexArray(Cubemap::VAO);
+        glBindVertexArray(Cubemap::m_VAO);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapId);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
