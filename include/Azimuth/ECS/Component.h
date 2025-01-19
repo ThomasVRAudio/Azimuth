@@ -2,6 +2,7 @@
 #include <Azimuth/Common.h>
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/Renderer/PrimitiveMeshes.h>
+#include <Azimuth/Renderer/Shader.h>
 
 namespace Azimuth
 {

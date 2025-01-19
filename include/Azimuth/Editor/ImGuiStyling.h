@@ -1,4 +1,5 @@
 #pragma once
+#ifdef AZIMUTH_EDITOR
 #include "Azimuth/Common.h"
 
 namespace Azimuth
@@ -84,3 +85,5 @@ namespace Azimuth
         }
     };
 }
+
+#endif

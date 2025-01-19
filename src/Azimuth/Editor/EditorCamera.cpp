@@ -1,3 +1,4 @@
+#ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorCamera.h>
 
 namespace Azimuth
@@ -88,3 +89,5 @@ namespace Azimuth
     }
 
 }
+
+#endif

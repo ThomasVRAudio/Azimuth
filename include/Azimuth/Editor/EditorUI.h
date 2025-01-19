@@ -1,4 +1,5 @@
 #pragma once
+#ifdef AZIMUTH_EDITOR
 #include <Azimuth/Common.h>
 #include <Azimuth/Editor/ImGuiStyling.h>
 #include <Azimuth/Renderer/Window.h>
@@ -46,3 +47,5 @@ namespace Azimuth
     };
 
 }
+
+#endif

@@ -1,3 +1,4 @@
+#ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorLayer.h>
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/Events/MouseEvents.h>
@@ -46,3 +47,5 @@ namespace Azimuth
             glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
+
+#endif

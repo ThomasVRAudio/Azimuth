@@ -1,3 +1,4 @@
+#ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorUI.h>
 
 namespace Azimuth
@@ -55,14 +56,12 @@ namespace Azimuth
         ImGui::Unindent(left_padding);
         ImGui::End();
 
-#ifdef AZIMUTH_EDITOR
         ImGui::Begin("Settings");
         ImGui::Indent(left_padding);
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
         ImGui::Checkbox("Play Scene", &Application::s_PlayingEditorScene);
         ImGui::Unindent(left_padding);
         ImGui::End();
-#endif
 
         ImGui::Begin("Logs");
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
@@ -104,3 +103,4 @@ namespace Azimuth
     }
 
 }
+#endif

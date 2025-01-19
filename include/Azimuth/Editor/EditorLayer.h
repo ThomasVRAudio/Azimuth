@@ -1,4 +1,5 @@
 #pragma once
+#ifdef AZIMUTH_EDITOR
 #include <Azimuth/Common.h>
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/ECS/ECSManager.h>
@@ -26,3 +27,5 @@ namespace Azimuth
         EditorCamera m_EditorCamera;
     };
 }
+
+#endif
