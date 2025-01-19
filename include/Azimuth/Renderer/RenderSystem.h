@@ -6,6 +6,7 @@
 #include <dependencies/glm/gtc/matrix_transform.hpp>
 #include <Azimuth/Renderer/Camera.h>
 #include <Azimuth/Renderer/Cubemap.h>
+#include <Azimuth/Renderer/HDRCubemap.h>
 
 namespace Azimuth
 {

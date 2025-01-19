@@ -19,12 +19,8 @@ namespace Azimuth
         }
 
     private:
-        static Shader *m_CubemapShader;
-        static unsigned int m_VAO, m_VBO;
-        static bool m_isInitialized;
+        inline static Shader *m_CubemapShader;
+        inline static unsigned int m_VAO, m_VBO;
+        inline static bool m_isInitialized = false;
     };
-
-    inline Shader *Cubemap::m_CubemapShader;
-    inline unsigned int Cubemap::m_VAO, Cubemap::m_VBO;
-    inline bool Cubemap::m_isInitialized = false;
 }

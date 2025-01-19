@@ -3,11 +3,6 @@
 
 namespace Azimuth
 {
-    ImGuiIO *EditorUI::io = nullptr;
-    ImGuiWindowFlags EditorUI::m_WindowFlags;
-    ImVec2 EditorUI::m_SceneWindowPos;
-    ImVec2 EditorUI::m_SceneWindowSize;
-
     void EditorUI::Init()
     {
         IMGUI_CHECKVERSION();
@@ -73,11 +68,36 @@ namespace Azimuth
         ImGui::End();
     }
 
+    void EditorUI::SetAspectConstraints(ImGuiSizeCallbackData *data)
+    {
+        float width = data->CurrentSize.x;
+        float height = data->CurrentSize.y;
+
+        if (width / height > m_SceneWindowAspectRatio)
+            width = height * m_SceneWindowAspectRatio;
+        else
+            height = width / m_SceneWindowAspectRatio;
+
+        data->DesiredSize = ImVec2(width, height);
+    }
+
     void EditorUI::DrawEditorScene(unsigned int *texture)
     {
+
+        ImGui::SetNextWindowSizeConstraints(ImVec2(100, 100), ImVec2(FLT_MAX, FLT_MAX), SetAspectConstraints);
+
         ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
         m_SceneWindowSize = ImGui::GetContentRegionAvail();
-        m_SceneWindowPos = ImGui::GetWindowPos();
+        ImVec2 availableSize = m_SceneWindowSize;
+
+        if (m_SceneWindowSize.x / m_SceneWindowSize.y > m_SceneWindowAspectRatio)
+            m_SceneWindowSize.x = m_SceneWindowSize.y * m_SceneWindowAspectRatio;
+        else
+            m_SceneWindowSize.y = m_SceneWindowSize.x / m_SceneWindowAspectRatio;
+
+        ImVec2 padding((availableSize.x - m_SceneWindowSize.x) * 0.5f, (availableSize.y - m_SceneWindowSize.y) * 0.5f);
+        ImGui::SetCursorPos(ImGui::GetCursorPos() + padding);
 
         ImGui::Image((ImTextureID)(*texture), m_SceneWindowSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
@@ -101,6 +121,5 @@ namespace Azimuth
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
         ImGui::End();
     }
-
 }
 #endif

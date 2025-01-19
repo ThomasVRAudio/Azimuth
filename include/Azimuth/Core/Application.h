@@ -24,8 +24,8 @@ namespace Azimuth
         void AddLayer(Layer *layer);
         Scene *ActiveScene;
 #ifdef AZIMUTH_EDITOR
-        static bool s_PlayingEditorScene;
-        static bool s_IsFirstPlayFrame;
+        inline static bool s_PlayingEditorScene = false;
+        inline static bool s_IsFirstPlayFrame = true;
 #endif
 
     private:
@@ -33,9 +33,4 @@ namespace Azimuth
         Layer *m_GameLayer;
         std::vector<Layer *> m_Layers;
     };
-
-#ifdef AZIMUTH_EDITOR
-    inline bool Application::s_PlayingEditorScene = false;
-    inline bool Application::s_IsFirstPlayFrame = true;
-#endif
 }

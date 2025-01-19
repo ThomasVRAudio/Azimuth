@@ -18,14 +18,16 @@ namespace Azimuth
             "assets/skybox/ice/front.jpg",
             "assets/skybox/ice/back.jpg"};
 
-        m_CubemapId = Cubemap::LoadCubemap(faces);
+        // m_CubemapId = Cubemap::LoadCubemap(faces);
+        HDRCubemap::LoadHDRCubemap("assets/hdr/qwantani.hdr");
     }
 
     void RenderSystem::DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
     {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-        Cubemap::DrawCubemap(m_CubemapId, viewMatrix, projectionMatrix);
+        // Cubemap::DrawCubemap(m_CubemapId, viewMatrix, projectionMatrix);
+        HDRCubemap::DrawHDRCubemap(viewMatrix, projectionMatrix);
 
         ECSManager &ECS = ECSManager::GetInstance();
         for (auto &entity : m_Entities)
