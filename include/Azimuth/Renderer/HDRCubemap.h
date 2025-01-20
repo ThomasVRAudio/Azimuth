@@ -10,7 +10,7 @@ namespace Azimuth
     class HDRCubemap
     {
     public:
-        static void LoadHDRCubemap(std::string path);
+        static void LoadHDRCubemap(std::string path, unsigned int resolution);
         static void DrawHDRCubemap(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
         ~HDRCubemap()
         {
@@ -36,6 +36,7 @@ namespace Azimuth
         inline static unsigned int m_VAO = 0, m_VBO;
         inline static unsigned int m_CaptureFBO, m_CaptureRBO;
         inline static unsigned int m_EnvCubemap, m_IrradianceCubemap;
+        inline static unsigned int m_Resolution = 512;
         inline static glm::mat4 m_CaptureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
         inline static glm::mat4 m_CaptureViews[] =
             {

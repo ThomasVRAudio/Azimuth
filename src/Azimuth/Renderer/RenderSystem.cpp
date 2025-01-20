@@ -19,7 +19,7 @@ namespace Azimuth
             "assets/skybox/ice/back.jpg"};
 
         // m_CubemapId = Cubemap::LoadCubemap(faces);
-        HDRCubemap::LoadHDRCubemap("assets/hdr/qwantani.hdr");
+        HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
     }
 
     void RenderSystem::DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)

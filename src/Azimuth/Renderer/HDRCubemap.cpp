@@ -3,8 +3,9 @@
 namespace Azimuth
 {
 
-    void HDRCubemap::LoadHDRCubemap(std::string path)
+    void HDRCubemap::LoadHDRCubemap(std::string path, unsigned int resolution)
     {
+        m_Resolution = resolution;
         m_BackgroundShader = new Shader("built_in_shaders/IBL/background.vert", "built_in_shaders/IBL/background.frag");
         m_EquirectangularToCubemapShader = new Shader("built_in_shaders/IBL/cubemap.vert", "built_in_shaders/IBL/equirectangular_to_cubemap.frag");
         m_IrradianceShader = new Shader("built_in_shaders/IBL/cubemap.vert", "built_in_shaders/IBL/irradiance_convolution.frag");
@@ -28,7 +29,7 @@ namespace Azimuth
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
         for (unsigned int i = 0; i < 6; ++i)
         {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, m_Resolution, m_Resolution, 0, GL_RGB, GL_FLOAT, nullptr);
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -42,7 +43,7 @@ namespace Azimuth
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, hdrTexture);
 
-        glViewport(0, 0, 512, 512);
+        glViewport(0, 0, m_Resolution, m_Resolution);
         glBindFramebuffer(GL_FRAMEBUFFER, m_CaptureFBO);
 
         for (unsigned int i = 0; i < 6; ++i)
