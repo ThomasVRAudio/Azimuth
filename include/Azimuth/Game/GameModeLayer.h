@@ -5,10 +5,12 @@
 
 namespace Azimuth
 {
+    class Scene;
+
     class GameModeLayer : public Layer
     {
     public:
-        virtual void Init();
+        virtual void Init(Scene *scene);
         void OnStart() override;
         void OnUpdate() override;
 

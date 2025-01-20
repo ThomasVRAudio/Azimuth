@@ -11,11 +11,12 @@
 
 namespace Azimuth
 {
+    class Scene;
 
     class EditorLayer : public Layer
     {
     public:
-        virtual void Init();
+        virtual void Init(Scene *scene);
         void OnStart() override;
         void OnUpdate() override;
 

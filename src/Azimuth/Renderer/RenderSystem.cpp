@@ -4,8 +4,10 @@
 namespace Azimuth
 {
 
-    void RenderSystem::Init()
+    void RenderSystem::Init(ECSManager *ECS)
     {
+        this->ECS = ECS;
+
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glEnable(GL_MULTISAMPLE);
@@ -18,7 +20,6 @@ namespace Azimuth
             "assets/skybox/ice/front.jpg",
             "assets/skybox/ice/back.jpg"};
 
-        // m_CubemapId = Cubemap::LoadCubemap(faces);
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
     }
 
@@ -26,17 +27,15 @@ namespace Azimuth
     {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-        // Cubemap::DrawCubemap(m_CubemapId, viewMatrix, projectionMatrix);
         HDRCubemap::DrawHDRCubemap(viewMatrix, projectionMatrix);
 
-        ECSManager &ECS = ECSManager::GetInstance();
         for (auto &entity : m_Entities)
         {
-            MeshComponent &mesh = ECS.GetComponent<MeshComponent>(entity);
+            MeshComponent &mesh = ECS->GetComponent<MeshComponent>(entity);
             model = glm::mat4(1.0f);
             if (mesh.shader)
             {
-                model = glm::translate(model, ECS.GetComponent<TransformComponent>(entity).Position);
+                model = glm::translate(model, ECS->GetComponent<TransformComponent>(entity).Position);
 
                 mesh.shader->use();
                 mesh.shader->setMat4("model", model);

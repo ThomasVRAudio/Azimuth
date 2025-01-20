@@ -15,10 +15,11 @@ namespace Azimuth
     public:
         RenderSystem() = default;
         ~RenderSystem();
-        void Init();
+        void Init(ECSManager *ECS);
         void DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
     private:
+        ECSManager *ECS;
         Shader *activeShader;
         unsigned int VBO, VAO;
         glm::mat4 model = glm::mat4(1.0f);

@@ -9,6 +9,7 @@ namespace Azimuth
     class ECSManager
     {
     public:
+        ECSManager() = default;
         void Init()
         {
             m_ComponentManager = std::make_unique<ComponentManager>();
@@ -89,20 +90,10 @@ namespace Azimuth
             m_SystemManager->SetComponentMask<T>(componentMask);
         }
 
-        ECSManager(const ECSManager &) = delete;
-        ECSManager &operator=(const ECSManager &) = delete;
-
-        static ECSManager &GetInstance()
-        {
-            static ECSManager instance;
-            return instance;
-        }
-
     private:
         std::unique_ptr<ComponentManager> m_ComponentManager;
         std::unique_ptr<EntityManager> m_EntityManager;
         std::unique_ptr<SystemManager> m_SystemManager;
-        ECSManager() {}
     };
 
 }

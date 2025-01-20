@@ -4,16 +4,16 @@
 namespace Azimuth
 {
 
-    void ScriptLayer::Init()
+    void ScriptLayer::Init(Scene *scene)
     {
-        ECSManager &ECS = ECSManager::GetInstance();
+        ECSManager *ECS = scene->GetECSManager();
 
         ComponentMask mask;
 
-        mask.set(ECS.GetComponentBitType<ScriptsComponent>(), true);
-        m_ScriptSystem = ECS.RegisterSystem<ScriptSystem>();
-        ECS.SetSystemComponentMask<ScriptSystem>(mask);
-        m_ScriptSystem->Init();
+        mask.set(ECS->GetComponentBitType<ScriptsComponent>(), true);
+        m_ScriptSystem = ECS->RegisterSystem<ScriptSystem>();
+        ECS->SetSystemComponentMask<ScriptSystem>(mask);
+        m_ScriptSystem->Init(ECS);
     }
 
     void ScriptLayer::OnStart()

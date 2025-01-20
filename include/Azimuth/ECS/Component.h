@@ -51,6 +51,7 @@ namespace Azimuth
     };
 
     class MonoScript;
+    class Scene;
 
     class ScriptsComponent : public IComponent
     {
@@ -70,6 +71,7 @@ namespace Azimuth
         Scene *m_Scene;
         Entity m_Entity = 0;
         friend MonoScript;
+        friend Scene;
     };
 
     class MonoScript : public IComponent

@@ -44,7 +44,7 @@ namespace Azimuth
 
         for (auto const layer : m_Layers)
         {
-            layer->Init();
+            layer->Init(ActiveScene);
         }
     }
 

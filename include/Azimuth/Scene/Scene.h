@@ -21,34 +21,34 @@ namespace Azimuth
         template <typename T>
         T &GetComponent(Entity entity)
         {
-            return ECSManager::GetInstance().GetComponent<T>(entity);
+            return ECS->GetComponent<T>(entity);
         }
 
         template <typename T>
         void AddComponent(Entity entity, T component)
         {
-            ECSManager::GetInstance().AddComponent<T>(entity, component);
+            ECS->AddComponent<T>(entity, component);
         }
 
         template <typename T>
         void RemoveComponent(Entity entity)
         {
-            ECSManager::GetInstance().RemoveComponent<T>(entity);
+            ECS->RemoveComponent<T>(entity);
         }
 
         Entity CreateEntity()
         {
-            Entity entity = ECSManager::GetInstance().CreateEntity();
-
+            Entity entity = ECS->CreateEntity();
             return entity;
         }
 
         void InitScriptsIfNotExist(Entity entity);
 
         void AddScript(Entity entity, std::shared_ptr<MonoScript> script);
+        inline ECSManager *GetECSManager() { return ECS; }
 
     private:
-        static ECSManager &ECS;
+        ECSManager *ECS = new ECSManager();
         Application &m_Application;
 
         ScriptLayer *m_ScriptLayer;

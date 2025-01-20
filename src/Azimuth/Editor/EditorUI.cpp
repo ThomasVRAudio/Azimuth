@@ -32,15 +32,8 @@ namespace Azimuth
 
     void EditorUI::DrawUI()
     {
-
         float left_padding = 10.0f;
-        ImGui::Begin("Hierarchy");
-        ImGui::Dummy(ImVec2(4.0f, 4.0f));
-        ImGui::Indent(left_padding);
-        ImGui::Text("Entities");
-        ImGui::Text("Components");
-        ImGui::Unindent(left_padding);
-        ImGui::End();
+        DrawHierarchyPanel();
 
         ImGui::Begin("Properties");
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
@@ -64,6 +57,18 @@ namespace Azimuth
         ImGui::Text("Right click!");
         ImGui::Text("Loaded entity");
         ImGui::Text("Printing ..");
+        ImGui::Unindent(left_padding);
+        ImGui::End();
+    }
+
+    void EditorUI::DrawHierarchyPanel()
+    {
+        float left_padding = 10.0f;
+        ImGui::Begin("Hierarchy");
+        ImGui::Dummy(ImVec2(4.0f, 4.0f));
+        ImGui::Indent(left_padding);
+        ImGui::Text("Entities");
+        ImGui::Text("Components");
         ImGui::Unindent(left_padding);
         ImGui::End();
     }

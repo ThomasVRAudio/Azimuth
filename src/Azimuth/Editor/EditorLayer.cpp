@@ -6,17 +6,17 @@
 namespace Azimuth
 {
 
-    void EditorLayer::Init()
+    void EditorLayer::Init(Scene *scene)
     {
-        ECSManager &ECS = ECSManager::GetInstance();
+        ECSManager *ECS = scene->GetECSManager();
 
         ComponentMask mask;
-        mask.set(ECS.GetComponentBitType<TransformComponent>(), true);
-        mask.set(ECS.GetComponentBitType<MeshComponent>(), true);
-        m_RenderSystem = ECS.RegisterSystem<RenderSystem>();
-        ECS.SetSystemComponentMask<RenderSystem>(mask);
+        mask.set(ECS->GetComponentBitType<TransformComponent>(), true);
+        mask.set(ECS->GetComponentBitType<MeshComponent>(), true);
+        m_RenderSystem = ECS->RegisterSystem<RenderSystem>();
+        ECS->SetSystemComponentMask<RenderSystem>(mask);
 
-        m_RenderSystem->Init();
+        m_RenderSystem->Init(ECS);
         EditorUI::Init();
 
         glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);

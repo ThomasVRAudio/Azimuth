@@ -40,6 +40,7 @@ namespace Azimuth
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
 
     private:
+        static void DrawHierarchyPanel();
         static void SetAspectConstraints(ImGuiSizeCallbackData *data);
         inline static ImGuiIO *io = nullptr;
         inline static ImGuiWindowFlags m_WindowFlags;

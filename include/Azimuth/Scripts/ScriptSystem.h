@@ -8,8 +8,11 @@ namespace Azimuth
     {
     public:
         ScriptSystem() = default;
-        void Init();
+        void Init(ECSManager *ECS);
         void OnStart();
         void OnUpdate();
+
+    private:
+        ECSManager *ECS;
     };
 }

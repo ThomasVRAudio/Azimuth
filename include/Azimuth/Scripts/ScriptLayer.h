@@ -5,11 +5,12 @@
 
 namespace Azimuth
 {
+    class Scene;
 
     class ScriptLayer : public Layer
     {
     public:
-        virtual void Init();
+        virtual void Init(Scene *scene);
         void OnStart() override;
         void OnUpdate() override;
 

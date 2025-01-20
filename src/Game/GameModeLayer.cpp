@@ -4,17 +4,17 @@
 
 namespace Azimuth
 {
-    void GameModeLayer::Init()
+    void GameModeLayer::Init(Scene *scene)
     {
-        ECSManager &ECS = ECSManager::GetInstance();
+        ECSManager *ECS = scene->GetECSManager();
 
         ComponentMask mask;
-        mask.set(ECS.GetComponentBitType<TransformComponent>(), true);
-        mask.set(ECS.GetComponentBitType<MeshComponent>(), true);
-        m_RenderSystem = ECS.RegisterSystem<RenderSystem>();
-        ECS.SetSystemComponentMask<RenderSystem>(mask);
+        mask.set(ECS->GetComponentBitType<TransformComponent>(), true);
+        mask.set(ECS->GetComponentBitType<MeshComponent>(), true);
+        m_RenderSystem = ECS->RegisterSystem<RenderSystem>();
+        ECS->SetSystemComponentMask<RenderSystem>(mask);
 
-        m_RenderSystem->Init();
+        m_RenderSystem->Init(ECS);
 
         glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         m_MainCamera.Position = glm::vec3(0.0f, 0.0f, 3.0f);

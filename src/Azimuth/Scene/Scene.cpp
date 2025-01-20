@@ -5,19 +5,17 @@
 
 namespace Azimuth
 {
-    ECSManager &Scene::ECS = ECSManager::GetInstance();
-
     Scene::Scene(Application &application)
         : m_Application(application) {
           };
 
     void Scene::Init()
     {
-        ECS.Init();
-        ECS.RegisterComponent<TransformComponent>();
-        ECS.RegisterComponent<MeshComponent>();
-        ECS.RegisterComponent<AudioComponent>();
-        ECS.RegisterComponent<ScriptsComponent>();
+        ECS->Init();
+        ECS->RegisterComponent<TransformComponent>();
+        ECS->RegisterComponent<MeshComponent>();
+        ECS->RegisterComponent<AudioComponent>();
+        ECS->RegisterComponent<ScriptsComponent>();
 
         m_ScriptLayer = new ScriptLayer();
         m_Application.AddLayer(m_ScriptLayer);
@@ -27,29 +25,32 @@ namespace Azimuth
     {
         if (m_ScriptLayer)
             delete m_ScriptLayer;
+
+        if (ECS)
+            delete ECS;
     }
 
     void Scene::InitScriptsIfNotExist(Entity entity)
     {
-        ECSManager &ECS = ECSManager::GetInstance();
-        bool hasScriptBase = ECS.HasComponent<ScriptsComponent>(entity);
+        bool hasScriptBase = ECS->HasComponent<ScriptsComponent>(entity);
 
         if (!hasScriptBase)
         {
             ScriptsComponent component;
-            ECS.AddComponent<ScriptsComponent>(entity, std::move(component));
+            ECS->AddComponent<ScriptsComponent>(entity, std::move(component));
         }
     }
 
     void Scene::AddScript(Entity entity, std::shared_ptr<MonoScript> script)
     {
         InitScriptsIfNotExist(entity);
-        ECSManager &ECS = ECSManager::GetInstance();
-        ScriptsComponent &baseComponent = ECS.GetComponent<ScriptsComponent>(entity);
+        ScriptsComponent &baseComponent = ECS->GetComponent<ScriptsComponent>(entity);
 
         if (!script->HasParent())
         {
             std::shared_ptr sharedBase = std::make_shared<ScriptsComponent>(baseComponent);
+            sharedBase->m_Scene = this;
+            sharedBase->m_Entity = entity;
             script->SetParent(sharedBase);
         }
 
