@@ -17,7 +17,7 @@ namespace Azimuth
         ECS->SetSystemComponentMask<RenderSystem>(mask);
 
         m_RenderSystem->Init(ECS);
-        EditorUI::Init();
+        EditorUI::Init(scene);
 
         glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }

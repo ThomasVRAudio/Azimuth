@@ -13,7 +13,9 @@ namespace Azimuth
 
     struct TransformComponent : public IComponent
     {
-        glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
+        glm::vec3 Position = glm::vec3(0.0f);
+        glm::vec3 Rotation = glm::vec3(0.0f);
+        glm::vec3 Scale = glm::vec3(1.0f);
     };
 
     enum PRIMITIVE_TYPE
@@ -69,7 +71,7 @@ namespace Azimuth
     private:
         std::vector<std::shared_ptr<MonoScript>> m_Scripts;
         Scene *m_Scene;
-        Entity m_Entity = 0;
+        Entity m_Entity;
         friend MonoScript;
         friend Scene;
     };
@@ -116,4 +118,8 @@ namespace Azimuth
         std::shared_ptr<ScriptsComponent> m_ScriptParent;
     };
 
+    struct TagComponent : public IComponent
+    {
+        std::string name;
+    };
 }

@@ -8,7 +8,8 @@ int main()
     Application *app = new Azimuth::Application();
     Scene *scene = app->ActiveScene;
 
-    Entity player = scene->CreateEntity();
+    Entity player = scene->CreateEntity("Player");
+    Entity otherEntity = scene->CreateEntity("Meshless Entity");
 
     scene->AddScript(player, std::make_shared<PlayerMovement>());
 

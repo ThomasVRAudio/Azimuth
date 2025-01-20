@@ -10,6 +10,10 @@ namespace Azimuth
     class MonoScript;
     class EditorLayer;
 
+#ifdef AZIMUTH_EDITOR
+    class EditorUI;
+#endif
+
     class Scene
     {
 
@@ -36,11 +40,13 @@ namespace Azimuth
             ECS->RemoveComponent<T>(entity);
         }
 
-        Entity CreateEntity()
+        template <typename T>
+        bool HasComponent(Entity entity)
         {
-            Entity entity = ECS->CreateEntity();
-            return entity;
+            return ECS->HasComponent<T>(entity);
         }
+
+        Entity CreateEntity(std::string name);
 
         void InitScriptsIfNotExist(Entity entity);
 
@@ -50,7 +56,10 @@ namespace Azimuth
     private:
         ECSManager *ECS = new ECSManager();
         Application &m_Application;
-
         ScriptLayer *m_ScriptLayer;
+        std::vector<Entity> m_Entities;
+#ifdef AZIMUTH_EDITOR
+        friend EditorUI;
+#endif
     };
 }
