@@ -21,14 +21,30 @@ namespace Azimuth
     {
     }
 
-    void
-    MeshComponent::CreateMesh(PRIMITIVE_TYPE primitive, std::shared_ptr<Shader> shader)
+    void MeshComponent::CreateMesh(PRIMITIVE_TYPE primitive, std::shared_ptr<Shader> shader)
     {
         GenerateBuffers();
+        SetBufferData(primitive);
 
+        if (shader)
+        {
+            this->shader = shader;
+        }
+        else
+        {
+            this->shader = std::make_shared<Shader>("assets/shaders/default/solid.vert", "assets/shaders/default/solid.frag");
+        }
+    }
+
+    void MeshComponent::SetBufferData(PRIMITIVE_TYPE primitive)
+    {
         PrimitiveMesh mesh;
         switch (primitive)
         {
+        case None:
+            m_Vertices = std::vector<float>();
+            m_Indices = std::vector<int>();
+            break;
         case PRIMITIVE_POINT:
             m_Vertices = mesh.Point().positions;
             m_Indices = mesh.Point().indices;
@@ -49,6 +65,8 @@ namespace Azimuth
             print("Shape not yet implemented.");
         }
 
+        m_Type = primitive;
+
         glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), m_Vertices.data(), GL_STATIC_DRAW);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(int), m_Indices.data(), GL_STATIC_DRAW);
 
@@ -63,8 +81,24 @@ namespace Azimuth
         {
             std::cout << "OpenGL error: " << error << std::endl;
         }
+    }
 
-        this->shader = shader;
+    void MeshComponent::UpdateMeshPrimitive(PRIMITIVE_TYPE primitive)
+    {
+        if (primitive == m_Type)
+            return;
+
+        if (shader == nullptr)
+        {
+            CreateMesh(primitive);
+            return;
+        }
+
+        glBindVertexArray(m_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+
+        SetBufferData(primitive);
     }
 
     void MeshComponent::CreateMesh(const std::vector<float> &verts, std::shared_ptr<Shader> shader)

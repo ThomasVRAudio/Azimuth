@@ -66,8 +66,11 @@ namespace Azimuth
         for (auto &entity : m_Scene->m_Entities)
         {
             std::string name = m_Scene->GetComponent<TagComponent>(entity).name;
-            if (ImGui::Selectable(name.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
+            bool isSelected = (m_SelectedEntity == entity);
+            if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_AllowDoubleClick))
+            {
                 m_SelectedEntity = entity;
+            }
         }
 
         ImGui::Unindent(left_padding);
@@ -81,17 +84,89 @@ namespace Azimuth
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
         ImGui::Indent(left_padding);
 
+        if (ImGui::Button("Add Component"))
+            ImGui::OpenPopup("Select Component");
+
+        if (ImGui::BeginPopup("Select Component"))
+        {
+            if (!m_Scene->HasComponent<TransformComponent>(m_SelectedEntity))
+            {
+                if (ImGui::Selectable("Transform"))
+                {
+                    TransformComponent component;
+                    m_Scene->AddComponent<TransformComponent>(m_SelectedEntity, std::move(component));
+                }
+            }
+
+            if (!m_Scene->HasComponent<MeshComponent>(m_SelectedEntity))
+            {
+                if (ImGui::Selectable("Mesh"))
+                {
+                    MeshComponent component;
+                    m_Scene->AddComponent<MeshComponent>(m_SelectedEntity, std::move(component));
+
+                    if (!m_Scene->HasComponent<MaterialComponent>(m_SelectedEntity))
+                    {
+                        MaterialComponent mat;
+                        m_Scene->AddComponent<MaterialComponent>(m_SelectedEntity, std::move(mat));
+                    }
+                }
+            }
+            ImGui::EndPopup();
+        }
+
         if (m_Scene->HasComponent<TransformComponent>(m_SelectedEntity))
         {
+            ImGui::Text("Transform");
             TransformComponent &component = m_Scene->GetComponent<TransformComponent>(m_SelectedEntity);
             DrawVec3Box(component.Position, "Translate", {"X", "Y", "Z"});
             DrawVec3Box(component.Rotation, "Rotate", {"X", "Y", "Z"}, 0.1f);
             DrawVec3Box(component.Scale, "Scale", {"X", "Y", "Z"});
+
+            ImGui::Separator();
         }
 
         if (m_Scene->HasComponent<MeshComponent>(m_SelectedEntity))
         {
-            ImGui::Text("MeshComponent");
+            MeshComponent &component = m_Scene->GetComponent<MeshComponent>(m_SelectedEntity);
+            const char *items[] = {"None", "Point", "Line", "Triangle", "Square"};
+            auto currentItem = component.GetMeshType();
+
+            ImGui::Text("Mesh");
+            ImGui::Text("Shape");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(100.0f);
+            if (ImGui::BeginCombo("##MeshCombo", items[currentItem]))
+            {
+                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+                {
+                    bool isSelected = (currentItem == i);
+                    if (ImGui::Selectable(items[i], isSelected))
+                    {
+                        if (currentItem != i)
+                        {
+                            currentItem = static_cast<PRIMITIVE_TYPE>(i);
+                            component.UpdateMeshPrimitive(static_cast<PRIMITIVE_TYPE>(i));
+                        }
+                    }
+                    if (isSelected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::PopItemWidth();
+            ImGui::Separator();
+        }
+
+        if (m_Scene->HasComponent<MaterialComponent>(m_SelectedEntity))
+        {
+            ImGui::Text("Material");
+            MaterialComponent &material = m_Scene->GetComponent<MaterialComponent>(m_SelectedEntity);
+            ImGui::PushItemWidth(100.0f);
+            ImGui::ColorEdit3("Color", &material.color.r);
+            ImGui::PopItemWidth();
             ImGui::Separator();
         }
 

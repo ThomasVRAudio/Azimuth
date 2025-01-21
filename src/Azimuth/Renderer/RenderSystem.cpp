@@ -33,6 +33,7 @@ namespace Azimuth
         {
             MeshComponent &mesh = ECS->GetComponent<MeshComponent>(entity);
             model = glm::mat4(1.0f);
+
             if (mesh.shader)
             {
                 TransformComponent &transform = ECS->GetComponent<TransformComponent>(entity);
@@ -46,6 +47,14 @@ namespace Azimuth
                 mesh.shader->setMat4("model", model);
                 mesh.shader->setMat4("view", viewMatrix);
                 mesh.shader->setMat4("projection", projectionMatrix);
+
+                // To improve
+                if (ECS->HasComponent<MaterialComponent>(entity))
+                {
+                    MaterialComponent &material = ECS->GetComponent<MaterialComponent>(entity);
+                    if (material.type == "solid")
+                        mesh.shader->setVec3("Color", material.color);
+                }
 
                 mesh.DrawMesh();
             }

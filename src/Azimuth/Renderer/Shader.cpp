@@ -5,7 +5,6 @@ namespace Azimuth
 
     unsigned int Shader::ProcessFile(const char *path, GLenum type)
     {
-        print("path: " << path);
         std::string code;
         std::ifstream file;
 

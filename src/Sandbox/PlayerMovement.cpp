@@ -2,7 +2,6 @@
 
 void Azimuth::PlayerMovement::OnStart()
 {
-    AddComponent<TransformComponent>();
     AddComponent<MeshComponent>();
 
     MeshComponent &mesh = GetComponent<MeshComponent>();

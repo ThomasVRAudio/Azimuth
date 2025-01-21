@@ -20,13 +20,21 @@ namespace Azimuth
 
     enum PRIMITIVE_TYPE
     {
-        PRIMITIVE_POINT,
-        PRIMITIVE_LINE,
-        PRIMITIVE_TRIANGLE,
-        PRIMITIVE_PLANE,
-        PRIMITIVE_SQUARE,
-        PRIMITIVE_CUBE,
-        PRIMITIVE_SPHERE
+        None = 0,
+        PRIMITIVE_POINT = 1,
+        PRIMITIVE_LINE = 2,
+        PRIMITIVE_TRIANGLE = 3,
+        PRIMITIVE_SQUARE = 4,
+        PRIMITIVE_PLANE = 5,
+        PRIMITIVE_CUBE = 6,
+        PRIMITIVE_SPHERE = 7
+    };
+
+    class MaterialComponent : public IComponent
+    {
+    public:
+        std::string type = "solid";
+        glm::vec3 color;
     };
 
     class MeshComponent : public IComponent
@@ -35,14 +43,18 @@ namespace Azimuth
         MeshComponent();
         ~MeshComponent();
 
-        void CreateMesh(PRIMITIVE_TYPE primitive, std::shared_ptr<Shader> shader);
+        void CreateMesh(PRIMITIVE_TYPE primitive, std::shared_ptr<Shader> shader = nullptr);
         void CreateMesh(const std::vector<float> &verts, std::shared_ptr<Shader> shader);
+        void UpdateMeshPrimitive(PRIMITIVE_TYPE primitive);
         void DrawMesh();
 
         std::shared_ptr<Shader> shader;
+        inline PRIMITIVE_TYPE GetMeshType() { return m_Type; };
 
     private:
         void GenerateBuffers();
+        void SetBufferData(PRIMITIVE_TYPE primitive);
+        PRIMITIVE_TYPE m_Type = None;
         unsigned int m_VAO, m_VBO, m_EBO;
         std::vector<float> m_Vertices;
         std::vector<int> m_Indices;

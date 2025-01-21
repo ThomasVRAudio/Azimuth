@@ -17,6 +17,7 @@ namespace Azimuth
         ECS->RegisterComponent<AudioComponent>();
         ECS->RegisterComponent<ScriptsComponent>();
         ECS->RegisterComponent<TagComponent>();
+        ECS->RegisterComponent<MaterialComponent>();
 
         m_ScriptLayer = new ScriptLayer();
         m_Application.AddLayer(m_ScriptLayer);
@@ -62,8 +63,10 @@ namespace Azimuth
     {
         Entity entity = ECS->CreateEntity();
         TagComponent tagComponent;
+        TransformComponent transformComponent;
 
-        ECS->AddComponent<TagComponent>(entity, tagComponent);
+        ECS->AddComponent<TagComponent>(entity, std::move(tagComponent));
+        ECS->AddComponent<TransformComponent>(entity, std::move(transformComponent));
         ECS->GetComponent<TagComponent>(entity).name = name;
 
         m_Entities.emplace_back(entity);
