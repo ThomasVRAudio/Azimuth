@@ -6,9 +6,9 @@ namespace Azimuth
     void HDRCubemap::LoadHDRCubemap(std::string path, unsigned int resolution)
     {
         m_Resolution = resolution;
-        m_BackgroundShader = new Shader("built_in_shaders/IBL/background.vert", "built_in_shaders/IBL/background.frag");
-        m_EquirectangularToCubemapShader = new Shader("built_in_shaders/IBL/cubemap.vert", "built_in_shaders/IBL/equirectangular_to_cubemap.frag");
-        m_IrradianceShader = new Shader("built_in_shaders/IBL/cubemap.vert", "built_in_shaders/IBL/irradiance_convolution.frag");
+        m_BackgroundShader = new Shader("assets/shaders/IBL/background.vert", "assets/shaders/IBL/background.frag");
+        m_EquirectangularToCubemapShader = new Shader("assets/shaders/IBL/cubemap.vert", "assets/shaders/IBL/equirectangular_to_cubemap.frag");
+        m_IrradianceShader = new Shader("assets/shaders/IBL/cubemap.vert", "assets/shaders/IBL/irradiance_convolution.frag");
 
         m_BackgroundShader->use();
         m_BackgroundShader->setInt("environmentMap", 0);

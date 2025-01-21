@@ -67,9 +67,7 @@ namespace Azimuth
         {
             std::string name = m_Scene->GetComponent<TagComponent>(entity).name;
             if (ImGui::Selectable(name.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
-            {
                 m_SelectedEntity = entity;
-            }
         }
 
         ImGui::Unindent(left_padding);

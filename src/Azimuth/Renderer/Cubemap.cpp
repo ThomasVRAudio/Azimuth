@@ -7,7 +7,7 @@ namespace Azimuth
     {
         if (!Cubemap::m_isInitialized)
         {
-            Cubemap::m_CubemapShader = new Shader("built_in_shaders/cubemap.vert", "built_in_shaders/cubemap.frag");
+            Cubemap::m_CubemapShader = new Shader("assets/shaders/cubemap.vert", "assets/shaders/cubemap.frag");
 
             glGenVertexArrays(1, &Cubemap::m_VAO);
             glGenBuffers(1, &Cubemap::m_VBO);

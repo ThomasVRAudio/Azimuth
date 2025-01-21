@@ -30,5 +30,6 @@
 #include "dependencies/imgui/imgui_impl_opengl3.h"
 
 #include <cassert>
+#include <filesystem>
 
 #endif

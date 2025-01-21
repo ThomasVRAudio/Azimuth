@@ -42,6 +42,7 @@ target_compile_options(editor_debug PRIVATE -g)
 target_compile_definitions(editor_debug PRIVATE AZIMUTH_EDITOR)
 target_link_libraries(editor_debug glfw3dll assimp)
 add_dependencies(editor_debug precompiled_header)
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 # Release Editor Build
 add_executable(editor_release ${SOURCES})
@@ -49,6 +50,7 @@ target_compile_options(editor_release PRIVATE -O3 -g -DIMGUI_IMPL_OPENGL_LOADER_
 target_compile_definitions(editor_release PRIVATE AZIMUTH_EDITOR)
 target_link_libraries(editor_release glfw3dll assimp)
 add_dependencies(editor_release precompiled_header)
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 # Debug Game Build (without the editor code)
 add_executable(game_debug ${SOURCES})
@@ -56,6 +58,7 @@ target_compile_options(game_debug PRIVATE -g)
 target_compile_definitions(game_debug PRIVATE AZIMUTH_GAME)  # No AZIMUTH_EDITOR
 target_link_libraries(game_debug glfw3dll assimp)
 add_dependencies(game_debug precompiled_header)
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 # Release Game Build (without the editor code)
 add_executable(game_release ${SOURCES})
@@ -63,3 +66,4 @@ target_compile_options(game_release PRIVATE -O3 -g -DIMGUI_IMPL_OPENGL_LOADER_GL
 target_compile_definitions(game_release PRIVATE AZIMUTH_GAME)  # No AZIMUTH_EDITOR
 target_link_libraries(game_release glfw3dll assimp)
 add_dependencies(game_release precompiled_header)
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
