@@ -4,10 +4,11 @@
 #include <Azimuth/Editor/ImGuiStyling.h>
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Application.h>
+#include <Azimuth/Editor/EditorPropertiesPanel.h>
+#include <Azimuth/Editor/EditorHierarchyPanel.h>
 
 namespace Azimuth
 {
-
     class Scene;
 
     class EditorUI
@@ -42,9 +43,6 @@ namespace Azimuth
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
 
     private:
-        static void DrawHierarchyPanel();
-        static void DrawVec3Box(glm::vec3 &vec3, std::string name, const std::array<std::string, 3> &labels, float speed = 0.01f);
-        static void DrawPropertiesPanel();
         static void SetAspectConstraints(ImGuiSizeCallbackData *data);
         inline static ImGuiIO *io = nullptr;
         inline static ImGuiWindowFlags m_WindowFlags;
@@ -53,6 +51,8 @@ namespace Azimuth
         inline static float m_SceneWindowAspectRatio = 1.778f;
         inline static Scene *m_Scene = nullptr;
         inline static Entity m_SelectedEntity;
+        friend class EditorHierarchyPanel;
+        friend class EditorPropertiesPanel;
     };
 
 }

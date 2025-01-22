@@ -120,4 +120,9 @@ namespace Azimuth
     {
         glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &vec[0]);
     }
+
+    void Shader::setVec4(const std::string &name, glm::vec4 &vec) const
+    {
+        glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &vec[0]);
+    }
 }

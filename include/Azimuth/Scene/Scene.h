@@ -1,13 +1,12 @@
 #pragma once
 #include <Azimuth/ECS/ECSManager.h>
-#include <Azimuth/Core/Layer.h>
 #include <Azimuth/Editor/EditorLayer.h>
 #include <Azimuth/Scripts/ScriptLayer.h>
 
 namespace Azimuth
 {
-    class Application;
     class MonoScript;
+    class Application;
     class EditorLayer;
 
 #ifdef AZIMUTH_EDITOR
@@ -60,6 +59,7 @@ namespace Azimuth
         std::vector<Entity> m_Entities;
 #ifdef AZIMUTH_EDITOR
         friend EditorUI;
+        friend class EditorHierarchyPanel;
 #endif
     };
 }

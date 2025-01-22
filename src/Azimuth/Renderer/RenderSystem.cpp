@@ -48,14 +48,6 @@ namespace Azimuth
                 mesh.shader->setMat4("view", viewMatrix);
                 mesh.shader->setMat4("projection", projectionMatrix);
 
-                // To improve
-                if (ECS->HasComponent<MaterialComponent>(entity))
-                {
-                    MaterialComponent &material = ECS->GetComponent<MaterialComponent>(entity);
-                    if (material.type == "solid")
-                        mesh.shader->setVec3("Color", material.color);
-                }
-
                 mesh.DrawMesh();
             }
         }

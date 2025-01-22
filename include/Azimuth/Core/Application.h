@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Game/GameModeLayer.h>
@@ -11,7 +10,6 @@
 
 namespace Azimuth
 {
-    class Scene;
 
     class Application
     {
