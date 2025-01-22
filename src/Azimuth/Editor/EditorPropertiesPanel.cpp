@@ -97,12 +97,12 @@ namespace Azimuth
 
             for (auto &uniform : *material.GetUniforms())
             {
-                ImGui::Text("%s", uniform.Name.c_str());
+                ImGui::PushItemWidth(150.0f);
                 switch (uniform.Type)
                 {
                 case GL_FLOAT:
                 {
-                    float value = std::get<float>(uniform.Value);
+                    float &value = std::get<float>(uniform.Value);
                     ImGui::SliderFloat(uniform.Name.c_str(), &value, 0.0f, 1.0f);
                     material.shader->setFloat(uniform.Name, value);
                 }
@@ -135,7 +135,14 @@ namespace Azimuth
                 case GL_FLOAT_VEC3:
                 {
                     glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
-                    ImGui::SliderFloat3(uniform.Name.c_str(), &value[0], -1.0f, 1.0f);
+                    if (uniform.Name.find("Color") != std::string::npos)
+                    {
+                        ImGui::ColorPicker3(uniform.Name.c_str(), &value[0], ImGuiColorEditFlags_NoInputs);
+                    }
+                    else
+                    {
+                        ImGui::SliderFloat3(uniform.Name.c_str(), &value[0], -1.0f, 1.0f);
+                    }
                     material.shader->setVec3(uniform.Name, value);
                 }
                 break;
@@ -151,9 +158,9 @@ namespace Azimuth
                 default:
                     break;
                 }
-
-                ImGui::Separator();
+                ImGui::PopItemWidth();
             }
+            ImGui::Separator();
         }
 
         if (EditorUI::m_Scene->HasComponent<AudioComponent>(EditorUI::m_SelectedEntity))
