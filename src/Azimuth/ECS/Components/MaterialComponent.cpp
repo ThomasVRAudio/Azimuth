@@ -37,29 +37,17 @@ namespace Azimuth
             uniform.Type = type;
 
             if (type == GL_FLOAT)
-            {
                 uniform.Value = 0.0f;
-            }
             else if (type == GL_INT)
-            {
                 uniform.Value = 0;
-            }
             else if (type == GL_BOOL)
-            {
                 uniform.Value = false;
-            }
             else if (type == GL_FLOAT_VEC3)
-            {
                 uniform.Value = glm::vec3(0.0f, 0.0f, 0.0f);
-            }
             else if (type == GL_FLOAT_VEC4)
-            {
                 uniform.Value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-            }
             else
-            {
                 continue;
-            }
             m_Uniforms->emplace_back(uniform);
         }
     }
