@@ -1,4 +1,5 @@
 #include <Azimuth/Renderer/Shader.h>
+#include <Azimuth/ECS/Components/MaterialComponent.h>
 
 namespace Azimuth
 {
@@ -124,5 +125,47 @@ namespace Azimuth
     void Shader::setVec4(const std::string &name, glm::vec4 &vec) const
     {
         glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &vec[0]);
+    }
+
+    void Shader::setUniform(Uniform &uniform)
+    {
+        switch (uniform.Type)
+        {
+        case GL_FLOAT:
+        {
+            float &value = std::get<float>(uniform.Value);
+            setFloat(uniform.Name, value);
+            break;
+        }
+        case GL_INT:
+        {
+            int &value = std::get<int>(uniform.Value);
+            setInt(uniform.Name, value);
+            break;
+        }
+        case GL_UNSIGNED_INT:
+        {
+            int &value = std::get<int>(uniform.Value);
+            setInt(uniform.Name, value);
+            break;
+        }
+        case GL_BOOL:
+        {
+            bool &value = std::get<bool>(uniform.Value);
+            setBool(uniform.Name, value);
+            break;
+        }
+        case GL_FLOAT_VEC3:
+        {
+            glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
+            setVec3(uniform.Name, value);
+            break;
+        }
+        case GL_FLOAT_VEC4:
+        {
+            glm::vec4 &value = std::get<glm::vec4>(uniform.Value);
+            setVec4(uniform.Name, value);
+        }
+        }
     }
 }

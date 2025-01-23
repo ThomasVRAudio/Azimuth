@@ -104,7 +104,6 @@ namespace Azimuth
                 {
                     float &value = std::get<float>(uniform.Value);
                     ImGui::SliderFloat(uniform.Name.c_str(), &value, 0.0f, 1.0f);
-                    material.shader->setFloat(uniform.Name, value);
                 }
                 break;
 
@@ -112,7 +111,6 @@ namespace Azimuth
                 {
                     int &value = std::get<int>(uniform.Value);
                     ImGui::SliderInt(uniform.Name.c_str(), &value, -100, 100);
-                    material.shader->setInt(uniform.Name, value);
                 }
                 break;
 
@@ -120,7 +118,6 @@ namespace Azimuth
                 {
                     int &value = std::get<int>(uniform.Value);
                     ImGui::SliderInt(uniform.Name.c_str(), &value, 0, 1000);
-                    material.shader->setInt(uniform.Name, value);
                 }
                 break;
 
@@ -128,7 +125,6 @@ namespace Azimuth
                 {
                     bool &value = std::get<bool>(uniform.Value);
                     ImGui::Checkbox(uniform.Name.c_str(), &value);
-                    material.shader->setBool(uniform.Name, value);
                 }
                 break;
 
@@ -143,7 +139,6 @@ namespace Azimuth
                     {
                         ImGui::SliderFloat3(uniform.Name.c_str(), &value[0], -1.0f, 1.0f);
                     }
-                    material.shader->setVec3(uniform.Name, value);
                 }
                 break;
 
@@ -151,7 +146,6 @@ namespace Azimuth
                 {
                     glm::vec4 &value = std::get<glm::vec4>(uniform.Value);
                     ImGui::SliderFloat4(uniform.Name.c_str(), &value[0], -1.0f, 1.0f);
-                    material.shader->setVec4(uniform.Name, value);
                 }
                 break;
 

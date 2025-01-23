@@ -21,6 +21,20 @@ namespace Azimuth
             }
         }
 
+        float fullWidth = ImGui::GetContentRegionAvail().x;
+        float windowHeight = ImGui::GetWindowSize().y;
+        float buttonHeight = 30.0f;
+        float margin = 30.0f;
+
+        ImGui::SetCursorPosY(windowHeight - buttonHeight - margin);
+
+        if (ImGui::Button("Add Gameobject", ImVec2(fullWidth - margin, buttonHeight)))
+        {
+            Entity entity = EditorUI::m_Scene->CreateEntity("Gameobject");
+            std::string &name = EditorUI::m_Scene->GetComponent<TagComponent>(entity).name;
+            name += std::to_string(entity);
+        }
+
         ImGui::Unindent(left_padding);
         ImGui::End();
     };

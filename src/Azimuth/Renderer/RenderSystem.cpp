@@ -32,24 +32,26 @@ namespace Azimuth
         for (auto &entity : m_Entities)
         {
             MeshComponent &mesh = ECS->GetComponent<MeshComponent>(entity);
+            MaterialComponent &material = ECS->GetComponent<MaterialComponent>(entity);
             model = glm::mat4(1.0f);
 
-            if (mesh.shader)
-            {
-                TransformComponent &transform = ECS->GetComponent<TransformComponent>(entity);
-                model = glm::translate(model, transform.Position);
-                model = glm::rotate(model, glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-                model = glm::rotate(model, glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-                model = glm::rotate(model, glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-                model = glm::scale(model, ECS->GetComponent<TransformComponent>(entity).Scale);
+            TransformComponent &transform = ECS->GetComponent<TransformComponent>(entity);
+            model = glm::translate(model, transform.Position);
+            model = glm::rotate(model, glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::scale(model, ECS->GetComponent<TransformComponent>(entity).Scale);
 
-                mesh.shader->use();
-                mesh.shader->setMat4("model", model);
-                mesh.shader->setMat4("view", viewMatrix);
-                mesh.shader->setMat4("projection", projectionMatrix);
+            material.shader->use();
+            material.shader->setMat4("model", model);
+            material.shader->setMat4("view", viewMatrix);
+            material.shader->setMat4("projection", projectionMatrix);
 
-                mesh.DrawMesh();
-            }
+            for (auto &uniform : *material.GetUniforms())
+                material.shader->setUniform(uniform);
+
+            material.Use();
+            mesh.DrawMesh();
         }
     };
 

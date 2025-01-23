@@ -69,8 +69,6 @@ namespace Azimuth
         if (m_VAO == 0)
         {
 
-            GLenum error = glGetError();
-
             PrimitiveMesh mesh;
             Mesh cubeMesh = mesh.CubeNonIndexed();
 
@@ -91,16 +89,10 @@ namespace Azimuth
             glEnableVertexAttribArray(2);
             glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
 
-            error = glGetError();
-            if (error != GL_NO_ERROR)
-            {
-                std::cout << "5" << error << std::endl;
-            }
-
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
 
-            error = glGetError();
+            GLenum error = glGetError();
             if (error != GL_NO_ERROR)
             {
                 std::cout << "OpenGL Render Projection Cube Error: " << error << std::endl;

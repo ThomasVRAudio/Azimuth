@@ -4,15 +4,13 @@ namespace Azimuth
 {
     void MaterialComponent::CreateMaterial(std::shared_ptr<Shader> shader)
     {
-        if (shader)
-        {
-            this->shader = shader;
-        }
-        else
-        {
-            this->shader = std::make_shared<Shader>("assets/shaders/default/solid.vert", "assets/shaders/default/solid.frag");
-        }
+        this->shader = shader;
+        SetUniforms();
+    }
 
+    void MaterialComponent::CreateMaterial()
+    {
+        this->shader = std::make_shared<Shader>("assets/shaders/default/solid.vert", "assets/shaders/default/solid.frag");
         SetUniforms();
     }
 
@@ -29,11 +27,14 @@ namespace Azimuth
             GLenum type;
 
             glGetActiveUniform(this->shader->ID, i, sizeof(name), &length, &size, &type, name);
+            GLenum error;
+            error = glGetError();
+            if (error != GL_NO_ERROR)
+                print("SetUniforms Error: " << error);
 
             Uniform uniform;
             uniform.Name = name;
             uniform.Type = type;
-            print(type);
 
             if (type == GL_FLOAT)
             {
@@ -57,7 +58,6 @@ namespace Azimuth
             }
             else
             {
-                print("Material return: Uniform currently not available.");
                 continue;
             }
             m_Uniforms->emplace_back(uniform);

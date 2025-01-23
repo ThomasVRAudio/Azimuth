@@ -3,19 +3,9 @@
 namespace Azimuth
 {
 
-    void MeshComponent::CreateMesh(PRIMITIVE_TYPE primitive, std::shared_ptr<Shader> shader)
+    void MeshComponent::CreateMesh(PRIMITIVE_TYPE primitive)
     {
-        GenerateBuffers();
         SetBufferData(primitive);
-
-        if (shader)
-        {
-            this->shader = shader;
-        }
-        else
-        {
-            this->shader = std::make_shared<Shader>("assets/shaders/default/solid.vert", "assets/shaders/default/solid.frag");
-        }
     }
 
     void MeshComponent::SetBufferData(PRIMITIVE_TYPE primitive)
@@ -48,6 +38,7 @@ namespace Azimuth
         }
 
         m_Type = primitive;
+        BindBuffers();
 
         glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), m_Vertices.data(), GL_STATIC_DRAW);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(int), m_Indices.data(), GL_STATIC_DRAW);
@@ -56,12 +47,13 @@ namespace Azimuth
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        GLenum error = glGetError();
+        error = glGetError();
         if (error != GL_NO_ERROR)
         {
-            std::cout << "OpenGL error: " << error << std::endl;
+            std::cout << "OpenGL error Set Mesh Buffer Data Error: " << error << std::endl;
         }
     }
 
@@ -70,22 +62,12 @@ namespace Azimuth
         if (primitive == m_Type)
             return;
 
-        if (shader == nullptr)
-        {
-            CreateMesh(primitive);
-            return;
-        }
-
-        glBindVertexArray(m_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-
         SetBufferData(primitive);
     }
 
-    void MeshComponent::CreateMesh(const std::vector<float> &verts, std::shared_ptr<Shader> shader)
+    void MeshComponent::CreateMesh(const std::vector<float> &verts)
     {
-        GenerateBuffers();
+        BindBuffers();
 
         m_Vertices = verts;
         glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), m_Vertices.data(), GL_STATIC_DRAW);
@@ -96,13 +78,11 @@ namespace Azimuth
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        GLenum error = glGetError();
+        error = glGetError();
         if (error != GL_NO_ERROR)
         {
-            std::cout << "OpenGL error: " << error << std::endl;
+            std::cout << "OpenGL Create Mesh Error: " << error << std::endl;
         }
-
-        this->shader = shader;
     }
 
     void MeshComponent::GenerateBuffers()
@@ -110,19 +90,25 @@ namespace Azimuth
         glGenVertexArrays(1, &m_VAO);
         glGenBuffers(1, &m_VBO);
         glGenBuffers(1, &m_EBO);
+    }
+
+    void MeshComponent::BindBuffers()
+    {
 
         glBindVertexArray(m_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+        error = glGetError();
+        if (error != GL_NO_ERROR)
+        {
+            std::cout << "OpenGL Bind Buffers Error: " << error << std::endl;
+        }
     }
 
     void MeshComponent::DrawMesh()
     {
-        if (!shader)
-            return;
-
-        shader->use();
         glBindVertexArray(m_VAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
         glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
     }
 }

@@ -10,7 +10,7 @@ namespace Azimuth
 
         ComponentMask mask;
 
-        mask.set(ECS->GetComponentBitType<ScriptsComponent>(), true);
+        mask.set(ECS->GetComponentBitType<ScriptComponent>(), true);
         m_ScriptSystem = ECS->RegisterSystem<ScriptSystem>();
         ECS->SetSystemComponentMask<ScriptSystem>(mask);
         m_ScriptSystem->Init(ECS);

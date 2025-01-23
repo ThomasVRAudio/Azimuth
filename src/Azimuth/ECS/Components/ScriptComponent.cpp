@@ -1,14 +1,14 @@
-#include <Azimuth/ECS/Components/ScriptsComponent.h>
+#include <Azimuth/ECS/Components/ScriptComponent.h>
 
 namespace Azimuth
 {
-    void ScriptsComponent::OnStart()
+    void ScriptComponent::OnStart()
     {
         for (auto &script : m_Scripts)
             script->OnStart();
     }
 
-    void ScriptsComponent::OnUpdate()
+    void ScriptComponent::OnUpdate()
     {
         for (auto &script : m_Scripts)
             script->OnUpdate();

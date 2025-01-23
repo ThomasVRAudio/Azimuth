@@ -6,10 +6,10 @@ namespace Azimuth
 {
     class MonoScript;
 
-    class ScriptsComponent : public IComponent
+    class ScriptComponent : public IComponent
     {
     public:
-        ScriptsComponent() = default;
+        ScriptComponent() = default;
 
         void AddScript(std::shared_ptr<MonoScript> script)
         {
@@ -55,7 +55,7 @@ namespace Azimuth
             return m_ScriptParent->m_Scene->RemoveComponent<T>(m_ScriptParent->m_Entity);
         }
 
-        void SetParent(std::shared_ptr<ScriptsComponent> parent)
+        void SetParent(std::shared_ptr<ScriptComponent> parent)
         {
             m_ScriptParent = parent;
         }
@@ -66,6 +66,6 @@ namespace Azimuth
         }
 
     private:
-        std::shared_ptr<ScriptsComponent> m_ScriptParent;
+        std::shared_ptr<ScriptComponent> m_ScriptParent;
     };
 }

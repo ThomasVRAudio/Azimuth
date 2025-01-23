@@ -16,12 +16,12 @@ namespace Azimuth
     class MaterialComponent : public IComponent
     {
     public:
-        std::string type = "solid";
-        glm::vec3 color;
         std::shared_ptr<Shader> shader;
-        void CreateMaterial(std::shared_ptr<Shader> shader = nullptr);
+        void CreateMaterial(std::shared_ptr<Shader> shader);
+        void CreateMaterial();
         void SetUniforms();
         std::shared_ptr<std::vector<Uniform>> GetUniforms() { return m_Uniforms; };
+        void Use() { shader->use(); }
 
     private:
         std::shared_ptr<std::vector<Uniform>> m_Uniforms = std::make_shared<std::vector<Uniform>>();

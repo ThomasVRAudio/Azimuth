@@ -15,7 +15,7 @@ namespace Azimuth
         ECS->RegisterComponent<TransformComponent>();
         ECS->RegisterComponent<MeshComponent>();
         ECS->RegisterComponent<AudioComponent>();
-        ECS->RegisterComponent<ScriptsComponent>();
+        ECS->RegisterComponent<ScriptComponent>();
         ECS->RegisterComponent<TagComponent>();
         ECS->RegisterComponent<MaterialComponent>();
 
@@ -34,23 +34,23 @@ namespace Azimuth
 
     void Scene::InitScriptsIfNotExist(Entity entity)
     {
-        bool hasScriptBase = ECS->HasComponent<ScriptsComponent>(entity);
+        bool hasScriptBase = ECS->HasComponent<ScriptComponent>(entity);
 
         if (!hasScriptBase)
         {
-            ScriptsComponent component;
-            ECS->AddComponent<ScriptsComponent>(entity, std::move(component));
+            ScriptComponent component;
+            ECS->AddComponent<ScriptComponent>(entity, std::move(component));
         }
     }
 
     void Scene::AddScript(Entity entity, std::shared_ptr<MonoScript> script)
     {
         InitScriptsIfNotExist(entity);
-        ScriptsComponent &baseComponent = ECS->GetComponent<ScriptsComponent>(entity);
+        ScriptComponent &baseComponent = ECS->GetComponent<ScriptComponent>(entity);
 
         if (!script->HasParent())
         {
-            std::shared_ptr sharedBase = std::make_shared<ScriptsComponent>(baseComponent);
+            std::shared_ptr sharedBase = std::make_shared<ScriptComponent>(baseComponent);
             sharedBase->m_Scene = this;
             sharedBase->m_Entity = entity;
             script->SetParent(sharedBase);

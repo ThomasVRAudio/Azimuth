@@ -12,7 +12,7 @@ namespace Azimuth
     {
         for (auto &entity : m_Entities)
         {
-            ECS->GetComponent<ScriptsComponent>(entity).OnStart();
+            ECS->GetComponent<ScriptComponent>(entity).OnStart();
         }
     }
 
@@ -20,7 +20,7 @@ namespace Azimuth
     {
         for (auto &entity : m_Entities)
         {
-            ECS->GetComponent<ScriptsComponent>(entity).OnUpdate();
+            ECS->GetComponent<ScriptComponent>(entity).OnUpdate();
         };
     }
 }
