@@ -9,7 +9,7 @@ void Azimuth::PlayerMovement::OnStart()
     auto shader = Shader("src/Sandbox/shader.vert", "src/Sandbox/shader.frag");
     MaterialComponent &mat = GetComponent<MaterialComponent>();
 
-    mesh.CreateMesh(PRIMITIVE_TRIANGLE);
+    mesh.CreateMesh(GEOMETRY_TRIANGLE);
     mat.CreateMaterial(std::make_shared<Shader>(shader));
 }
 

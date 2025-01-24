@@ -66,41 +66,16 @@ namespace Azimuth
 
     void HDRCubemap::RenderProjectionCube()
     {
-        if (m_VAO == 0)
+        Mesh cubeMesh = Geometry::Cube();
+
+        GLenum error = glGetError();
+        if (error != GL_NO_ERROR)
         {
-
-            PrimitiveMesh mesh;
-            Mesh cubeMesh = mesh.CubeNonIndexed();
-
-            glGenVertexArrays(1, &m_VAO);
-            glGenBuffers(1, &m_VBO);
-
-            glBindVertexArray(m_VAO);
-            glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-
-            glBufferData(GL_ARRAY_BUFFER, cubeMesh.positions.size() * sizeof(float), cubeMesh.positions.data(), GL_STATIC_DRAW);
-
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-
-            GLenum error = glGetError();
-            if (error != GL_NO_ERROR)
-            {
-                std::cout << "OpenGL Render Projection Cube Error: " << error << std::endl;
-            }
+            std::cout << "OpenGL Render Projection Cube Error: " << error << std::endl;
         }
 
-        glBindVertexArray(m_VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(cubeMesh.VAO);
+        glDrawElements(GL_TRIANGLES, cubeMesh.indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 

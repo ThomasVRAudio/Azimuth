@@ -2,7 +2,7 @@
 #include <Azimuth/Common.h>
 #include <Azimuth/Renderer/Shader.h>
 #include <Azimuth/Renderer/Window.h>
-#include <Azimuth/Renderer/PrimitiveMeshes.h>
+#include <Azimuth/Renderer/Geometry.h>
 #include <dependencies/stb_image.h>
 
 namespace Azimuth

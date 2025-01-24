@@ -58,7 +58,7 @@ namespace Azimuth
         if (EditorUI::m_Scene->HasComponent<MeshComponent>(EditorUI::m_SelectedEntity))
         {
             MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
-            const char *items[] = {"None", "Point", "Line", "Triangle", "Square"};
+            const char *items[] = {"None", "Point", "Line", "Triangle", "Square", "Cube"};
             auto currentItem = component.GetMeshType();
 
             ImGui::Text("Mesh");
@@ -74,8 +74,8 @@ namespace Azimuth
                     {
                         if (currentItem != i)
                         {
-                            currentItem = static_cast<PRIMITIVE_TYPE>(i);
-                            component.UpdateMeshPrimitive(static_cast<PRIMITIVE_TYPE>(i));
+                            currentItem = static_cast<GEOMETRY_TYPE>(i);
+                            component.UpdateMeshGeometry(static_cast<GEOMETRY_TYPE>(i));
                         }
                     }
                     if (isSelected)

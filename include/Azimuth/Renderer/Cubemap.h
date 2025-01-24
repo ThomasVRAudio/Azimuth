@@ -2,7 +2,7 @@
 #include <Azimuth/Common.h>
 #include <dependencies/stb_image.h>
 #include <Azimuth/Renderer/Shader.h>
-#include <Azimuth/Renderer/PrimitiveMeshes.h>
+#include <Azimuth/Renderer/Geometry.h>
 
 namespace Azimuth
 {
@@ -20,7 +20,5 @@ namespace Azimuth
 
     private:
         inline static Shader *m_CubemapShader;
-        inline static unsigned int m_VAO, m_VBO;
-        inline static bool m_isInitialized = false;
     };
 }

@@ -3,52 +3,38 @@
 namespace Azimuth
 {
 
-    void MeshComponent::CreateMesh(PRIMITIVE_TYPE primitive)
+    void MeshComponent::CreateMesh(GEOMETRY_TYPE geometry)
     {
-        SetBufferData(primitive);
+        SetMeshGeometry(geometry);
     }
 
-    void MeshComponent::SetBufferData(PRIMITIVE_TYPE primitive)
+    void MeshComponent::SetMeshGeometry(GEOMETRY_TYPE geometry)
     {
-        PrimitiveMesh mesh;
-        switch (primitive)
+        switch (geometry)
         {
         case None:
-            m_Vertices = std::vector<float>();
-            m_Indices = std::vector<int>();
+            m_geometryMesh;
             break;
-        case PRIMITIVE_POINT:
-            m_Vertices = mesh.Point().positions;
-            m_Indices = mesh.Point().indices;
+        case GEOMETRY_POINT:
+            m_geometryMesh = Geometry::Point();
             break;
-        case PRIMITIVE_LINE:
-            m_Vertices = mesh.Line().positions;
-            m_Indices = mesh.Line().indices;
+        case GEOMETRY_LINE:
+            m_geometryMesh = Geometry::Line();
             break;
-        case PRIMITIVE_TRIANGLE:
-            m_Vertices = mesh.Triangle().positions;
-            m_Indices = mesh.Triangle().indices;
+        case GEOMETRY_TRIANGLE:
+            m_geometryMesh = Geometry::Triangle();
             break;
-        case PRIMITIVE_SQUARE:
-            m_Vertices = mesh.Square().positions;
-            m_Indices = mesh.Square().indices;
+        case GEOMETRY_PLANE:
+            m_geometryMesh = Geometry::Square();
+            break;
+        case GEOMETRY_CUBE:
+            m_geometryMesh = Geometry::Cube();
             break;
         default:
-            print("Shape not yet implemented.");
+            print("Geometry not yet implemented.");
         }
 
-        m_Type = primitive;
-        BindBuffers();
-
-        glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), m_Vertices.data(), GL_STATIC_DRAW);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(int), m_Indices.data(), GL_STATIC_DRAW);
-
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+        m_Type = geometry;
 
         error = glGetError();
         if (error != GL_NO_ERROR)
@@ -57,58 +43,32 @@ namespace Azimuth
         }
     }
 
-    void MeshComponent::UpdateMeshPrimitive(PRIMITIVE_TYPE primitive)
+    void MeshComponent::UpdateMeshGeometry(GEOMETRY_TYPE geometry)
     {
-        if (primitive == m_Type)
+        if (geometry == m_Type)
             return;
 
-        SetBufferData(primitive);
+        SetMeshGeometry(geometry);
     }
 
-    void MeshComponent::CreateMesh(const std::vector<float> &verts)
+    void MeshComponent::CreateMesh(std::vector<Vertex> &vertices)
     {
-        BindBuffers();
-
-        m_Vertices = verts;
-        glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), m_Vertices.data(), GL_STATIC_DRAW);
-
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
-        error = glGetError();
-        if (error != GL_NO_ERROR)
-        {
-            std::cout << "OpenGL Create Mesh Error: " << error << std::endl;
-        }
-    }
-
-    void MeshComponent::GenerateBuffers()
-    {
-        glGenVertexArrays(1, &m_VAO);
-        glGenBuffers(1, &m_VBO);
-        glGenBuffers(1, &m_EBO);
-    }
-
-    void MeshComponent::BindBuffers()
-    {
-
-        glBindVertexArray(m_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        error = glGetError();
-        if (error != GL_NO_ERROR)
-        {
-            std::cout << "OpenGL Bind Buffers Error: " << error << std::endl;
-        }
     }
 
     void MeshComponent::DrawMesh()
     {
-        glBindVertexArray(m_VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+        if (m_Type == None)
+            return;
+
+        glBindVertexArray(m_geometryMesh.VAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_geometryMesh.EBO);
+
+        GLenum geometryType = GL_TRIANGLES;
+        if (m_Type == GEOMETRY_POINT)
+            geometryType = GL_POINTS;
+        else if (m_Type == GEOMETRY_LINE)
+            geometryType = GL_LINES;
+
+        glDrawElements(geometryType, m_geometryMesh.indices.size(), GL_UNSIGNED_INT, 0);
     }
 }
