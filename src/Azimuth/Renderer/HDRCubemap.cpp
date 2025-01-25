@@ -133,6 +133,8 @@ namespace Azimuth
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
 
+        m_BackgroundShader->setInt("environmentMap", 0);
+
         RenderProjectionCube();
     }
 
@@ -159,7 +161,6 @@ namespace Azimuth
         {
             std::cout << "OpenGL Failed to load HDR image." << std::endl;
         }
-
         return hdrTexture;
     }
 

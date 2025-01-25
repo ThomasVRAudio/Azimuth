@@ -56,8 +56,17 @@ namespace Azimuth
             {
                 if (*light->Type == DIRECTIONAL_LIGHT)
                 {
-                    material.shader->setVec3("g_LightPos", light->Transform->Position);
-                    material.shader->setVec3("g_LightColor", *light->Color);
+                    glm::mat4 lightTransform = glm::mat4(1.0f);
+                    lightTransform = glm::rotate(lightTransform, glm::radians(light->Transform->Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+                    lightTransform = glm::rotate(lightTransform, glm::radians(light->Transform->Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+                    lightTransform = glm::rotate(lightTransform, glm::radians(light->Transform->Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+                    glm::vec3 forward = glm::normalize(glm::vec3(lightTransform * glm::vec4(0.0f, -1.0f, 0.0f, 0.0f)));
+
+                    material.shader->setVec3("g_DirLight.direction", forward);
+                    material.shader->setVec3("g_DirLight.ambient", *light->Color);
+                    material.shader->setVec3("g_DirLight.diffuse", *light->Color);
+                    material.shader->setVec3("g_DirLight.specular", glm::vec3(1.0f));
                     material.shader->setVec3("g_ViewPos", camera.Position);
                 }
             }
