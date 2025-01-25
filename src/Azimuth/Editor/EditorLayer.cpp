@@ -9,15 +9,25 @@ namespace Azimuth
     void EditorLayer::Init(Scene *scene)
     {
         ECSManager *ECS = scene->GetECSManager();
-
         ComponentMask mask;
+
         mask.set(ECS->GetComponentBitType<TransformComponent>(), true);
         mask.set(ECS->GetComponentBitType<MeshComponent>(), true);
         m_RenderSystem = ECS->RegisterSystem<RenderSystem>();
         ECS->SetSystemComponentMask<RenderSystem>(mask);
 
-        m_RenderSystem->Init(ECS);
+        mask.reset();
+        mask.set(ECS->GetComponentBitType<LightComponent>(), true);
+        mask.set(ECS->GetComponentBitType<TransformComponent>(), true);
+        m_LightSystem = ECS->RegisterSystem<LightSystem>();
+
+        ECS->SetSystemComponentMask<LightSystem>(mask);
+
+        m_RenderSystem->Init(ECS, &scene->Lights);
+        m_LightSystem->Init(ECS, &scene->Lights);
         EditorUI::Init(scene);
+        EditorUI::SetLightsUpdateCallback([&]()
+                                          { m_LightSystem->UpdateLights(); });
 
         glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
@@ -33,7 +43,7 @@ namespace Azimuth
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
         EditorUI::DrawToBuffer(&m_FrameBuffer, [&]()
-                               { m_RenderSystem->DrawScene(m_EditorCamera.GetViewMatrix(), m_EditorCamera.GetProjectionMatrix()); });
+                               { m_RenderSystem->DrawScene(m_EditorCamera); });
 
         EditorUI::CreateDocker();
         EditorUI::DrawEditorScene(&m_EditorSceneTexture);

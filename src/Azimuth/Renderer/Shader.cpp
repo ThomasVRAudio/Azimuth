@@ -157,6 +157,9 @@ namespace Azimuth
         }
         case GL_FLOAT_VEC3:
         {
+            if (uniform.Name.find("g_") != std::string::npos)
+                break;
+
             glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
             setVec3(uniform.Name, value);
             break;

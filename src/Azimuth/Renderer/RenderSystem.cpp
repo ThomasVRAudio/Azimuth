@@ -1,12 +1,14 @@
 #include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/ECS/Component.h>
+#include <Azimuth/Renderer/LightSystem.h>
 
 namespace Azimuth
 {
 
-    void RenderSystem::Init(ECSManager *ECS)
+    void RenderSystem::Init(ECSManager *ECS, std::vector<std::shared_ptr<Light>> *lights)
     {
-        this->ECS = ECS;
+        this->m_ECS = ECS;
+        this->m_Lights = lights;
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
@@ -23,29 +25,42 @@ namespace Azimuth
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
     }
 
-    void RenderSystem::DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+    void RenderSystem::DrawScene(Camera &camera)
     {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+        glm::mat4 viewMatrix = camera.GetViewMatrix();
+        glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
 
         HDRCubemap::DrawHDRCubemap(viewMatrix, projectionMatrix);
 
         for (auto &entity : m_Entities)
         {
-            MeshComponent &mesh = ECS->GetComponent<MeshComponent>(entity);
-            MaterialComponent &material = ECS->GetComponent<MaterialComponent>(entity);
-            model = glm::mat4(1.0f);
+            MeshComponent &mesh = m_ECS->GetComponent<MeshComponent>(entity);
+            MaterialComponent &material = m_ECS->GetComponent<MaterialComponent>(entity);
+            m_Model = glm::mat4(1.0f);
 
-            TransformComponent &transform = ECS->GetComponent<TransformComponent>(entity);
-            model = glm::translate(model, transform.Position);
-            model = glm::rotate(model, glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            model = glm::rotate(model, glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-            model = glm::scale(model, ECS->GetComponent<TransformComponent>(entity).Scale);
+            TransformComponent &transform = m_ECS->GetComponent<TransformComponent>(entity);
+            m_Model = glm::translate(m_Model, transform.Position);
+            m_Model = glm::rotate(m_Model, glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+            m_Model = glm::rotate(m_Model, glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            m_Model = glm::rotate(m_Model, glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            m_Model = glm::scale(m_Model, m_ECS->GetComponent<TransformComponent>(entity).Scale);
 
             material.shader->use();
-            material.shader->setMat4("model", model);
-            material.shader->setMat4("view", viewMatrix);
-            material.shader->setMat4("projection", projectionMatrix);
+            material.shader->setMat4("g_Model", m_Model);
+            material.shader->setMat4("g_View", viewMatrix);
+            material.shader->setMat4("g_Projection", projectionMatrix);
+
+            for (auto &light : *m_Lights)
+            {
+                if (*light->Type == DIRECTIONAL_LIGHT)
+                {
+                    material.shader->setVec3("g_LightPos", light->Transform->Position);
+                    material.shader->setVec3("g_LightColor", *light->Color);
+                    material.shader->setVec3("g_ViewPos", camera.Position);
+                }
+            }
 
             for (auto &uniform : *material.GetUniforms())
                 material.shader->setUniform(uniform);
@@ -54,10 +69,4 @@ namespace Azimuth
             mesh.DrawMesh();
         }
     };
-
-    RenderSystem::~RenderSystem()
-    {
-        if (activeShader)
-            delete activeShader;
-    }
 }

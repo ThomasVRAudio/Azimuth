@@ -2,6 +2,7 @@
 #include <Azimuth/ECS/ECSManager.h>
 #include <Azimuth/Editor/EditorLayer.h>
 #include <Azimuth/Scripts/ScriptLayer.h>
+#include <Azimuth/ECS/Component.h>
 
 namespace Azimuth
 {
@@ -51,6 +52,8 @@ namespace Azimuth
 
         void AddScript(Entity entity, std::shared_ptr<MonoScript> script);
         inline ECSManager *GetECSManager() { return ECS; }
+
+        std::vector<std::shared_ptr<Light>> Lights;
 
     private:
         ECSManager *ECS = new ECSManager();

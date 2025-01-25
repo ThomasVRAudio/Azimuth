@@ -2,6 +2,7 @@
 #include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/Core/Application.h>
 #include <Azimuth/ECS/Component.h>
+#include <Azimuth/ECS/Components/ScriptComponent.h>
 
 namespace Azimuth
 {
@@ -18,6 +19,7 @@ namespace Azimuth
         ECS->RegisterComponent<ScriptComponent>();
         ECS->RegisterComponent<TagComponent>();
         ECS->RegisterComponent<MaterialComponent>();
+        ECS->RegisterComponent<LightComponent>();
 
         m_ScriptLayer = new ScriptLayer();
         m_Application.AddLayer(m_ScriptLayer);

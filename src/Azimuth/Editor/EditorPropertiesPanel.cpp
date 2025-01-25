@@ -41,6 +41,17 @@ namespace Azimuth
                     }
                 }
             }
+
+            if (!EditorUI::m_Scene->HasComponent<LightComponent>(EditorUI::m_SelectedEntity))
+            {
+                if (ImGui::Selectable("Light"))
+                {
+                    LightComponent component;
+                    EditorUI::m_Scene->AddComponent<LightComponent>(EditorUI::m_SelectedEntity, std::move(component));
+                    EditorUI::UpdateLights();
+                };
+            }
+
             ImGui::EndPopup();
         }
 
@@ -51,6 +62,43 @@ namespace Azimuth
             DrawVec3Box(component.Position, "Translate", {"X", "Y", "Z"});
             DrawVec3Box(component.Rotation, "Rotate", {"X", "Y", "Z"}, 0.1f);
             DrawVec3Box(component.Scale, "Scale", {"X", "Y", "Z"});
+
+            ImGui::Separator();
+        }
+
+        if (EditorUI::m_Scene->HasComponent<LightComponent>(EditorUI::m_SelectedEntity))
+        {
+            ImGui::Text("Light");
+            LightComponent &component = EditorUI::m_Scene->GetComponent<LightComponent>(EditorUI::m_SelectedEntity);
+
+            // const char *items[] = {"Point", "Directional", "Spot"};
+            // auto currentItem = static_cast<int>(component.Type);
+
+            // ImGui::Text("Type");
+            // ImGui::SameLine();
+            // ImGui::PushItemWidth(100.0f);
+            // if (ImGui::BeginCombo("##TypeCombo", items[currentItem]))
+            //{
+            // for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+            //{
+            // bool isSelected = (currentItem == i);
+            // if (ImGui::Selectable(items[i], isSelected))
+            //{
+            // if (currentItem != i)
+            //{
+            // currentItem = i;
+            // component.Type = static_cast<LightType>(currentItem);
+            //}
+            //}
+            // if (isSelected)
+            //{
+            // ImGui::SetItemDefaultFocus();
+            //}
+            //}
+            // ImGui::EndCombo();
+            //}
+            // ImGui::Checkbox("Active", &component.IsActive);
+            // ImGui::PopItemWidth();
 
             ImGui::Separator();
         }
@@ -98,6 +146,10 @@ namespace Azimuth
             for (auto &uniform : *material.GetUniforms())
             {
                 ImGui::PushItemWidth(150.0f);
+
+                if (uniform.Name.find("g_") != std::string::npos)
+                    continue;
+
                 switch (uniform.Type)
                 {
                 case GL_FLOAT:
@@ -130,8 +182,9 @@ namespace Azimuth
 
                 case GL_FLOAT_VEC3:
                 {
+
                     glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
-                    if (uniform.Name.find("Color") != std::string::npos)
+                    if (uniform.Name.find("u_Color") != std::string::npos)
                     {
                         ImGui::ColorPicker3(uniform.Name.c_str(), &value[0], ImGuiColorEditFlags_NoInputs);
                     }

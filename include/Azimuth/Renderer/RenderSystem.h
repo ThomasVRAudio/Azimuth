@@ -10,20 +10,19 @@
 
 namespace Azimuth
 {
+    struct Light;
     class RenderSystem : public System
     {
     public:
         RenderSystem() = default;
-        ~RenderSystem();
-        void Init(ECSManager *ECS);
-        void DrawScene(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+        void Init(ECSManager *ECS, std::vector<std::shared_ptr<Light>> *lights);
+        void DrawScene(Camera &camera);
 
     private:
-        ECSManager *ECS;
-        Shader *activeShader;
-        unsigned int VBO, VAO;
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
+        ECSManager *m_ECS;
+        std::vector<std::shared_ptr<Light>> *m_Lights;
+        glm::mat4 m_Model = glm::mat4(1.0f);
+        glm::mat4 m_Projection = glm::mat4(1.0f);
         unsigned int m_CubemapId;
     };
 }
