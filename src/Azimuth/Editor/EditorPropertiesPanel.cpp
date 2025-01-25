@@ -71,34 +71,35 @@ namespace Azimuth
             ImGui::Text("Light");
             LightComponent &component = EditorUI::m_Scene->GetComponent<LightComponent>(EditorUI::m_SelectedEntity);
 
-            // const char *items[] = {"Point", "Directional", "Spot"};
-            // auto currentItem = static_cast<int>(component.Type);
+            const char *items[] = {"Point", "Directional", "Spot"};
+            auto currentItem = component.Type;
 
-            // ImGui::Text("Type");
-            // ImGui::SameLine();
-            // ImGui::PushItemWidth(100.0f);
-            // if (ImGui::BeginCombo("##TypeCombo", items[currentItem]))
-            //{
-            // for (int i = 0; i < IM_ARRAYSIZE(items); i++)
-            //{
-            // bool isSelected = (currentItem == i);
-            // if (ImGui::Selectable(items[i], isSelected))
-            //{
-            // if (currentItem != i)
-            //{
-            // currentItem = i;
-            // component.Type = static_cast<LightType>(currentItem);
-            //}
-            //}
-            // if (isSelected)
-            //{
-            // ImGui::SetItemDefaultFocus();
-            //}
-            //}
-            // ImGui::EndCombo();
-            //}
-            // ImGui::Checkbox("Active", &component.IsActive);
-            // ImGui::PopItemWidth();
+            ImGui::Text("Type");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(100.0f);
+            if (ImGui::BeginCombo("##TypeCombo", items[currentItem]))
+            {
+                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
+                {
+                    bool isSelected = (currentItem == i);
+                    if (ImGui::Selectable(items[i], isSelected))
+                    {
+                        if (currentItem != i)
+                        {
+                            currentItem = static_cast<LightType>(i);
+                            component.Type = currentItem;
+                        }
+                    }
+                    if (isSelected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::Checkbox("Active", &component.IsActive);
+            ImGui::ColorPicker3("Light Color", &component.Color[0], ImGuiColorEditFlags_NoInputs);
+            ImGui::PopItemWidth();
 
             ImGui::Separator();
         }
