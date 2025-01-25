@@ -17,11 +17,13 @@ namespace Azimuth
     {
     public:
         LightSystem() = default;
-        void Init(ECSManager *ECS, std::vector<std::shared_ptr<Light>> *lights);
+        void Init(ECSManager *ECS);
         void UpdateLights();
+        std::shared_ptr<Light> DirectionalLight;
+        std::vector<std::shared_ptr<Light>> PointLights;
+        std::vector<std::shared_ptr<Light>> SpotLights;
 
     private:
         ECSManager *m_ECS;
-        std::vector<std::shared_ptr<Light>> *m_Lights;
     };
 }

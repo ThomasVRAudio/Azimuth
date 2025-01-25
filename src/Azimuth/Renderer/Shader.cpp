@@ -129,6 +129,9 @@ namespace Azimuth
 
     void Shader::setUniform(Uniform &uniform)
     {
+        if (uniform.Name.find("g_") != std::string::npos)
+            return;
+
         switch (uniform.Type)
         {
         case GL_FLOAT:
@@ -157,9 +160,6 @@ namespace Azimuth
         }
         case GL_FLOAT_VEC3:
         {
-            if (uniform.Name.find("g_") != std::string::npos)
-                break;
-
             glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
             setVec3(uniform.Name, value);
             break;

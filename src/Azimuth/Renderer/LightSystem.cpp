@@ -3,26 +3,39 @@
 namespace Azimuth
 {
 
-    void LightSystem::Init(ECSManager *ECS, std::vector<std::shared_ptr<Light>> *lights)
+    void LightSystem::Init(ECSManager *ECS)
     {
-        m_Lights = lights;
         m_ECS = ECS;
     };
 
     void LightSystem::UpdateLights()
     {
-        m_Lights->clear();
+        PointLights.clear();
+        SpotLights.clear();
+
         std::vector<Light *> lights;
         for (auto &entity : m_Entities)
         {
             LightComponent &lightComponent = m_ECS->GetComponent<LightComponent>(entity);
             TransformComponent &transform = m_ECS->GetComponent<TransformComponent>(entity);
+
             std::shared_ptr<Light> light = std::make_shared<Light>(Light{
                 .Transform = &transform,
                 .Color = &lightComponent.Color,
                 .Type = &lightComponent.Type});
 
-            m_Lights->emplace_back(light);
+            switch (lightComponent.Type)
+            {
+            case POINT_LIGHT:
+                PointLights.emplace_back(light);
+                break;
+            case DIRECTIONAL_LIGHT:
+                DirectionalLight = light;
+                break;
+            case SPOT_LIGHT:
+                SpotLights.emplace_back(light);
+                break;
+            }
         }
     }
 }

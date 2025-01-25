@@ -5,22 +5,14 @@
 namespace Azimuth
 {
 
-    void RenderSystem::Init(ECSManager *ECS, std::vector<std::shared_ptr<Light>> *lights)
+    void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem)
     {
         this->m_ECS = ECS;
-        this->m_Lights = lights;
+        m_LightSystem = lightSystem;
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glEnable(GL_MULTISAMPLE);
-
-        std::vector<std::string> faces = {
-            "assets/skybox/ice/right.jpg",
-            "assets/skybox/ice/left.jpg",
-            "assets/skybox/ice/top.jpg",
-            "assets/skybox/ice/bottom.jpg",
-            "assets/skybox/ice/front.jpg",
-            "assets/skybox/ice/back.jpg"};
 
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
     }
@@ -52,23 +44,36 @@ namespace Azimuth
             material.shader->setMat4("g_View", viewMatrix);
             material.shader->setMat4("g_Projection", projectionMatrix);
 
-            for (auto &light : *m_Lights)
+            std::shared_ptr<Light> directionalLight = m_LightSystem->DirectionalLight;
+            if (directionalLight)
             {
-                if (*light->Type == DIRECTIONAL_LIGHT)
-                {
-                    glm::mat4 lightTransform = glm::mat4(1.0f);
-                    lightTransform = glm::rotate(lightTransform, glm::radians(light->Transform->Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-                    lightTransform = glm::rotate(lightTransform, glm::radians(light->Transform->Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-                    lightTransform = glm::rotate(lightTransform, glm::radians(light->Transform->Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+                glm::mat4 lightTransform = glm::mat4(1.0f);
+                lightTransform = glm::rotate(lightTransform, glm::radians(directionalLight->Transform->Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+                lightTransform = glm::rotate(lightTransform, glm::radians(directionalLight->Transform->Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+                lightTransform = glm::rotate(lightTransform, glm::radians(directionalLight->Transform->Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-                    glm::vec3 forward = glm::normalize(glm::vec3(lightTransform * glm::vec4(0.0f, -1.0f, 0.0f, 0.0f)));
+                glm::vec3 forward = glm::normalize(glm::vec3(lightTransform * glm::vec4(0.0f, -1.0f, 0.0f, 0.0f)));
 
-                    material.shader->setVec3("g_DirLight.direction", forward);
-                    material.shader->setVec3("g_DirLight.ambient", *light->Color);
-                    material.shader->setVec3("g_DirLight.diffuse", *light->Color);
-                    material.shader->setVec3("g_DirLight.specular", glm::vec3(1.0f));
-                    material.shader->setVec3("g_ViewPos", camera.Position);
-                }
+                material.shader->setVec3("g_DirLight.direction", forward);
+                material.shader->setVec3("g_DirLight.ambient", *directionalLight->Color);
+                material.shader->setVec3("g_DirLight.diffuse", *directionalLight->Color);
+                material.shader->setVec3("g_DirLight.specular", glm::vec3(1.0f));
+            }
+
+            material.shader->setVec3("g_ViewPos", camera.Position);
+            material.shader->setInt("g_NumPointLights", m_LightSystem->PointLights.size());
+
+            for (size_t i = 0; i < m_LightSystem->PointLights.size(); ++i)
+            {
+                auto &light = m_LightSystem->PointLights[i];
+
+                material.shader->setFloat("g_PointLights[" + std::to_string(i) + "].constant", 1.0f);
+                material.shader->setFloat("g_PointLights[" + std::to_string(i) + "].linear", 0.009f);
+                material.shader->setFloat("g_PointLights[" + std::to_string(i) + "].quadratic", 0.0032f);
+                material.shader->setVec3("g_PointLights[" + std::to_string(i) + "].position", light->Transform->Position);
+                material.shader->setVec3("g_PointLights[" + std::to_string(i) + "].ambient", *light->Color);
+                material.shader->setVec3("g_PointLights[" + std::to_string(i) + "].diffuse", *light->Color);
+                material.shader->setVec3("g_PointLights[" + std::to_string(i) + "].specular", glm::vec3(1.0f));
             }
 
             for (auto &uniform : *material.GetUniforms())

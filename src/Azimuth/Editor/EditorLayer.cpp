@@ -23,8 +23,8 @@ namespace Azimuth
 
         ECS->SetSystemComponentMask<LightSystem>(mask);
 
-        m_RenderSystem->Init(ECS, &scene->Lights);
-        m_LightSystem->Init(ECS, &scene->Lights);
+        m_LightSystem->Init(ECS);
+        m_RenderSystem->Init(ECS, m_LightSystem);
         EditorUI::Init(scene);
         EditorUI::SetLightsUpdateCallback([&]()
                                           { m_LightSystem->UpdateLights(); });

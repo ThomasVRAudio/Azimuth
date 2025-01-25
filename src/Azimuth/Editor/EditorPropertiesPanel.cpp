@@ -88,6 +88,7 @@ namespace Azimuth
                         {
                             currentItem = static_cast<LightType>(i);
                             component.Type = currentItem;
+                            EditorUI::UpdateLights();
                         }
                     }
                     if (isSelected)
@@ -156,7 +157,12 @@ namespace Azimuth
                 case GL_FLOAT:
                 {
                     float &value = std::get<float>(uniform.Value);
-                    ImGui::SliderFloat(uniform.Name.c_str(), &value, 0.0f, 1.0f);
+                    float max = 1.0f;
+
+                    if (uniform.Name.find("shininess")) // TO DO
+                        max = 100.0f;
+
+                    ImGui::SliderFloat(uniform.Name.c_str(), &value, 0.0f, max);
                 }
                 break;
 

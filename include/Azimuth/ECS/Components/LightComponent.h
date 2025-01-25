@@ -15,7 +15,7 @@ namespace Azimuth
     {
     public:
         glm::vec3 Color = glm::vec3(1.0f);
-        LightType Type = DIRECTIONAL_LIGHT;
+        LightType Type = POINT_LIGHT;
         bool IsActive = true;
     };
 }
