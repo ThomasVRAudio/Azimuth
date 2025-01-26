@@ -41,17 +41,16 @@ namespace Azimuth
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Save"))
+                if (ImGui::MenuItem("Open"))
                 {
-                    // Handle Save logic
+                    Serializer::OpenScene();
                 }
                 if (ImGui::MenuItem("Save As..."))
                 {
-                    // Handle Save As logic
+                    Serializer::SaveScene(m_Scene);
                 }
                 if (ImGui::MenuItem("Quit"))
                 {
-                    // Handle Quit logic
                 }
                 ImGui::EndMenu();
             }

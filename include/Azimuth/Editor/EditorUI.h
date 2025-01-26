@@ -6,6 +6,7 @@
 #include <Azimuth/Core/Application.h>
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
+#include <Azimuth/Project/Serializer.h>
 
 namespace Azimuth
 {

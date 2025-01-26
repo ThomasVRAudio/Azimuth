@@ -4,6 +4,9 @@
 #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #define IMGUI_DEFINE_MATH_OPERATORS
 
+#define GLFW_EXPOSE_NATIVE_WGL
+#define GLFW_EXPOSE_NATIVE_WIN32
+
 #include <Azimuth/helper.h>
 
 #include <iostream>
@@ -22,6 +25,7 @@
 
 #include <dependencies/glad/glad.h>
 #include <dependencies/GLFW/glfw3.h>
+#include <dependencies/GLFW/glfw3native.h>
 #include <dependencies/glm/glm.hpp>
 #include <dependencies/glm/gtc/matrix_transform.hpp>
 
@@ -31,5 +35,8 @@
 
 #include <cassert>
 #include <filesystem>
+
+#include <windows.h>
+#include <commdlg.h>
 
 #endif

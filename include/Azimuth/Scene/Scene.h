@@ -62,6 +62,7 @@ namespace Azimuth
         std::vector<Entity> m_Entities;
 #ifdef AZIMUTH_EDITOR
         friend EditorUI;
+        friend class Serializer;
         friend class EditorHierarchyPanel;
 #endif
     };

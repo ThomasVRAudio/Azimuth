@@ -24,8 +24,16 @@ setup_precompiled_headers(precompiled_header ${CMAKE_SOURCE_DIR}/include/Azimuth
 # Include directories
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/dependencies
     ${CMAKE_SOURCE_DIR}/src/Sandbox
     )
+
+    # Check if building a shared or static library
+if(BUILD_SHARED_LIBS)
+    add_definitions(-Dyaml_cpp_EXPORTS)  # Define for DLL builds
+else()
+    add_definitions(-DYAML_CPP_STATIC_DEFINE)  # Define for static builds
+endif()
 
 # Source files
 file(GLOB_RECURSE SOURCES
