@@ -43,7 +43,7 @@ namespace Azimuth
             {
                 if (ImGui::MenuItem("Open"))
                 {
-                    Serializer::OpenScene();
+                    Serializer::OpenScene(m_Scene);
                 }
                 if (ImGui::MenuItem("Save As..."))
                 {

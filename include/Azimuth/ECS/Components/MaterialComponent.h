@@ -19,11 +19,13 @@ namespace Azimuth
         std::shared_ptr<Shader> shader;
         void CreateMaterial(std::shared_ptr<Shader> shader);
         void CreateMaterial();
-        void SetUniforms();
         std::shared_ptr<std::vector<Uniform>> GetUniforms() { return m_Uniforms; };
         void Use() { shader->use(); }
 
     private:
+        void SetUniforms();
         std::shared_ptr<std::vector<Uniform>> m_Uniforms = std::make_shared<std::vector<Uniform>>();
+
+        friend class Serializer;
     };
 }

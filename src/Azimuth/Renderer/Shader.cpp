@@ -48,6 +48,9 @@ namespace Azimuth
 
     Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath)
     {
+        m_VertPath = vertexPath;
+        m_FragPath = fragmentPath;
+
         unsigned int vertex = ProcessFile(vertexPath, GL_VERTEX_SHADER);
         unsigned int fragment = ProcessFile(fragmentPath, GL_FRAGMENT_SHADER);
         unsigned int geometry = 0;

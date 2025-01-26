@@ -6,7 +6,7 @@ namespace Azimuth
     bool Serializer::OpenFileDialog(std::string &outFilePath, FileDialogType dialogType)
     {
         OPENFILENAME ofn;
-        char szFile[260];
+        char szFile[1024] = {0};
 
         ofn.hwndOwner = glfwGetWin32Window(Window::GetMainWindow());
 
@@ -28,28 +28,116 @@ namespace Azimuth
         ofn.lpstrInitialDir = initialDirString.c_str();
 
         ofn.lpstrTitle = "Open Scene File";
-        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+        ofn.Flags = 0;
 
         if (dialogType == SAVE)
             ofn.Flags |= OFN_OVERWRITEPROMPT;
+        else
+            ofn.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
 
-        bool result = (dialogType == OPEN) ? GetOpenFileName(&ofn) : GetSaveFileName(&ofn);
+        BOOL result = (dialogType == OPEN) ? GetOpenFileName(&ofn) : GetSaveFileName(&ofn);
 
-        if (result)
+        if (result == TRUE)
         {
             outFilePath = szFile;
             return true;
+        }
+        else
+        {
+            DWORD error = CommDlgExtendedError();
+            std::cerr << "Dialog failed with error code: " << error << std::endl;
+            return false;
         }
 
         return false;
     }
 
-    void Serializer::OpenScene()
+    void Serializer::OpenScene(Scene *scene)
     {
         std::string filePath;
         if (OpenFileDialog(filePath, OPEN))
         {
-            print("in open: " << filePath);
+            std::ifstream fin(filePath);
+            if (!fin.is_open())
+            {
+                std::cerr << "Failed to open file: " << filePath << std::endl;
+                return;
+            }
+
+            YAML::Node root = YAML::Load(fin);
+
+            for (const auto &entityNode : root)
+            {
+                YAML::Node entitySection = entityNode.second;
+
+                if (!entitySection["Tag"] || !entitySection["ID"])
+                {
+                    print("Couldn't load entity; Missing Tag or ID");
+                    return;
+                }
+                Entity entity = entitySection["ID"].as<int>();
+
+                scene->CreateEntity(entitySection["Tag"].as<std::string>());
+
+                if (entitySection["Transform"])
+                {
+                    TransformComponent &component = scene->GetComponent<TransformComponent>(entity);
+                    const YAML::Node &transformNode = entitySection["Transform"];
+
+                    component.Position = glm::vec3(
+                        transformNode["Position"][0].as<float>(),
+                        transformNode["Position"][1].as<float>(),
+                        transformNode["Position"][2].as<float>());
+
+                    component.Rotation = glm::vec3(
+                        transformNode["Rotation"][0].as<float>(),
+                        transformNode["Rotation"][1].as<float>(),
+                        transformNode["Rotation"][2].as<float>());
+
+                    component.Scale = glm::vec3(
+                        transformNode["Scale"][0].as<float>(),
+                        transformNode["Scale"][1].as<float>(),
+                        transformNode["Scale"][2].as<float>());
+                }
+
+                if (entitySection["Mesh"])
+                {
+                    MeshComponent component;
+                    GEOMETRY_TYPE type = static_cast<GEOMETRY_TYPE>(entitySection["Mesh"]["Type"].as<int>());
+                    component.CreateMesh(type);
+                    scene->AddComponent<MeshComponent>(entity, std::move(component));
+                }
+
+                if (entitySection["Material"])
+                {
+                    MaterialComponent component;
+                    const YAML::Node &mat = entitySection["Material"];
+
+                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(mat["VertexPath"].as<std::string>().c_str(),
+                                                                              mat["FragmentPath"].as<std::string>().c_str());
+                    component.CreateMaterial(shader);
+                    scene->AddComponent<MaterialComponent>(entity, std::move(component));
+                }
+
+                if (entitySection["Light"])
+                {
+                    LightComponent component;
+                    const YAML::Node &lightNode = entitySection["Light"];
+
+                    component.Color = glm::vec3(
+                        lightNode["Color"][0].as<float>(),
+                        lightNode["Color"][1].as<float>(),
+                        lightNode["Color"][2].as<float>());
+
+                    component.Type = static_cast<LightType>(lightNode["Type"].as<int>());
+                    component.IsActive = lightNode["IsActive"].as<bool>();
+
+                    scene->AddComponent<LightComponent>(entity, std::move(component));
+                }
+            }
+
+            EditorUI::UpdateLights();
         }
     }
 
@@ -58,14 +146,104 @@ namespace Azimuth
         std::string filePath;
         if (OpenFileDialog(filePath, SAVE))
         {
+            if (filePath.find_last_of(".") == std::string::npos)
+                filePath += ".scene";
+
+            ECSManager *ECS = scene->ECS;
+            YAML::Node root;
+
             for (auto &entity : scene->m_Entities)
             {
-                if (scene->ECS->HasComponent<TransformComponent>(entity))
+                YAML::Node entitySection;
+                entitySection["ID"] = entity;
+
+                if (ECS->HasComponent<TagComponent>(entity))
                 {
-                    // save in yaml form
+                    auto component = ECS->GetComponent<TagComponent>(entity);
+                    entitySection["Tag"] = component.name;
+                };
+
+                if (ECS->HasComponent<TransformComponent>(entity))
+                {
+                    auto component = ECS->GetComponent<TransformComponent>(entity);
+                    YAML::Node node;
+                    node["Position"] = YAML::Node(YAML::NodeType::Sequence);
+                    node["Position"].push_back(component.Position.x);
+                    node["Position"].push_back(component.Position.y);
+                    node["Position"].push_back(component.Position.z);
+
+                    node["Rotation"] = YAML::Node(YAML::NodeType::Sequence);
+                    node["Rotation"].push_back(component.Rotation.x);
+                    node["Rotation"].push_back(component.Rotation.y);
+                    node["Rotation"].push_back(component.Rotation.z);
+
+                    node["Scale"] = YAML::Node(YAML::NodeType::Sequence);
+                    node["Scale"].push_back(component.Scale.x);
+                    node["Scale"].push_back(component.Scale.y);
+                    node["Scale"].push_back(component.Scale.z);
+
+                    entitySection["Transform"] = node;
+                };
+
+                if (ECS->HasComponent<MeshComponent>(entity))
+                {
+                    auto component = ECS->GetComponent<MeshComponent>(entity);
+                    YAML::Node node;
+
+                    node["Type"] = static_cast<int>(component.GetMeshType());
+
+                    entitySection["Mesh"] = node;
                 }
+
+                if (ECS->HasComponent<AudioComponent>(entity))
+                {
+                    auto component = ECS->GetComponent<AudioComponent>(entity);
+                    YAML::Node node;
+
+                    entitySection["Audio"] = node;
+                }
+
+                if (ECS->HasComponent<MaterialComponent>(entity))
+                {
+                    auto component = ECS->GetComponent<MaterialComponent>(entity);
+                    YAML::Node node;
+                    std::pair<std::string, std::string> paths = component.shader->GetPaths();
+
+                    node["VertexPath"] = paths.first;
+                    node["FragmentPath"] = paths.second;
+
+                    entitySection["Material"] = node;
+                }
+
+                if (ECS->HasComponent<LightComponent>(entity))
+                {
+                    auto component = ECS->GetComponent<LightComponent>(entity);
+                    YAML::Node node;
+
+                    node["Color"] = YAML::Node(YAML::NodeType::Sequence);
+                    node["Color"].push_back(component.Color.x);
+                    node["Color"].push_back(component.Color.y);
+                    node["Color"].push_back(component.Color.z);
+
+                    node["Type"] = static_cast<int>(component.Type);
+                    node["IsActive"] = static_cast<bool>(component.IsActive);
+
+                    entitySection["Light"] = node;
+                }
+
+                root["Entity " + std::to_string(entity)] = entitySection;
             }
-            print("in save");
+            std::ofstream fout(filePath);
+            if (fout.is_open())
+            {
+                fout << root;
+                fout.close();
+                print("Scene saved to: " << filePath);
+            }
+            else
+            {
+                print("Failed to open file for saving: " << filePath);
+            }
         }
     }
 }

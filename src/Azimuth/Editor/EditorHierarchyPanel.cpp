@@ -47,11 +47,16 @@ namespace Azimuth
         float fullWidth = ImGui::GetContentRegionAvail().x;
         float windowHeight = ImGui::GetWindowSize().y;
         float buttonHeight = 30.0f;
-        float margin = 30.0f;
+        float margin = 20.0f;
+
+        float buttonWidth = fullWidth - margin;
+        float centerX = (fullWidth - buttonWidth) * 0.5f;
+
+        ImGui::SetCursorPosX(centerX);
 
         ImGui::SetCursorPosY(windowHeight - buttonHeight - margin);
 
-        if (ImGui::Button("Add Gameobject", ImVec2(fullWidth - margin, buttonHeight)))
+        if (ImGui::Button("Add Gameobject", ImVec2(buttonWidth, buttonHeight)))
         {
             Entity entity = EditorUI::m_Scene->CreateEntity("Gameobject");
             std::string &name = EditorUI::m_Scene->GetComponent<TagComponent>(entity).name;

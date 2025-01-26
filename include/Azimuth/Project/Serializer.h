@@ -3,6 +3,7 @@
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Scene/Scene.h>
 #include <dependencies/yaml-cpp/yaml.h>
+#include <Azimuth/Project/YamlConversions.h>
 
 namespace Azimuth
 {
@@ -16,7 +17,7 @@ namespace Azimuth
     {
     public:
         static bool OpenFileDialog(std::string &outFilePath, FileDialogType dialogType);
-        static void OpenScene();
+        static void OpenScene(Scene *scene);
         static void SaveScene(Scene *scene);
     };
 }

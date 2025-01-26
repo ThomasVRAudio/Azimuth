@@ -22,9 +22,13 @@ namespace Azimuth
         void setVec3(const std::string &name, const glm::vec3 &vec) const;
         void setVec4(const std::string &name, glm::vec4 &vec) const;
         void setUniform(Uniform &uniform);
+        std::pair<std::string, std::string> GetPaths() { return {m_VertPath, m_FragPath}; };
 
     private:
         unsigned int ProcessFile(const char *path, GLenum type);
+        const char *m_VertPath;
+        const char *m_FragPath;
+        friend class Serializer;
     };
 
 }

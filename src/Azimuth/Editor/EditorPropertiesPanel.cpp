@@ -12,52 +12,6 @@ namespace Azimuth
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
         ImGui::Indent(left_padding);
 
-        if (ImGui::Button("Add Component"))
-            ImGui::OpenPopup("Select Component");
-
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
-        if (ImGui::BeginPopup("Select Component"))
-        {
-            if (!EditorUI::m_Scene->HasComponent<TransformComponent>(EditorUI::m_SelectedEntity))
-            {
-                if (ImGui::Selectable("Transform"))
-                {
-                    TransformComponent component;
-                    EditorUI::m_Scene->AddComponent<TransformComponent>(EditorUI::m_SelectedEntity, std::move(component));
-                }
-            }
-
-            if (!EditorUI::m_Scene->HasComponent<MeshComponent>(EditorUI::m_SelectedEntity))
-            {
-                if (ImGui::Selectable("Mesh"))
-                {
-                    MeshComponent component;
-                    component.UpdateMeshGeometry(GEOMETRY_CUBE);
-                    EditorUI::m_Scene->AddComponent<MeshComponent>(EditorUI::m_SelectedEntity, std::move(component));
-
-                    if (!EditorUI::m_Scene->HasComponent<MaterialComponent>(EditorUI::m_SelectedEntity))
-                    {
-                        MaterialComponent mat;
-                        mat.CreateMaterial();
-                        EditorUI::m_Scene->AddComponent<MaterialComponent>(EditorUI::m_SelectedEntity, std::move(mat));
-                    }
-                }
-            }
-
-            if (!EditorUI::m_Scene->HasComponent<LightComponent>(EditorUI::m_SelectedEntity))
-            {
-                if (ImGui::Selectable("Light"))
-                {
-                    LightComponent component;
-                    EditorUI::m_Scene->AddComponent<LightComponent>(EditorUI::m_SelectedEntity, std::move(component));
-                    EditorUI::UpdateLights();
-                };
-            }
-
-            ImGui::EndPopup();
-        }
-        ImGui::PopStyleVar();
-
         if (EditorUI::m_Scene->HasComponent<TagComponent>(EditorUI::m_SelectedEntity))
         {
             TagComponent &component = EditorUI::m_Scene->GetComponent<TagComponent>(EditorUI::m_SelectedEntity);
@@ -247,6 +201,8 @@ namespace Azimuth
             ImGui::Separator();
         }
 
+        AddComponent();
+
         ImGui::Unindent(left_padding);
         ImGui::End();
     }
@@ -272,6 +228,65 @@ namespace Azimuth
         ImGui::SameLine();
         ImGui::DragFloat(("##" + title + labels[2]).c_str(), &vec3.z, speed);
         ImGui::PopItemWidth();
+    }
+
+    void EditorPropertiesPanel::AddComponent()
+    {
+
+        float fullWidth = ImGui::GetContentRegionAvail().x;
+        float buttonHeight = 30.0f;
+        float margin = 20.0f;
+        float buttonWidth = fullWidth - margin;
+        float centerX = (fullWidth - buttonWidth) * 0.5f;
+
+        ImGui::SetCursorPosX(centerX);
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + margin * 0.5f);
+
+        if (ImGui::Button("Add Component", ImVec2(buttonWidth, buttonHeight)))
+            ImGui::OpenPopup("Select Component");
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
+        if (ImGui::BeginPopup("Select Component"))
+        {
+            if (!EditorUI::m_Scene->HasComponent<TransformComponent>(EditorUI::m_SelectedEntity))
+            {
+                if (ImGui::Selectable("Transform"))
+                {
+                    TransformComponent component;
+                    EditorUI::m_Scene->AddComponent<TransformComponent>(EditorUI::m_SelectedEntity, std::move(component));
+                }
+            }
+
+            if (!EditorUI::m_Scene->HasComponent<MeshComponent>(EditorUI::m_SelectedEntity))
+            {
+                if (ImGui::Selectable("Mesh"))
+                {
+                    MeshComponent component;
+                    component.UpdateMeshGeometry(GEOMETRY_CUBE);
+                    EditorUI::m_Scene->AddComponent<MeshComponent>(EditorUI::m_SelectedEntity, std::move(component));
+
+                    if (!EditorUI::m_Scene->HasComponent<MaterialComponent>(EditorUI::m_SelectedEntity))
+                    {
+                        MaterialComponent mat;
+                        mat.CreateMaterial();
+                        EditorUI::m_Scene->AddComponent<MaterialComponent>(EditorUI::m_SelectedEntity, std::move(mat));
+                    }
+                }
+            }
+
+            if (!EditorUI::m_Scene->HasComponent<LightComponent>(EditorUI::m_SelectedEntity))
+            {
+                if (ImGui::Selectable("Light"))
+                {
+                    LightComponent component;
+                    EditorUI::m_Scene->AddComponent<LightComponent>(EditorUI::m_SelectedEntity, std::move(component));
+                    EditorUI::UpdateLights();
+                };
+            }
+
+            ImGui::EndPopup();
+        }
+        ImGui::PopStyleVar();
     }
 }
 
