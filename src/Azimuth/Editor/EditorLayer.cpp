@@ -24,7 +24,9 @@ namespace Azimuth
         ECS->SetSystemComponentMask<LightSystem>(mask);
 
         m_LightSystem->Init(ECS);
-        m_RenderSystem->Init(ECS, m_LightSystem);
+        m_RenderSystem->Init(ECS, m_LightSystem, m_EditorSceneTextureWidth,
+                             m_EditorSceneTextureWidth * (9.0f / 16.0f), &m_EditorSceneTexture);
+
         EditorUI::Init(scene);
         EditorUI::SetLightsUpdateCallback([&]()
                                           { m_LightSystem->UpdateLights(); });
@@ -32,18 +34,16 @@ namespace Azimuth
         glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    void EditorLayer::OnStart()
-    {
-        FrameBuffer::CreateFramebuffer(&m_FrameBuffer, &m_EditorSceneTexture,
-                                       m_EditorSceneTextureWidth, m_EditorSceneTextureWidth * (9.0f / 16.0f));
-    }
+    void EditorLayer::OnStart() {}
 
     void EditorLayer::OnUpdate()
     {
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
-        EditorUI::DrawToBuffer(&m_FrameBuffer, [&]()
-                               { m_RenderSystem->DrawScene(m_EditorCamera); });
+        m_RenderSystem->RenderScene(m_EditorCamera);
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         EditorUI::CreateDocker();
         EditorUI::DrawEditorScene(&m_EditorSceneTexture);
