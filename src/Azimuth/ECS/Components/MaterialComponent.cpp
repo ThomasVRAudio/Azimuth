@@ -43,7 +43,7 @@ namespace Azimuth
             else if (type == GL_BOOL)
                 uniform.Value = false;
             else if (type == GL_FLOAT_VEC3)
-                uniform.Value = glm::vec3(0.0f, 0.0f, 0.0f);
+                uniform.Value = glm::vec3(1.0f, 1.0f, 1.0f);
             else if (type == GL_FLOAT_VEC4)
                 uniform.Value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
             else

@@ -34,7 +34,32 @@ namespace Azimuth
 
     void EditorUI::DrawUI()
     {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
         float left_padding = 10.0f;
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("Save"))
+                {
+                    // Handle Save logic
+                }
+                if (ImGui::MenuItem("Save As..."))
+                {
+                    // Handle Save As logic
+                }
+                if (ImGui::MenuItem("Quit"))
+                {
+                    // Handle Quit logic
+                }
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMainMenuBar();
+        }
+        ImGui::PopStyleVar(2);
+
         EditorHierarchyPanel::DrawPanel();
         EditorPropertiesPanel::DrawPanel();
 

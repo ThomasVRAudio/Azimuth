@@ -15,6 +15,7 @@ namespace Azimuth
         if (ImGui::Button("Add Component"))
             ImGui::OpenPopup("Select Component");
 
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         if (ImGui::BeginPopup("Select Component"))
         {
             if (!EditorUI::m_Scene->HasComponent<TransformComponent>(EditorUI::m_SelectedEntity))
@@ -31,6 +32,7 @@ namespace Azimuth
                 if (ImGui::Selectable("Mesh"))
                 {
                     MeshComponent component;
+                    component.UpdateMeshGeometry(GEOMETRY_CUBE);
                     EditorUI::m_Scene->AddComponent<MeshComponent>(EditorUI::m_SelectedEntity, std::move(component));
 
                     if (!EditorUI::m_Scene->HasComponent<MaterialComponent>(EditorUI::m_SelectedEntity))
@@ -53,6 +55,28 @@ namespace Azimuth
             }
 
             ImGui::EndPopup();
+        }
+        ImGui::PopStyleVar();
+
+        if (EditorUI::m_Scene->HasComponent<TagComponent>(EditorUI::m_SelectedEntity))
+        {
+            TagComponent &component = EditorUI::m_Scene->GetComponent<TagComponent>(EditorUI::m_SelectedEntity);
+            static char name[256];
+            if (strlen(name) == 0)
+            {
+                strncpy(name, component.name.c_str(), sizeof(name) - 1);
+                name[sizeof(name) - 1] = '\0';
+            }
+            ImGui::Text("Name Tag");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(200.0f);
+            if (ImGui::InputText("##Name", name, IM_ARRAYSIZE(name), ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                if (strlen(name) > 0)
+                    component.name = name;
+            }
+            ImGui::PopItemWidth();
+            ImGui::Separator();
         }
 
         if (EditorUI::m_Scene->HasComponent<TransformComponent>(EditorUI::m_SelectedEntity))
