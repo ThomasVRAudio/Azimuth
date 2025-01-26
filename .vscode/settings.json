@@ -59,6 +59,7 @@
     "set": "cpp",
     "unordered_set": "cpp",
     "bitset": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "valarray": "cpp"
   }
 }

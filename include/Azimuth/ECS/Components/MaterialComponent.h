@@ -17,8 +17,9 @@ namespace Azimuth
     {
     public:
         std::shared_ptr<Shader> shader;
-        void CreateMaterial(std::shared_ptr<Shader> shader);
         void CreateMaterial();
+        void CreateMaterial(std::shared_ptr<Shader> shader);
+        void CreateMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<std::vector<Uniform>> uniforms);
         std::shared_ptr<std::vector<Uniform>> GetUniforms() { return m_Uniforms; };
         void Use() { shader->use(); }
 

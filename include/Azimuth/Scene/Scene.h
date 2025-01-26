@@ -47,13 +47,12 @@ namespace Azimuth
         }
 
         Entity CreateEntity(std::string name);
+        void DestroyEntity(Entity entity);
 
         void InitScriptsIfNotExist(Entity entity);
 
         void AddScript(Entity entity, std::shared_ptr<MonoScript> script);
         inline ECSManager *GetECSManager() { return ECS; }
-
-        std::vector<std::shared_ptr<Light>> Lights;
 
     private:
         ECSManager *ECS = new ECSManager();

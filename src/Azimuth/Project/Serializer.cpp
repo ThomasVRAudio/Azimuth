@@ -58,6 +58,12 @@ namespace Azimuth
         std::string filePath;
         if (OpenFileDialog(filePath, OPEN))
         {
+            for (auto &e : scene->m_Entities)
+            {
+                scene->DestroyEntity(e);
+            }
+            scene->m_Entities.clear();
+
             std::ifstream fin(filePath);
             if (!fin.is_open())
             {
@@ -76,9 +82,7 @@ namespace Azimuth
                     print("Couldn't load entity; Missing Tag or ID");
                     return;
                 }
-                Entity entity = entitySection["ID"].as<int>();
-
-                scene->CreateEntity(entitySection["Tag"].as<std::string>());
+                Entity entity = scene->CreateEntity(entitySection["Tag"].as<std::string>());
 
                 if (entitySection["Transform"])
                 {
@@ -116,7 +120,52 @@ namespace Azimuth
 
                     std::shared_ptr<Shader> shader = std::make_shared<Shader>(mat["VertexPath"].as<std::string>().c_str(),
                                                                               mat["FragmentPath"].as<std::string>().c_str());
-                    component.CreateMaterial(shader);
+
+                    std::shared_ptr<std::vector<Uniform>> uniforms = std::make_shared<std::vector<Uniform>>();
+                    for (const auto &uniform : mat["Uniforms"])
+                    {
+                        Uniform u;
+                        u.Name = uniform["Uniform"]["Name"].as<std::string>();
+                        u.Type = static_cast<GLenum>(uniform["Uniform"]["Type"].as<int>());
+                        switch (u.Type)
+                        {
+                        case static_cast<int>(GL_FLOAT):
+                        {
+                            u.Value = uniform["Uniform"]["Value"].as<float>();
+                            break;
+                        }
+                        case static_cast<int>(GL_INT):
+                        {
+                            u.Value = uniform["Uniform"]["Value"].as<int>();
+                            break;
+                        }
+                        case static_cast<int>(GL_BOOL):
+                        {
+                            u.Value = uniform["Uniform"]["Value"].as<bool>();
+                            break;
+                        }
+                        case static_cast<int>(GL_FLOAT_VEC3):
+                        {
+                            u.Value = glm::vec3(
+                                uniform["Uniform"]["Value"][0].as<float>(),
+                                uniform["Uniform"]["Value"][1].as<float>(),
+                                uniform["Uniform"]["Value"][2].as<float>());
+                            break;
+                        }
+                        case static_cast<int>(GL_FLOAT_VEC4):
+                        {
+                            u.Value = glm::vec4(
+                                uniform["Uniform"]["Value"][0].as<float>(),
+                                uniform["Uniform"]["Value"][1].as<float>(),
+                                uniform["Uniform"]["Value"][2].as<float>(),
+                                uniform["Uniform"]["Value"][3].as<float>());
+                            break;
+                        }
+                        }
+                        uniforms->emplace_back(u);
+                    }
+
+                    component.CreateMaterial(shader, uniforms);
                     scene->AddComponent<MaterialComponent>(entity, std::move(component));
                 }
 
@@ -211,6 +260,59 @@ namespace Azimuth
 
                     node["VertexPath"] = paths.first;
                     node["FragmentPath"] = paths.second;
+
+                    YAML::Node uniformsNode;
+                    for (auto &uniform : *component.m_Uniforms)
+                    {
+                        if (uniform.Name.find("g_") != std::string::npos)
+                            continue;
+
+                        YAML::Node uniformNode;
+                        uniformNode["Type"] = static_cast<int>(uniform.Type);
+                        uniformNode["Name"] = uniform.Name;
+                        switch (uniform.Type)
+                        {
+                        case GL_FLOAT:
+                        {
+                            uniformNode["Value"] = std::get<float>(uniform.Value);
+                            break;
+                        }
+                        case GL_INT:
+                        {
+                            uniformNode["Value"] = std::get<int>(uniform.Value);
+                            break;
+                        }
+                        case GL_BOOL:
+                        {
+                            uniformNode["Value"] = std::get<bool>(uniform.Value);
+                            break;
+                        }
+                        case GL_FLOAT_VEC3:
+                        {
+                            auto &v = std::get<glm::vec3>(uniform.Value);
+                            uniformNode["Value"] = YAML::Node(YAML::NodeType::Sequence);
+                            uniformNode["Value"].push_back(v.x);
+                            uniformNode["Value"].push_back(v.y);
+                            uniformNode["Value"].push_back(v.z);
+                            break;
+                        }
+                        case GL_FLOAT_VEC4:
+                        {
+                            auto &v = std::get<glm::vec4>(uniform.Value);
+                            uniformNode["Value"] = YAML::Node(YAML::NodeType::Sequence);
+                            uniformNode["Value"].push_back(v.x);
+                            uniformNode["Value"].push_back(v.y);
+                            uniformNode["Value"].push_back(v.z);
+                            uniformNode["Value"].push_back(v.w);
+                            break;
+                        }
+                        }
+                        YAML::Node uniformWrapper;
+                        uniformWrapper["Uniform"] = uniformNode;
+                        uniformsNode.push_back(uniformWrapper);
+                    };
+
+                    node["Uniforms"] = uniformsNode;
 
                     entitySection["Material"] = node;
                 }

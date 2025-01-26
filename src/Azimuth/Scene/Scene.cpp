@@ -75,4 +75,9 @@ namespace Azimuth
         return entity;
     }
 
+    void Scene::DestroyEntity(Entity entity)
+    {
+        ECS->DestroyEntity(entity);
+    }
+
 }

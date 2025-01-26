@@ -14,6 +14,12 @@ namespace Azimuth
         SetUniforms();
     }
 
+    void MaterialComponent::CreateMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<std::vector<Uniform>> uniforms)
+    {
+        this->shader = shader;
+        m_Uniforms = uniforms;
+    }
+
     void MaterialComponent::SetUniforms()
     {
         GLint numActiveUniforms = 0;
