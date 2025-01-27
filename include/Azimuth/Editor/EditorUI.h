@@ -7,6 +7,7 @@
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
 #include <Azimuth/Project/Serializer.h>
+#include <dependencies/imgui/ImGuizmo.h>
 
 namespace Azimuth
 {
@@ -17,7 +18,7 @@ namespace Azimuth
     public:
         static void Init(Scene *scene);
         static void DrawUI();
-        static void DrawEditorScene(unsigned int *texture);
+        static void DrawEditorScene(unsigned int *texture, Camera &camera);
 
         template <typename CallbackFn>
         static void SetLightsUpdateCallback(CallbackFn callback)
@@ -33,19 +34,20 @@ namespace Azimuth
 
         static void EndDraw();
         static void CreateDocker();
+        static void DrawGizmos(Camera &camera);
         inline static ImVec2 GetSceneWindowPos() { return m_SceneWindowPos; }
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
 
     private:
+        inline static ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
         inline static std::function<void()> lightUpdateCallback = nullptr;
         static void SetAspectConstraints(ImGuiSizeCallbackData *data);
-        inline static ImGuiIO *io = nullptr;
         inline static ImGuiWindowFlags m_WindowFlags;
         inline static ImVec2 m_SceneWindowPos;
         inline static ImVec2 m_SceneWindowSize;
         inline static float m_SceneWindowAspectRatio = 1.778f;
         inline static Scene *m_Scene = nullptr;
-        inline static Entity m_SelectedEntity;
+        inline static Entity m_SelectedEntity = -1;
         friend class EditorHierarchyPanel;
         friend class EditorPropertiesPanel;
     };

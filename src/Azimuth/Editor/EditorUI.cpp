@@ -15,12 +15,12 @@ namespace Azimuth
         bool success = ImGui_ImplGlfw_InitForOpenGL(Window::GetMainWindow(), true);
         assert(success && "ImGui_ImplGlfw_InitForOpenGL failed!");
 
-        success = ImGui_ImplOpenGL3_Init("#version 330");
+        success = ImGui_ImplOpenGL3_Init();
         assert(success && "ImGui_ImplOpenGL3_Init failed!");
 
-        io = &ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
 
-        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         m_WindowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
         m_WindowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiConfigFlags_ViewportsEnable;
@@ -29,7 +29,7 @@ namespace Azimuth
         fontConfig.OversampleH = 4;
         fontConfig.OversampleV = 4;
         fontConfig.PixelSnapH = false;
-        io->Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-SemiBold.ttf", 18.0f, &fontConfig);
+        io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-SemiBold.ttf", 18.0f, &fontConfig);
     }
 
     void EditorUI::DrawUI()
@@ -79,6 +79,49 @@ namespace Azimuth
         ImGui::End();
     }
 
+    void EditorUI::DrawGizmos(Camera &camera)
+    {
+        if (m_SelectedEntity < 0)
+            return;
+
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_SceneWindowSize.x, m_SceneWindowSize.y);
+
+        TransformComponent &component = m_Scene->GetComponent<TransformComponent>(m_SelectedEntity);
+
+        glm::mat4 transform = glm::mat4(1.0f);
+        transform = glm::translate(transform, component.Position);
+        transform = glm::rotate(transform, glm::radians(component.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        transform = glm::rotate(transform, glm::radians(component.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        transform = glm::rotate(transform, glm::radians(component.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        transform = glm::scale(transform, component.Scale);
+
+        if (Input::IsKeyPressed(W))
+            gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+        if (Input::IsKeyPressed(Q))
+            gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+        if (Input::IsKeyPressed(E))
+            gizmoOperation = ImGuizmo::OPERATION::SCALE;
+
+        ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(camera.GetProjectionMatrix()),
+                             gizmoOperation, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+
+        if (ImGuizmo::IsUsing())
+        {
+            glm::vec3 translation, rotation, scale;
+            translation = glm::vec3(transform[3]);
+
+            scale.x = glm::length(transform[0]);
+            scale.y = glm::length(transform[1]);
+            scale.z = glm::length(transform[2]);
+
+            component.Position = translation;
+            // component.Rotation = // lets not gpt this for a good while
+            component.Scale = scale;
+        }
+    }
+
     void EditorUI::SetAspectConstraints(ImGuiSizeCallbackData *data)
     {
         float width = data->CurrentSize.x;
@@ -92,7 +135,7 @@ namespace Azimuth
         data->DesiredSize = ImVec2(width, height);
     }
 
-    void EditorUI::DrawEditorScene(unsigned int *texture)
+    void EditorUI::DrawEditorScene(unsigned int *texture, Camera &camera)
     {
 
         ImGui::SetNextWindowSizeConstraints(ImVec2(100, 100), ImVec2(FLT_MAX, FLT_MAX), SetAspectConstraints);
@@ -111,6 +154,8 @@ namespace Azimuth
         ImGui::SetCursorPos(ImGui::GetCursorPos() + padding);
 
         ImGui::Image((ImTextureID)(*texture), m_SceneWindowSize, ImVec2(0, 1), ImVec2(1, 0));
+
+        DrawGizmos(camera);
         ImGui::End();
     }
 

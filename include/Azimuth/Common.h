@@ -7,6 +7,8 @@
 #define GLFW_EXPOSE_NATIVE_WGL
 #define GLFW_EXPOSE_NATIVE_WIN32
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <Azimuth/helper.h>
 
 #include <iostream>
@@ -28,6 +30,10 @@
 #include <dependencies/GLFW/glfw3native.h>
 #include <dependencies/glm/glm.hpp>
 #include <dependencies/glm/gtc/matrix_transform.hpp>
+#include <dependencies/glm/gtc/type_ptr.hpp>
+#include <dependencies/glm/gtc/quaternion.hpp>
+#include <dependencies/glm/gtx/euler_angles.hpp>
+#include <dependencies/glm/gtx/transform.hpp>
 
 #include "dependencies/imgui/imgui.h"
 #include "dependencies/imgui/imgui_impl_glfw.h"

@@ -30,8 +30,6 @@ namespace Azimuth
         EditorUI::Init(scene);
         EditorUI::SetLightsUpdateCallback([&]()
                                           { m_LightSystem->UpdateLights(); });
-
-        glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     void EditorLayer::OnStart() {}
@@ -41,14 +39,15 @@ namespace Azimuth
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
         m_RenderSystem->RenderScene(m_EditorCamera);
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
 
         EditorUI::CreateDocker();
-        EditorUI::DrawEditorScene(&m_EditorSceneTexture);
         EditorUI::DrawUI();
-
+        EditorUI::DrawEditorScene(&m_EditorSceneTexture, m_EditorCamera);
         EditorUI::EndDraw();
 
         m_EditorCamera.ProcessKeyboard();
