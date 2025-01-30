@@ -37,8 +37,13 @@ namespace Azimuth
         {
             ImGui::Text("Transform");
             TransformComponent &component = EditorUI::m_Scene->GetComponent<TransformComponent>(EditorUI::m_SelectedEntity);
+
             DrawVec3Box(component.Position, "Translate", {"X", "Y", "Z"});
-            DrawVec3Box(component.Rotation, "Rotate", {"X", "Y", "Z"}, 0.1f);
+
+            glm::vec3 rotInDeg = glm::degrees(component.Rotation);
+            DrawVec3Box(rotInDeg, "Rotate", {"X", "Y", "Z"}, 0.1f);
+            component.Rotation = glm::radians(rotInDeg);
+
             DrawVec3Box(component.Scale, "Scale", {"X", "Y", "Z"});
 
             ImGui::Separator();

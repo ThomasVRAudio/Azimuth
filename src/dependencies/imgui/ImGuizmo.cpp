@@ -713,29 +713,53 @@ namespace IMGUIZMO_NAMESPACE
    Style::Style()
    {
       // default values
-      TranslationLineThickness = 3.0f;
-      TranslationLineArrowSize = 6.0f;
-      RotationLineThickness = 2.0f;
+      TranslationLineThickness = 4.0f;
+      TranslationLineArrowSize = 8.0f;
+      RotationLineThickness = 3.0f;
       RotationOuterLineThickness = 3.0f;
-      ScaleLineThickness = 3.0f;
-      ScaleLineCircleSize = 6.0f;
-      HatchedAxisLineThickness = 6.0f;
+      ScaleLineThickness = 4.0f;
+      ScaleLineCircleSize = 8.0f;
+      HatchedAxisLineThickness = 12.0f;
       CenterCircleSize = 6.0f;
 
-      // initialize default colors
-      Colors[DIRECTION_X] = ImVec4(0.666f, 0.000f, 0.000f, 1.000f);
-      Colors[DIRECTION_Y] = ImVec4(0.000f, 0.666f, 0.000f, 1.000f);
-      Colors[DIRECTION_Z] = ImVec4(0.000f, 0.000f, 0.666f, 1.000f);
-      Colors[PLANE_X] = ImVec4(0.666f, 0.000f, 0.000f, 0.380f);
-      Colors[PLANE_Y] = ImVec4(0.000f, 0.666f, 0.000f, 0.380f);
-      Colors[PLANE_Z] = ImVec4(0.000f, 0.000f, 0.666f, 0.380f);
-      Colors[SELECTION] = ImVec4(1.000f, 0.500f, 0.062f, 0.541f);
-      Colors[INACTIVE] = ImVec4(0.600f, 0.600f, 0.600f, 0.600f);
+      // Define colors using the specified hex values
+      ImVec4 Red = ImVec4(0.933f, 0.278f, 0.435f, 1.000f);    // #ef476f
+      ImVec4 Green = ImVec4(0.024f, 0.839f, 0.627f, 1.000f);  // #06d6a0
+      ImVec4 Blue = ImVec4(0.200f, 0.396f, 0.541f, 1.000f);   // #33658A
+      ImVec4 Yellow = ImVec4(1.000f, 0.824f, 0.247f, 1.000f); // #FFD23F
+
+      // Apply to transformation matrices
+      Colors[DIRECTION_X] = Red;
+      Colors[DIRECTION_Y] = Green;
+      Colors[DIRECTION_Z] = Blue;
+
+      Colors[PLANE_X] = ImVec4(Red.x, Red.y, Red.z, 0.380f);
+      Colors[PLANE_Y] = ImVec4(Green.x, Green.y, Green.z, 0.380f);
+      Colors[PLANE_Z] = ImVec4(Blue.x, Blue.y, Blue.z, 0.380f);
+
       Colors[TRANSLATION_LINE] = ImVec4(0.666f, 0.666f, 0.666f, 0.666f);
       Colors[SCALE_LINE] = ImVec4(0.250f, 0.250f, 0.250f, 1.000f);
-      Colors[ROTATION_USING_BORDER] = ImVec4(1.000f, 0.500f, 0.062f, 1.000f);
-      Colors[ROTATION_USING_FILL] = ImVec4(1.000f, 0.500f, 0.062f, 0.500f);
-      Colors[HATCHED_AXIS_LINES] = ImVec4(0.000f, 0.000f, 0.000f, 0.500f);
+      Colors[ROTATION_USING_BORDER] = Red;
+      Colors[ROTATION_USING_FILL] = ImVec4(Red.x, Red.y, Red.z, 0.500f);
+      Colors[SELECTION] = Yellow;
+
+      Colors[HATCHED_AXIS_LINES] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+      // initialize default colors
+      // Colors[DIRECTION_X] = ImVec4(0.666f, 0.000f, 0.000f, 1.000f);
+      // Colors[DIRECTION_Y] = ImVec4(0.000f, 0.666f, 0.000f, 1.000f);
+      // Colors[DIRECTION_Z] = ImVec4(0.000f, 0.000f, 0.666f, 1.000f);
+      // Colors[PLANE_X] = ImVec4(0.666f, 0.000f, 0.000f, 0.380f);
+      // Colors[PLANE_Y] = ImVec4(0.000f, 0.666f, 0.000f, 0.380f);
+      // Colors[PLANE_Z] = ImVec4(0.000f, 0.000f, 0.666f, 0.380f);
+
+      // Colors[SELECTION] = ImVec4(1.000f, 0.500f, 0.062f, 0.541f);
+      Colors[INACTIVE] = ImVec4(0.600f, 0.600f, 0.600f, 0.600f);
+      // Colors[TRANSLATION_LINE] = ImVec4(0.666f, 0.666f, 0.666f, 0.666f);
+      // Colors[SCALE_LINE] = ImVec4(0.250f, 0.250f, 0.250f, 1.000f);
+      // Colors[ROTATION_USING_BORDER] = ImVec4(1.000f, 0.500f, 0.062f, 1.000f);
+      // Colors[ROTATION_USING_FILL] = ImVec4(1.000f, 0.500f, 0.062f, 0.500f);
+      // Colors[HATCHED_AXIS_LINES] = ImVec4(0.000f, 0.000f, 0.000f, 0.500f);
       Colors[TEXT] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
       Colors[TEXT_SHADOW] = ImVec4(0.000f, 0.000f, 0.000f, 1.000f);
    }

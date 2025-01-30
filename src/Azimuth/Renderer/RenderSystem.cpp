@@ -39,14 +39,8 @@ namespace Azimuth
         {
             MeshComponent &mesh = m_ECS->GetComponent<MeshComponent>(entity);
             MaterialComponent &material = m_ECS->GetComponent<MaterialComponent>(entity);
-            m_Model = glm::mat4(1.0f);
 
-            TransformComponent &transform = m_ECS->GetComponent<TransformComponent>(entity);
-            m_Model = glm::translate(m_Model, transform.Position);
-            m_Model = glm::rotate(m_Model, glm::radians(transform.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-            m_Model = glm::rotate(m_Model, glm::radians(transform.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            m_Model = glm::rotate(m_Model, glm::radians(transform.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-            m_Model = glm::scale(m_Model, m_ECS->GetComponent<TransformComponent>(entity).Scale);
+            m_Model = m_ECS->GetComponent<TransformComponent>(entity).GetTransform();
 
             material.shader->use();
             material.shader->setMat4("g_Model", m_Model);
@@ -69,12 +63,9 @@ namespace Azimuth
         std::shared_ptr<Light> directionalLight = m_LightSystem->DirectionalLight;
         if (directionalLight)
         {
-            glm::mat4 lightTransform = glm::mat4(1.0f);
-            lightTransform = glm::rotate(lightTransform, glm::radians(directionalLight->Transform->Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-            lightTransform = glm::rotate(lightTransform, glm::radians(directionalLight->Transform->Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            lightTransform = glm::rotate(lightTransform, glm::radians(directionalLight->Transform->Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            glm::mat4 lightTransform = directionalLight->Transform->GetTransform();
 
-            glm::vec3 forward = glm::normalize(glm::vec3(lightTransform * glm::vec4(0.0f, -1.0f, 0.0f, 0.0f)));
+            glm::vec3 forward = glm::normalize(glm::vec3(lightTransform * glm::vec4(-1.0f, 0.0f, 0.0f, 0.0f)));
 
             shader->setVec3("g_DirLight.direction", forward);
             shader->setVec3("g_DirLight.ambient", *directionalLight->Color);

@@ -43,6 +43,7 @@ namespace Azimuth
             {
                 if (ImGui::MenuItem("Open"))
                 {
+                    m_SelectedEntity = -1;
                     Serializer::OpenScene(m_Scene);
                 }
                 if (ImGui::MenuItem("Save As..."))
@@ -88,14 +89,8 @@ namespace Azimuth
         ImGuizmo::SetDrawlist();
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_SceneWindowSize.x, m_SceneWindowSize.y);
 
-        TransformComponent &component = m_Scene->GetComponent<TransformComponent>(m_SelectedEntity);
-
-        glm::mat4 transform = glm::mat4(1.0f);
-        transform = glm::translate(transform, component.Position);
-        transform = glm::rotate(transform, glm::radians(component.Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        transform = glm::rotate(transform, glm::radians(component.Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        transform = glm::rotate(transform, glm::radians(component.Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        transform = glm::scale(transform, component.Scale);
+        TransformComponent &transform = m_Scene->GetComponent<TransformComponent>(m_SelectedEntity);
+        glm::mat4 transformMatrix = transform.GetTransform();
 
         if (Input::IsKeyPressed(W))
             gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -105,20 +100,55 @@ namespace Azimuth
             gizmoOperation = ImGuizmo::OPERATION::SCALE;
 
         ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(camera.GetProjectionMatrix()),
-                             gizmoOperation, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+                             gizmoOperation, ImGuizmo::MODE::LOCAL, glm::value_ptr(transformMatrix));
 
         if (ImGuizmo::IsUsing())
         {
             glm::vec3 translation, rotation, scale;
-            translation = glm::vec3(transform[3]);
 
-            scale.x = glm::length(transform[0]);
-            scale.y = glm::length(transform[1]);
-            scale.z = glm::length(transform[2]);
+            glm::mat4 LocalMatrix(transformMatrix);
 
-            component.Position = translation;
-            // component.Rotation = // lets not gpt this for a good while
-            component.Scale = scale;
+            if (
+                glm::epsilonNotEqual(LocalMatrix[0][3], static_cast<float>(0), glm::epsilon<float>()) ||
+                glm::epsilonNotEqual(LocalMatrix[1][3], static_cast<float>(0), glm::epsilon<float>()) ||
+                glm::epsilonNotEqual(LocalMatrix[2][3], static_cast<float>(0), glm::epsilon<float>()))
+            {
+                LocalMatrix[0][3] = LocalMatrix[1][3] = LocalMatrix[2][3] = static_cast<float>(0);
+                LocalMatrix[3][3] = static_cast<float>(1);
+            }
+
+            translation = glm::vec3(LocalMatrix[3]);
+            LocalMatrix[3] = glm::vec4(0, 0, 0, LocalMatrix[3].w);
+
+            glm::vec3 Row[3];
+
+            for (glm::length_t i = 0; i < 3; ++i)
+                for (glm::length_t j = 0; j < 3; ++j)
+                    Row[i][j] = LocalMatrix[i][j];
+
+            scale.x = length(Row[0]);
+            scale.y = length(Row[1]);
+            scale.z = length(Row[2]);
+
+            Row[0] = glm::normalize(Row[0]);
+            Row[1] = glm::normalize(Row[1]);
+            Row[2] = glm::normalize(Row[2]);
+
+            rotation.y = asin(-Row[0][2]);
+            if (cos(rotation.y) != 0)
+            {
+                rotation.x = atan2(Row[1][2], Row[2][2]);
+                rotation.z = atan2(Row[0][1], Row[0][0]);
+            }
+            else
+            {
+                rotation.x = atan2(-Row[2][0], Row[1][1]);
+                rotation.z = 0;
+            }
+
+            transform.Position = translation;
+            transform.Rotation = rotation;
+            transform.Scale = scale;
         }
     }
 
