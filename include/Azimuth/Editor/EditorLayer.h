@@ -9,6 +9,8 @@
 #include <Azimuth/Editor/EditorUI.h>
 #include <Azimuth/Editor/EditorCamera.h>
 #include <Azimuth/Core/Time.h>
+#include <Azimuth/ECS/Component.h>
+#include <Azimuth/Events/MouseEvents.h>
 
 namespace Azimuth
 {

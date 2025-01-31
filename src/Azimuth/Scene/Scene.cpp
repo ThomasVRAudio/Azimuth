@@ -1,7 +1,4 @@
 #include <Azimuth/Scene/Scene.h>
-#include <Azimuth/Renderer/RenderSystem.h>
-#include <Azimuth/Core/Application.h>
-#include <Azimuth/ECS/Component.h>
 #include <Azimuth/ECS/Components/ScriptComponent.h>
 
 namespace Azimuth

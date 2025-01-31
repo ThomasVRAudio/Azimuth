@@ -8,6 +8,8 @@
 #include <Azimuth/Renderer/Cubemap.h>
 #include <Azimuth/Renderer/HDRCubemap.h>
 #include <Azimuth/Renderer/FrameBuffer.h>
+#include <Azimuth/ECS/Component.h>
+#include <Azimuth/Renderer/LightSystem.h>
 
 namespace Azimuth
 {

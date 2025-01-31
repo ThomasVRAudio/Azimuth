@@ -1,6 +1,4 @@
 #include <Azimuth/Renderer/RenderSystem.h>
-#include <Azimuth/ECS/Component.h>
-#include <Azimuth/Renderer/LightSystem.h>
 
 namespace Azimuth
 {

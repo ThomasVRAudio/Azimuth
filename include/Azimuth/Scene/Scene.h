@@ -3,6 +3,8 @@
 #include <Azimuth/Editor/EditorLayer.h>
 #include <Azimuth/Scripts/ScriptLayer.h>
 #include <Azimuth/ECS/Component.h>
+#include <Azimuth/Renderer/RenderSystem.h>
+#include <Azimuth/Core/Application.h>
 
 namespace Azimuth
 {

@@ -2,6 +2,8 @@
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Common.h>
 #include <Azimuth/Renderer/RenderSystem.h>
+#include <Azimuth/ECS/Component.h>
+#include <Azimuth/Events/MouseEvents.h>
 
 namespace Azimuth
 {

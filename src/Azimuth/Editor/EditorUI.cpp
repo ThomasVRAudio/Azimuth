@@ -1,6 +1,5 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorUI.h>
-#include <Azimuth/ECS/Component.h>
 
 namespace Azimuth
 {

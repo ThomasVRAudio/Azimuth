@@ -8,6 +8,7 @@
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
 #include <Azimuth/Project/Serializer.h>
 #include <dependencies/imgui/ImGuizmo.h>
+#include <Azimuth/ECS/Component.h>
 
 namespace Azimuth
 {

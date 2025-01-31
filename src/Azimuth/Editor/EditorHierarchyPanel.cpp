@@ -1,7 +1,5 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
-#include <Azimuth/ECS/Component.h>
-#include <Azimuth/Editor/EditorUI.h>
 
 namespace Azimuth
 {

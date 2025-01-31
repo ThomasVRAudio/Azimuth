@@ -1,6 +1,4 @@
 #include <Azimuth/Core/Application.h>
-#include <Azimuth/Core/Time.h>
-#include <Azimuth/Core/Input.h>
 
 namespace Azimuth
 {

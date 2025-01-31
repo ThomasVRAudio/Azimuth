@@ -1,5 +1,4 @@
 #include <Azimuth/Renderer/FrameBuffer.h>
-#include <Azimuth/Common.h>
 
 namespace Azimuth
 {

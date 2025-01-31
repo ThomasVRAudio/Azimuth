@@ -3,6 +3,8 @@
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Game/GameModeLayer.h>
 #include <Azimuth/Scene/Scene.h>
+#include <Azimuth/Core/Time.h>
+#include <Azimuth/Core/Input.h>
 
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorLayer.h>
