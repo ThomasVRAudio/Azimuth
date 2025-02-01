@@ -11,7 +11,8 @@ namespace Azimuth
     public:
         unsigned int ID;
 
-        Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath = nullptr);
+        Shader(const std::string &vertexPath, const std::string &fragmentPath, const std::string &geometryPath = "");
+
         void use();
         void setBool(const std::string &name, bool value) const;
         void setInt(const std::string &name, int value) const;
@@ -26,8 +27,8 @@ namespace Azimuth
 
     private:
         unsigned int ProcessFile(const char *path, GLenum type);
-        const char *m_VertPath;
-        const char *m_FragPath;
+        std::string m_VertPath;
+        std::string m_FragPath;
         friend class Serializer;
     };
 

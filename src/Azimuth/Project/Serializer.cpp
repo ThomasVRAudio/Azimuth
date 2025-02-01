@@ -118,8 +118,9 @@ namespace Azimuth
                     MaterialComponent component;
                     const YAML::Node &mat = entitySection["Material"];
 
-                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(mat["VertexPath"].as<std::string>().c_str(),
-                                                                              mat["FragmentPath"].as<std::string>().c_str());
+                    std::string vertexPath = mat["VertexPath"].as<std::string>();
+                    std::string fragmentPath = mat["FragmentPath"].as<std::string>();
+                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(vertexPath, fragmentPath);
 
                     std::shared_ptr<std::vector<Uniform>> uniforms = std::make_shared<std::vector<Uniform>>();
                     for (const auto &uniform : mat["Uniforms"])

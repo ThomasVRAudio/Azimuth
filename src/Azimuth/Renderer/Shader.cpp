@@ -46,22 +46,22 @@ namespace Azimuth
         return shader;
     }
 
-    Shader::Shader(const char *vertexPath, const char *fragmentPath, const char *geometryPath)
+    Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath, const std::string &geometryPath)
     {
         m_VertPath = vertexPath;
         m_FragPath = fragmentPath;
 
-        unsigned int vertex = ProcessFile(vertexPath, GL_VERTEX_SHADER);
-        unsigned int fragment = ProcessFile(fragmentPath, GL_FRAGMENT_SHADER);
+        unsigned int vertex = ProcessFile(m_VertPath.c_str(), GL_VERTEX_SHADER);
+        unsigned int fragment = ProcessFile(m_FragPath.c_str(), GL_FRAGMENT_SHADER);
         unsigned int geometry = 0;
 
         ID = glCreateProgram();
         glAttachShader(ID, vertex);
         glAttachShader(ID, fragment);
 
-        if (geometryPath)
+        if (geometryPath.length() != 0)
         {
-            geometry = ProcessFile(geometryPath, GL_GEOMETRY_SHADER);
+            geometry = ProcessFile(geometryPath.c_str(), GL_GEOMETRY_SHADER);
             glAttachShader(ID, geometry);
         }
 
