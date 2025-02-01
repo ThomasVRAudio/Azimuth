@@ -172,6 +172,7 @@ namespace Azimuth
         ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
         m_SceneWindowSize = ImGui::GetContentRegionAvail();
+        m_SceneWindowPos = ImGui::GetWindowPos() + ImGui::GetCursorPos();
         ImVec2 availableSize = m_SceneWindowSize;
 
         if (m_SceneWindowSize.x / m_SceneWindowSize.y > m_SceneWindowAspectRatio)
@@ -186,6 +187,34 @@ namespace Azimuth
 
         DrawGizmos(camera);
         ImGui::End();
+    }
+
+    void EditorUI::ReadPixelID(unsigned int frameBufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment)
+    {
+
+        double mouseX, mouseY;
+        glfwGetCursorPos(Window::GetMainWindow(), &mouseX, &mouseY);
+
+        double x = mouseX - m_SceneWindowPos.x;
+        double y = m_SceneWindowSize.y - (mouseY - m_SceneWindowPos.y);
+
+        double normalizedX = x / m_SceneWindowSize.x;
+        double normalizedY = y / m_SceneWindowSize.y;
+
+        int texX = static_cast<int>(normalizedX * textureWidth);
+        int texY = static_cast<int>(normalizedY * textureHeight);
+
+        int pixelData;
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
+        glReadPixels(texX, texY, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+        GLenum error;
+        error = glGetError();
+        if (error != GL_NO_ERROR)
+            print("ReadPixel ID Error: " << error);
+
+        print("x: " << x << " y: " << y << " data: " << pixelData);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void EditorUI::EndDraw()

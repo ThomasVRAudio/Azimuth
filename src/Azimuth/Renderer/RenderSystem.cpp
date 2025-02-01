@@ -3,8 +3,9 @@
 namespace Azimuth
 {
 
-    void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, int screenWidth, int screenHeight, unsigned int *outputTexture)
+    void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem)
     {
+
         this->m_ECS = ECS;
         m_LightSystem = lightSystem;
 
@@ -13,12 +14,11 @@ namespace Azimuth
         glEnable(GL_MULTISAMPLE);
 
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
-        FrameBuffer::CreateFramebuffer(&m_OutputFramebuffer, outputTexture, screenWidth, screenHeight);
     }
 
-    void RenderSystem::RenderScene(Camera &camera)
+    void RenderSystem::RenderScene(Camera &camera, unsigned int framebuffer)
     {
-        FrameBuffer::BindFramebuffer(&m_OutputFramebuffer);
+        FrameBuffer::BindFramebuffer(&framebuffer);
 
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         RenderPass(camera);

@@ -5,7 +5,6 @@
 #include <Azimuth/Renderer/Shader.h>
 #include <dependencies/glm/gtc/matrix_transform.hpp>
 #include <Azimuth/Renderer/Camera.h>
-#include <Azimuth/Renderer/Cubemap.h>
 #include <Azimuth/Renderer/HDRCubemap.h>
 #include <Azimuth/Renderer/FrameBuffer.h>
 #include <Azimuth/ECS/Component.h>
@@ -20,13 +19,12 @@ namespace Azimuth
     {
     public:
         RenderSystem() = default;
-        void Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, int screenWidth, int screenHeight, unsigned int *outputTexture);
-        void RenderScene(Camera &camera);
+        void Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem);
+        void RenderScene(Camera &camera, unsigned int framebuffer);
 
     private:
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);
         void RenderPass(Camera &camera);
-        unsigned int m_OutputFramebuffer, m_Texture;
         ECSManager *m_ECS;
         glm::mat4 m_Model = glm::mat4(1.0f);
         glm::mat4 m_Projection = glm::mat4(1.0f);

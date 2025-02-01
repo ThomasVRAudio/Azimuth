@@ -22,12 +22,29 @@ namespace Azimuth
         ECS->SetSystemComponentMask<LightSystem>(mask);
 
         m_LightSystem->Init(ECS);
-        m_RenderSystem->Init(ECS, m_LightSystem, m_EditorSceneTextureWidth,
-                             m_EditorSceneTextureWidth * (9.0f / 16.0f), &m_EditorSceneTexture);
+        m_RenderSystem->Init(ECS, m_LightSystem);
 
         EditorUI::Init(scene);
         EditorUI::SetLightsUpdateCallback([&]()
                                           { m_LightSystem->UpdateLights(); });
+
+        std::vector<ColorAttachment> colorAttachments;
+
+        unsigned int width = static_cast<unsigned int>(m_EditorSceneTextureWidth);
+        unsigned int height = static_cast<unsigned int>(m_EditorSceneTextureWidth * (9.0f / 16.0f));
+
+        colorAttachments.emplace_back(ColorAttachment{width, height, &m_EditorSceneTexture});
+        colorAttachments.emplace_back(ColorAttachment{
+            width,
+            height,
+            &m_EditorIDTexture,
+            FrameBufferTextureFormat::RED_INTEGER,
+            FrameBufferTextureFormat::RED_INTEGER_INTERNAL});
+
+        DepthAttachment depth{width, height};
+
+        m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(colorAttachments, depth);
+        FrameBuffer::CreateFramebuffer(m_FrameBufferConfig.get());
     }
 
     void EditorLayer::OnStart() {}
@@ -36,7 +53,7 @@ namespace Azimuth
     {
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
-        m_RenderSystem->RenderScene(m_EditorCamera);
+        m_RenderSystem->RenderScene(m_EditorCamera, m_FrameBufferConfig->ID);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -46,6 +63,7 @@ namespace Azimuth
         EditorUI::CreateDocker();
         EditorUI::DrawUI();
         EditorUI::DrawEditorScene(&m_EditorSceneTexture, m_EditorCamera);
+        EditorUI::ReadPixelID(m_FrameBufferConfig->ID, m_EditorSceneTextureWidth, m_EditorSceneTextureWidth * (9.0f / 16.0f), 1);
         EditorUI::EndDraw();
 
         m_EditorCamera.ProcessKeyboard();

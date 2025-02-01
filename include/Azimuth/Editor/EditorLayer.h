@@ -27,8 +27,9 @@ namespace Azimuth
     private:
         std::shared_ptr<RenderSystem> m_RenderSystem;
         std::shared_ptr<LightSystem> m_LightSystem;
+        std::unique_ptr<FrameBufferConfig> m_FrameBufferConfig = nullptr;
         ImVec4 m_ClearColor = ImVec4(0.7f, 0.7f, 0.9f, 1.0f);
-        unsigned int m_FrameBuffer, m_EditorSceneTexture;
+        unsigned int m_FrameBuffer, m_EditorSceneTexture, m_EditorIDTexture;
         unsigned int m_EditorSceneTextureWidth = 3840;
         EditorCamera m_EditorCamera;
     };

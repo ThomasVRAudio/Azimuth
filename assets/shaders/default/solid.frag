@@ -1,5 +1,6 @@
 #version 330 core
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor; 
+layout (location = 1) out int EntityID; 
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -89,5 +90,6 @@ void main()
     };
 
     result *= u_Color;
+    EntityID = 50;
     FragColor = vec4(result, 1.0f); 
 }

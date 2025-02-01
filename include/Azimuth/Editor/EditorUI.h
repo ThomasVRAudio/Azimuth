@@ -36,6 +36,7 @@ namespace Azimuth
         static void EndDraw();
         static void CreateDocker();
         static void DrawGizmos(Camera &camera);
+        static void ReadPixelID(unsigned int framebufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment);
         inline static ImVec2 GetSceneWindowPos() { return m_SceneWindowPos; }
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
 
