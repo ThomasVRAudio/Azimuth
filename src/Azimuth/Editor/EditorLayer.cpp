@@ -41,8 +41,9 @@ namespace Azimuth
             &m_EditorIDTexture,
             FrameBufferTextureFormat::RED_INTEGER,
             FrameBufferTextureFormat::RED_INTEGER_INTERNAL};
+        DepthAttachment depth{width, height};
 
-        m_FrameBufferEditorConfig = std::make_unique<FrameBufferConfig>(entityIDAttachment);
+        m_FrameBufferEditorConfig = std::make_unique<FrameBufferConfig>(entityIDAttachment, depth);
         FrameBuffer::CreateFramebuffer(m_FrameBufferEditorConfig.get());
     }
 
