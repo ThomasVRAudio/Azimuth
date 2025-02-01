@@ -28,23 +28,24 @@ namespace Azimuth
         EditorUI::SetLightsUpdateCallback([&]()
                                           { m_LightSystem->UpdateLights(); });
 
-        std::vector<ColorAttachment> colorAttachments;
-
         unsigned int width = static_cast<unsigned int>(m_EditorSceneTextureWidth);
         unsigned int height = static_cast<unsigned int>(m_EditorSceneTextureWidth * (9.0f / 16.0f));
 
-        colorAttachments.emplace_back(ColorAttachment{width, height, &m_EditorSceneTexture});
-        colorAttachments.emplace_back(ColorAttachment{
+        DepthAttachment depth{width, height};
+
+        m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(ColorAttachment{width, height, &m_EditorSceneTexture}, depth);
+        FrameBuffer::CreateFramebuffer(m_FrameBufferConfig.get());
+
+        m_EditorShader = std::make_shared<Shader>("assets/shaders/editor/unlit.vert", "assets/shaders/editor/unlit.frag");
+        ColorAttachment entityIDAttachment{
             width,
             height,
             &m_EditorIDTexture,
             FrameBufferTextureFormat::RED_INTEGER,
-            FrameBufferTextureFormat::RED_INTEGER_INTERNAL});
+            FrameBufferTextureFormat::RED_INTEGER_INTERNAL};
 
-        DepthAttachment depth{width, height};
-
-        m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(colorAttachments, depth);
-        FrameBuffer::CreateFramebuffer(m_FrameBufferConfig.get());
+        m_FrameBufferEditorConfig = std::make_unique<FrameBufferConfig>(entityIDAttachment, depth);
+        FrameBuffer::CreateFramebuffer(m_FrameBufferEditorConfig.get());
     }
 
     void EditorLayer::OnStart() {}
@@ -54,6 +55,7 @@ namespace Azimuth
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
         m_RenderSystem->RenderScene(m_EditorCamera, m_FrameBufferConfig->ID);
+        m_RenderSystem->RenderEditorPass(m_EditorCamera, m_FrameBufferEditorConfig->ID, m_EditorShader.get());
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -63,7 +65,7 @@ namespace Azimuth
         EditorUI::CreateDocker();
         EditorUI::DrawUI();
         EditorUI::DrawEditorScene(&m_EditorSceneTexture, m_EditorCamera);
-        EditorUI::ReadPixelID(m_FrameBufferConfig->ID, m_EditorSceneTextureWidth, m_EditorSceneTextureWidth * (9.0f / 16.0f), 1);
+        EditorUI::ReadPixelID(m_FrameBufferEditorConfig->ID, m_EditorSceneTextureWidth, m_EditorSceneTextureWidth * (9.0f / 16.0f), 0);
         EditorUI::EndDraw();
 
         m_EditorCamera.ProcessKeyboard();

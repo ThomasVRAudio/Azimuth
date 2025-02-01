@@ -54,13 +54,11 @@ namespace Azimuth
                 textureIDs.insert(*attachment.texture);
                 glBindTexture(GL_TEXTURE_2D, *attachment.texture);
 
-                GLenum dataType = (attachment.internalFormat == FrameBufferTextureFormat::RED_INTEGER_INTERNAL) ? GL_INT : GL_UNSIGNED_BYTE;
                 glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(attachment.internalFormat), attachment.width, attachment.height,
-                             0, static_cast<GLenum>(attachment.format), dataType, nullptr);
+                             0, static_cast<GLenum>(attachment.format), GL_UNSIGNED_BYTE, nullptr);
 
-                GLenum filter = (attachment.internalFormat == FrameBufferTextureFormat::RED_INTEGER_INTERNAL) ? GL_NEAREST : GL_LINEAR;
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

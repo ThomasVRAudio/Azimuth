@@ -55,6 +55,33 @@ namespace Azimuth
         }
     }
 
+#ifdef AZIMUTH_EDITOR
+    void RenderSystem::RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader)
+    {
+        FrameBuffer::BindFramebuffer(&framebuffer);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+        glm::mat4 viewMatrix = camera.GetViewMatrix();
+        glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
+
+        for (auto &entity : m_Entities)
+        {
+            MeshComponent &mesh = m_ECS->GetComponent<MeshComponent>(entity);
+
+            m_Model = m_ECS->GetComponent<TransformComponent>(entity).GetTransform();
+
+            shader->use();
+            shader->setMat4("g_Model", m_Model);
+            shader->setMat4("g_View", viewMatrix);
+            shader->setMat4("g_Projection", projectionMatrix);
+
+            mesh.DrawMesh();
+        }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+#endif
+
     void RenderSystem::RenderLights(std::shared_ptr<Shader> shader, Camera &camera)
     {
 
