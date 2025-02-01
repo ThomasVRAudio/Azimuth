@@ -133,7 +133,7 @@ namespace Azimuth
             return mesh;
         }
 
-        static const Mesh &Square()
+        static const Mesh &Quad()
         {
             static Mesh mesh;
             if (mesh.vertices.empty())
@@ -149,21 +149,61 @@ namespace Azimuth
                     Vertex{
                         .Position = glm::vec3(0.5f, -0.5f, 0.0f),
                         .Normal = glm::vec3(0.0f),
-                        .TexCoords = glm::vec2(0.0f),
+                        .TexCoords = glm::vec2(1.0f, 0.0f),
                         .Tangent = glm::vec3(0.0f),
                         .Bitangent = glm::vec3(0.0f)},
 
                     Vertex{
                         .Position = glm::vec3(0.5f, 0.5f, 0.0f),
                         .Normal = glm::vec3(0.0f),
-                        .TexCoords = glm::vec2(0.0f),
+                        .TexCoords = glm::vec2(1.0f, 1.0f),
                         .Tangent = glm::vec3(0.0f),
                         .Bitangent = glm::vec3(0.0f)},
 
                     Vertex{
                         .Position = glm::vec3(-0.5f, 0.5f, 0.0f),
                         .Normal = glm::vec3(0.0f),
+                        .TexCoords = glm::vec2(0.0f, 1.0f),
+                        .Tangent = glm::vec3(0.0f),
+                        .Bitangent = glm::vec3(0.0f)}};
+
+                mesh.indices = {0, 1, 2, 2, 3, 0};
+                mesh.SetupMeshBuffers();
+            }
+            return mesh;
+        }
+
+        static const Mesh &Screen()
+        {
+            static Mesh mesh;
+            if (mesh.vertices.empty())
+            {
+                mesh.vertices = {
+                    Vertex{
+                        .Position = glm::vec3(-1.0f, -1.0f, 0.0f),
+                        .Normal = glm::vec3(0.0f),
                         .TexCoords = glm::vec2(0.0f),
+                        .Tangent = glm::vec3(0.0f),
+                        .Bitangent = glm::vec3(0.0f)},
+
+                    Vertex{
+                        .Position = glm::vec3(1.0f, -1.0f, 0.0f),
+                        .Normal = glm::vec3(0.0f),
+                        .TexCoords = glm::vec2(1.0f, 0.0f),
+                        .Tangent = glm::vec3(0.0f),
+                        .Bitangent = glm::vec3(0.0f)},
+
+                    Vertex{
+                        .Position = glm::vec3(1.0f, 1.0f, 0.0f),
+                        .Normal = glm::vec3(0.0f),
+                        .TexCoords = glm::vec2(1.0f, 1.0f),
+                        .Tangent = glm::vec3(0.0f),
+                        .Bitangent = glm::vec3(0.0f)},
+
+                    Vertex{
+                        .Position = glm::vec3(-1.0f, 1.0f, 0.0f),
+                        .Normal = glm::vec3(0.0f),
+                        .TexCoords = glm::vec2(0.0f, 1.0f),
                         .Tangent = glm::vec3(0.0f),
                         .Bitangent = glm::vec3(0.0f)}};
 

@@ -3,7 +3,7 @@
 namespace Azimuth
 {
 
-    void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem)
+    void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, unsigned int width, unsigned int height)
     {
 
         this->m_ECS = ECS;
@@ -14,14 +14,29 @@ namespace Azimuth
         glEnable(GL_MULTISAMPLE);
 
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
+
+        ColorAttachment color = {width, height, &m_SceneTexture};
+        DepthAttachment depth = {width, height};
+
+        m_SceneFrameBuffer = std::make_unique<FrameBufferConfig>(color, depth);
+        FrameBuffer::CreateFramebuffer(m_SceneFrameBuffer.get());
+
+        m_PostProcessingShader = std::make_unique<Shader>("assets/shaders/default/postprocessing.vert", "assets/shaders/default/postprocessing.frag");
     }
 
-    void RenderSystem::RenderScene(Camera &camera, unsigned int framebuffer)
+    void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer)
     {
-        FrameBuffer::BindFramebuffer(&framebuffer);
-
+        FrameBuffer::BindFramebuffer(&m_SceneFrameBuffer->ID);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
         RenderPass(camera);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        FrameBuffer::BindFramebuffer(&outputFramebuffer);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+        RenderScreenQuad(m_PostProcessingShader.get(), m_SceneTexture);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     };
@@ -118,4 +133,18 @@ namespace Azimuth
         }
     }
 
+    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture)
+    {
+        shader->use();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        m_PostProcessingShader->setInt("g_Texture", 0);
+
+        glBindVertexArray(m_RenderScreenQuad.VAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);
+        glDrawElements(GL_TRIANGLES, m_RenderScreenQuad.indices.size(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
 }

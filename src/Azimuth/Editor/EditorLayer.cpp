@@ -31,9 +31,7 @@ namespace Azimuth
         unsigned int width = static_cast<unsigned int>(m_EditorSceneTextureWidth);
         unsigned int height = static_cast<unsigned int>(m_EditorSceneTextureWidth * (9.0f / 16.0f));
 
-        DepthAttachment depth{width, height};
-
-        m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(ColorAttachment{width, height, &m_EditorSceneTexture}, depth);
+        m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(ColorAttachment{width, height, &m_EditorSceneTexture});
         FrameBuffer::CreateFramebuffer(m_FrameBufferConfig.get());
 
         m_EditorShader = std::make_shared<Shader>("assets/shaders/editor/unlit.vert", "assets/shaders/editor/unlit.frag");
@@ -44,7 +42,7 @@ namespace Azimuth
             FrameBufferTextureFormat::RED_INTEGER,
             FrameBufferTextureFormat::RED_INTEGER_INTERNAL};
 
-        m_FrameBufferEditorConfig = std::make_unique<FrameBufferConfig>(entityIDAttachment, depth);
+        m_FrameBufferEditorConfig = std::make_unique<FrameBufferConfig>(entityIDAttachment);
         FrameBuffer::CreateFramebuffer(m_FrameBufferEditorConfig.get());
     }
 

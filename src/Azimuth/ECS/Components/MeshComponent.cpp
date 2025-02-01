@@ -25,7 +25,7 @@ namespace Azimuth
             m_geometryMesh = Geometry::Triangle();
             break;
         case GEOMETRY_PLANE:
-            m_geometryMesh = Geometry::Square();
+            m_geometryMesh = Geometry::Quad();
             break;
         case GEOMETRY_CUBE:
             m_geometryMesh = Geometry::Cube();
