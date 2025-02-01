@@ -21,7 +21,7 @@ namespace Azimuth
         RenderSystem() = default;
         void Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem);
         void RenderScene(Camera &camera, unsigned int framebuffer);
-        void RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader);
+        void RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader, unsigned int texture);
 
     private:
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);

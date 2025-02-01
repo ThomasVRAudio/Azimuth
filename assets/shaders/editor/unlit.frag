@@ -1,6 +1,8 @@
 #version 460 core
 layout (location = 0) out int EntityID; 
 
+in flat int Entity;
+
 void main() {
-     EntityID = 50;
+     EntityID = int(Entity);
 }

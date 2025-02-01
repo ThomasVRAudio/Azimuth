@@ -47,7 +47,9 @@ namespace Azimuth
         inline static ImGuiWindowFlags m_WindowFlags;
         inline static ImVec2 m_SceneWindowPos;
         inline static ImVec2 m_SceneWindowSize;
+        inline static ImVec2 m_SceneWindowPadding;
         inline static float m_SceneWindowAspectRatio = 1.778f;
+        inline static bool m_IsManipulating = false;
         inline static Scene *m_Scene = nullptr;
         inline static Entity m_SelectedEntity = -1;
         friend class EditorHierarchyPanel;

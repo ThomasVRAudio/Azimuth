@@ -56,10 +56,12 @@ namespace Azimuth
     }
 
 #ifdef AZIMUTH_EDITOR
-    void RenderSystem::RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader)
+    void RenderSystem::RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader, unsigned int texture)
     {
         FrameBuffer::BindFramebuffer(&framebuffer);
+        int clearValue = -1;
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+        glClearTexImage(texture, 0, GL_RED_INTEGER, GL_INT, &clearValue);
 
         glm::mat4 viewMatrix = camera.GetViewMatrix();
         glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
@@ -74,6 +76,7 @@ namespace Azimuth
             shader->setMat4("g_Model", m_Model);
             shader->setMat4("g_View", viewMatrix);
             shader->setMat4("g_Projection", projectionMatrix);
+            shader->setInt("g_Entity", entity);
 
             mesh.DrawMesh();
         }

@@ -86,7 +86,7 @@ namespace Azimuth
 
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_SceneWindowSize.x, m_SceneWindowSize.y);
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x + m_SceneWindowPadding.x, ImGui::GetWindowPos().y + m_SceneWindowPadding.y, m_SceneWindowSize.x, m_SceneWindowSize.y);
 
         TransformComponent &transform = m_Scene->GetComponent<TransformComponent>(m_SelectedEntity);
         glm::mat4 transformMatrix = transform.GetTransform();
@@ -103,6 +103,7 @@ namespace Azimuth
 
         if (ImGuizmo::IsUsing())
         {
+            m_IsManipulating = true;
             glm::vec3 translation, rotation, scale;
 
             glm::mat4 LocalMatrix(transformMatrix);
@@ -149,6 +150,10 @@ namespace Azimuth
             transform.Rotation = rotation;
             transform.Scale = scale;
         }
+        else
+        {
+            m_IsManipulating = false;
+        }
     }
 
     void EditorUI::SetAspectConstraints(ImGuiSizeCallbackData *data)
@@ -180,8 +185,7 @@ namespace Azimuth
         else
             m_SceneWindowSize.y = m_SceneWindowSize.x / m_SceneWindowAspectRatio;
 
-        ImVec2 padding((availableSize.x - m_SceneWindowSize.x) * 0.5f, (availableSize.y - m_SceneWindowSize.y) * 0.5f);
-        ImGui::SetCursorPos(ImGui::GetCursorPos() + padding);
+        m_SceneWindowPadding = ImGui::GetCursorPos();
 
         ImGui::Image((ImTextureID)(*texture), m_SceneWindowSize, ImVec2(0, 1), ImVec2(1, 0));
 
@@ -192,6 +196,9 @@ namespace Azimuth
     void EditorUI::ReadPixelID(unsigned int frameBufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment)
     {
 
+        if (!Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            return;
+
         double mouseX, mouseY;
         glfwGetCursorPos(Window::GetMainWindow(), &mouseX, &mouseY);
 
@@ -201,6 +208,9 @@ namespace Azimuth
         double normalizedX = x / m_SceneWindowSize.x;
         double normalizedY = y / m_SceneWindowSize.y;
 
+        if (x <= 0.0f || y <= 0.0f || x >= m_SceneWindowSize.x || y >= m_SceneWindowSize.y)
+            return;
+
         int texX = static_cast<int>(normalizedX * textureWidth);
         int texY = static_cast<int>(normalizedY * textureHeight);
 
@@ -208,13 +218,16 @@ namespace Azimuth
         glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
         glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
         glReadPixels(texX, texY, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+
         GLenum error;
         error = glGetError();
         if (error != GL_NO_ERROR)
             print("ReadPixel ID Error: " << error);
 
-        print("x: " << x << " y: " << y << " data: " << pixelData);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        if (!m_IsManipulating)
+            m_SelectedEntity = pixelData;
     }
 
     void EditorUI::EndDraw()
