@@ -9,6 +9,8 @@ namespace Azimuth
         ECSManager *ECS = scene->GetECSManager();
         ComponentMask mask;
 
+        m_SceneSettings = scene->Settings;
+
         mask.set(ECS->GetComponentBitType<TransformComponent>(), true);
         mask.set(ECS->GetComponentBitType<MeshComponent>(), true);
         m_RenderSystem = ECS->RegisterSystem<RenderSystem>();
@@ -53,7 +55,7 @@ namespace Azimuth
     {
         glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
 
-        m_RenderSystem->RenderScene(m_EditorCamera, m_FrameBufferConfig->ID);
+        m_RenderSystem->RenderScene(m_EditorCamera, m_FrameBufferConfig->ID, m_SceneSettings.get());
         m_RenderSystem->RenderEditorPass(m_EditorCamera, m_FrameBufferEditorConfig->ID, m_EditorShader.get(), m_EditorIDTexture);
 
         ImGui_ImplOpenGL3_NewFrame();

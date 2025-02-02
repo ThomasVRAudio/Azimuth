@@ -9,6 +9,7 @@
 #include <Azimuth/Renderer/FrameBuffer.h>
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/Renderer/LightSystem.h>
+#include <Azimuth/Scene/SceneSettings.h>
 
 namespace Azimuth
 {
@@ -23,7 +24,7 @@ namespace Azimuth
     public:
         RenderSystem() = default;
         void Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, unsigned int width = 3840, unsigned int height = 2160);
-        void RenderScene(Camera &camera, unsigned int outputFramebuffer);
+        void RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings);
         void RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader, unsigned int texture);
 
     private:

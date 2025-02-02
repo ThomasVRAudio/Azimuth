@@ -40,6 +40,7 @@ namespace Azimuth
         static void ReadPixelID(unsigned int framebufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment);
         inline static ImVec2 GetSceneWindowPos() { return m_SceneWindowPos; }
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
+        inline static std::shared_ptr<SceneSettings> GetSceneSettings() { return m_SceneSettings; };
 
     private:
         inline static ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -52,6 +53,7 @@ namespace Azimuth
         inline static float m_SceneWindowAspectRatio = 1.778f;
         inline static bool m_IsManipulating = false;
         inline static Scene *m_Scene = nullptr;
+        inline static std::shared_ptr<SceneSettings> m_SceneSettings = nullptr;
         inline static Entity m_SelectedEntity = -1;
         inline static bool t_HasOpenedScene = false;
         friend class EditorHierarchyPanel;

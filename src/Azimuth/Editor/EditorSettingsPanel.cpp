@@ -14,8 +14,13 @@ namespace Azimuth
         float max = 20.0f;
         ImGui::Text("HDR Settings: ");
 
-        ImGui::SliderFloat("Exposure", &Exposure, 0.0f, max);
-        Exposure = round(Exposure / 0.25f) * 0.25f;
+        if (EditorUI::GetSceneSettings() != nullptr)
+        {
+            float &Exposure = EditorUI::GetSceneSettings()->Exposure;
+
+            ImGui::SliderFloat("Exposure", &Exposure, 0.0f, max);
+            Exposure = round(Exposure / 0.25f) * 0.25f;
+        }
         ImGui::Unindent(left_padding);
         ImGui::End();
     }

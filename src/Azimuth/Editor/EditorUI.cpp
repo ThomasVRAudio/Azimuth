@@ -6,6 +6,7 @@ namespace Azimuth
     void EditorUI::Init(Scene *scene)
     {
         m_Scene = scene;
+        m_SceneSettings = scene->Settings;
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();

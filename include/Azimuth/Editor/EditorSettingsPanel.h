@@ -8,7 +8,6 @@ namespace Azimuth
     {
     public:
         static void DrawPanel();
-        inline static float Exposure = 1.0f;
     };
 
 }

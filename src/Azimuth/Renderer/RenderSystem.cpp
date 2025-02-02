@@ -1,7 +1,4 @@
 #include <Azimuth/Renderer/RenderSystem.h>
-#ifdef AZIMUTH_EDITOR
-#include <Azimuth/Editor/EditorSettingsPanel.h>
-#endif
 
 namespace Azimuth
 {
@@ -38,7 +35,7 @@ namespace Azimuth
         m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/hdr.vert", "assets/shaders/default/hdr.frag");
     }
 
-    void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer)
+    void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
     {
         // Scene Rendering
         FrameBuffer::BindFramebuffer(&m_SceneRenderFrameBuffer->ID);
@@ -49,10 +46,8 @@ namespace Azimuth
         // HDR Tone Mapping
         FrameBuffer::BindFramebuffer(&m_TonemappingFrameBuffer->ID);
         glClear(GL_COLOR_BUFFER_BIT);
-#ifdef AZIMUTH_EDITOR
         m_ToneMappingShader->use();
-        m_ToneMappingShader->setFloat("g_Exposure", EditorSettingsPanel::Exposure);
-#endif
+        m_ToneMappingShader->setFloat("g_Exposure", settings->Exposure);
         RenderScreenQuad(m_ToneMappingShader.get(), m_RenderedSceneTexture);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

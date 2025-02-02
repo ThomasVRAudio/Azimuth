@@ -5,6 +5,7 @@
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/Core/Application.h>
+#include <Azimuth/Scene/SceneSettings.h>
 
 namespace Azimuth
 {
@@ -55,6 +56,7 @@ namespace Azimuth
 
         void AddScript(Entity entity, std::shared_ptr<MonoScript> script);
         inline ECSManager *GetECSManager() { return ECS; }
+        std::shared_ptr<SceneSettings> Settings = std::make_shared<SceneSettings>();
 
     private:
         ECSManager *ECS = new ECSManager();
