@@ -28,7 +28,7 @@ namespace Azimuth
         m_PostProcessingFrameBuffer = std::make_unique<FrameBufferConfig>(postProcessColor);
         FrameBuffer::CreateFramebuffer(m_PostProcessingFrameBuffer.get());
 
-        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/hdr.vert", "assets/shaders/default/hdr.frag");
+        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/tonemapping.vert", "assets/shaders/default/tonemapping.frag");
         m_PostProcessShader = std::make_unique<Shader>("assets/shaders/default/postprocessing.vert", "assets/shaders/default/postprocessing.frag");
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/default/master.vert", "assets/shaders/default/master.frag");
     }
