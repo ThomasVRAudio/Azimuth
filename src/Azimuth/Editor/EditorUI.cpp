@@ -36,6 +36,13 @@ namespace Azimuth
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
         float left_padding = 10.0f;
+
+        if (!t_HasOpenedScene)
+        {
+            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/Basic.scene");
+            t_HasOpenedScene = true;
+        }
+
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
@@ -61,13 +68,7 @@ namespace Azimuth
 
         EditorHierarchyPanel::DrawPanel();
         EditorPropertiesPanel::DrawPanel();
-
-        ImGui::Begin("Settings");
-        ImGui::Indent(left_padding);
-        ImGui::Dummy(ImVec2(4.0f, 4.0f));
-        ImGui::Checkbox("Play Scene", &Application::s_PlayingEditorScene);
-        ImGui::Unindent(left_padding);
-        ImGui::End();
+        EditorSettingsPanel::DrawPanel();
 
         ImGui::Begin("Logs");
         ImGui::Dummy(ImVec2(4.0f, 4.0f));

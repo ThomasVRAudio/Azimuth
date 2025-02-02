@@ -53,10 +53,14 @@ namespace Azimuth
         return false;
     }
 
-    void Serializer::OpenScene(Scene *scene)
+    void Serializer::OpenScene(Scene *scene, std::string path)
     {
         std::string filePath;
-        if (OpenFileDialog(filePath, OPEN))
+
+        if (path.length())
+            filePath = path;
+
+        if (path.length() || OpenFileDialog(filePath, OPEN))
         {
             for (auto &e : scene->m_Entities)
             {

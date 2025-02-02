@@ -57,7 +57,7 @@ namespace Azimuth
                 glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(attachment.internalFormat), attachment.width, attachment.height,
                              0, static_cast<GLenum>(attachment.format), GL_UNSIGNED_BYTE, nullptr);
 
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config->generateMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -76,6 +76,9 @@ namespace Azimuth
 
             attachments[i] = GL_COLOR_ATTACHMENT0 + i;
             glFramebufferTexture2D(GL_FRAMEBUFFER, attachments[i], GL_TEXTURE_2D, *attachment.texture, 0);
+
+            if (config->generateMipmaps)
+                glGenerateMipmap(GL_TEXTURE_2D);
         }
         glDrawBuffers(config->colorAttachments.size(), attachments);
 

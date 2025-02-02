@@ -14,6 +14,9 @@ namespace Azimuth
 {
     struct Light;
     class LightSystem;
+#ifdef AZIMUTH_EDITOR
+    class EditorSettingsPanel;
+#endif
 
     class RenderSystem : public System
     {
@@ -26,14 +29,18 @@ namespace Azimuth
     private:
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);
         void RenderPass(Camera &camera);
-        void RenderScreenQuad(Shader *shader, unsigned int texture);
+        void RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps = false);
         ECSManager *m_ECS;
         glm::mat4 m_Model = glm::mat4(1.0f);
         glm::mat4 m_Projection = glm::mat4(1.0f);
         std::shared_ptr<LightSystem> m_LightSystem;
-        std::unique_ptr<FrameBufferConfig> m_SceneFrameBuffer;
-        unsigned int m_SceneTexture;
-        std::shared_ptr<Shader> m_PostProcessingShader = nullptr;
+        std::unique_ptr<FrameBufferConfig> m_SceneRenderFrameBuffer;
+        std::unique_ptr<FrameBufferConfig> m_TonemappingFrameBuffer;
+        unsigned int m_RenderedSceneTexture, m_ToneMappedTexture, m_PostProcessedTexture;
+        std::shared_ptr<Shader> m_PostProcessShader = nullptr;
+        std::shared_ptr<Shader> m_FinalCompositeShader = nullptr;
+        std::shared_ptr<Shader> m_ToneMappingShader = nullptr;
+        std::unique_ptr<FrameBufferConfig> m_PostProcessingFrameBuffer;
         Mesh m_RenderScreenQuad = Geometry::Screen();
     };
 }

@@ -1,4 +1,7 @@
 #include <Azimuth/Renderer/RenderSystem.h>
+#ifdef AZIMUTH_EDITOR
+#include <Azimuth/Editor/EditorSettingsPanel.h>
+#endif
 
 namespace Azimuth
 {
@@ -15,29 +18,54 @@ namespace Azimuth
 
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
 
-        ColorAttachment color = {width, height, &m_SceneTexture};
+        ColorAttachment color = {width, height, &m_RenderedSceneTexture, FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA16F};
         DepthAttachment depth = {width, height};
 
-        m_SceneFrameBuffer = std::make_unique<FrameBufferConfig>(color, depth);
-        FrameBuffer::CreateFramebuffer(m_SceneFrameBuffer.get());
+        m_SceneRenderFrameBuffer = std::make_unique<FrameBufferConfig>(color, depth, true);
+        FrameBuffer::CreateFramebuffer(m_SceneRenderFrameBuffer.get());
 
-        m_PostProcessingShader = std::make_unique<Shader>("assets/shaders/default/postprocessing.vert", "assets/shaders/default/postprocessing.frag");
+        ColorAttachment hdrColor = {width, height, &m_ToneMappedTexture};
+
+        m_TonemappingFrameBuffer = std::make_unique<FrameBufferConfig>(hdrColor);
+        FrameBuffer::CreateFramebuffer(m_TonemappingFrameBuffer.get());
+
+        ColorAttachment postProcessingColor = {width, height, &m_PostProcessedTexture};
+        m_PostProcessingFrameBuffer = std::make_unique<FrameBufferConfig>(postProcessingColor);
+        FrameBuffer::CreateFramebuffer(m_PostProcessingFrameBuffer.get());
+
+        m_PostProcessShader = std::make_unique<Shader>("assets/shaders/default/postprocessing.vert", "assets/shaders/default/postprocessing.frag");
+        m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/default/master.vert", "assets/shaders/default/master.frag");
+        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/hdr.vert", "assets/shaders/default/hdr.frag");
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer)
     {
-        FrameBuffer::BindFramebuffer(&m_SceneFrameBuffer->ID);
+        // Scene Rendering
+        FrameBuffer::BindFramebuffer(&m_SceneRenderFrameBuffer->ID);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
         RenderPass(camera);
-
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        // HDR Tone Mapping
+        FrameBuffer::BindFramebuffer(&m_TonemappingFrameBuffer->ID);
+        glClear(GL_COLOR_BUFFER_BIT);
+#ifdef AZIMUTH_EDITOR
+        m_ToneMappingShader->use();
+        m_ToneMappingShader->setFloat("g_Exposure", EditorSettingsPanel::Exposure);
+#endif
+        RenderScreenQuad(m_ToneMappingShader.get(), m_RenderedSceneTexture);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // Post Processing
+        FrameBuffer::BindFramebuffer(&m_PostProcessingFrameBuffer->ID);
+        glClear(GL_COLOR_BUFFER_BIT);
+        RenderScreenQuad(m_PostProcessShader.get(), m_ToneMappedTexture);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // Final Output
         FrameBuffer::BindFramebuffer(&outputFramebuffer);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-        RenderScreenQuad(m_PostProcessingShader.get(), m_SceneTexture);
-
+        RenderScreenQuad(m_FinalCompositeShader.get(), m_PostProcessedTexture);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     };
 
@@ -127,20 +155,23 @@ namespace Azimuth
             shader->setFloat("g_PointLights[" + std::to_string(i) + "].linear", 0.009f);
             shader->setFloat("g_PointLights[" + std::to_string(i) + "].quadratic", 0.0032f);
             shader->setVec3("g_PointLights[" + std::to_string(i) + "].position", light->Transform->Position);
-            shader->setVec3("g_PointLights[" + std::to_string(i) + "].ambient", *light->Color);
-            shader->setVec3("g_PointLights[" + std::to_string(i) + "].diffuse", *light->Color);
-            shader->setVec3("g_PointLights[" + std::to_string(i) + "].specular", glm::vec3(1.0f));
+            shader->setVec3("g_PointLights[" + std::to_string(i) + "].ambient", *light->Color * *light->HDRMultiplier);
+            shader->setVec3("g_PointLights[" + std::to_string(i) + "].diffuse", *light->Color * *light->HDRMultiplier);
+            shader->setVec3("g_PointLights[" + std::to_string(i) + "].specular", glm::vec3(1.0f) * *light->HDRMultiplier);
         }
     }
 
-    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture)
+    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps)
     {
         shader->use();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        m_PostProcessingShader->setInt("g_Texture", 0);
+        shader->setInt("g_Texture", 0);
+
+        if (mipmaps)
+            shader->setFloat("g_MipmapLevel", 1.0f);
 
         glBindVertexArray(m_RenderScreenQuad.VAO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);

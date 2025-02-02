@@ -17,7 +17,7 @@ namespace Azimuth
     {
     public:
         static bool OpenFileDialog(std::string &outFilePath, FileDialogType dialogType);
-        static void OpenScene(Scene *scene);
+        static void OpenScene(Scene *scene, std::string path = "");
         static void SaveScene(Scene *scene);
     };
 }

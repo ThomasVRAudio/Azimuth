@@ -22,7 +22,8 @@ namespace Azimuth
             std::shared_ptr<Light> light = std::make_shared<Light>(Light{
                 .Transform = &transform,
                 .Color = &lightComponent.Color,
-                .Type = &lightComponent.Type});
+                .Type = &lightComponent.Type,
+                .HDRMultiplier = &lightComponent.HDRMultiplier});
 
             switch (lightComponent.Type)
             {

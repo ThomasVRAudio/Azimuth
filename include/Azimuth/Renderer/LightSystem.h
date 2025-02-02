@@ -11,6 +11,7 @@ namespace Azimuth
         TransformComponent *Transform;
         glm::vec3 *Color;
         LightType *Type;
+        float *HDRMultiplier;
     };
 
     class LightSystem : public System

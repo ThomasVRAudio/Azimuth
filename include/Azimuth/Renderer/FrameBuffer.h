@@ -7,6 +7,7 @@ namespace Azimuth
     {
         None = 0,
         RGBA = GL_RGBA,
+        RGBA16F = GL_RGBA16F,
         RED_INTEGER = GL_RED_INTEGER,
         RED_INTEGER_INTERNAL = GL_R32I
     };
@@ -60,20 +61,24 @@ namespace Azimuth
         unsigned int ID;
         std::vector<ColorAttachment> colorAttachments;
         std::vector<DepthAttachment> depthAttachments;
+        bool generateMipmaps = false;
 
         FrameBufferConfig() {}
-        FrameBufferConfig(const ColorAttachment &color)
+        FrameBufferConfig(const ColorAttachment &color, bool generateMipmaps = false)
+            : generateMipmaps(generateMipmaps)
         {
             colorAttachments.emplace_back(color);
         }
 
-        FrameBufferConfig(const ColorAttachment &color, const DepthAttachment &depth)
+        FrameBufferConfig(const ColorAttachment &color, const DepthAttachment &depth, bool generateMipmaps = false)
+            : generateMipmaps(generateMipmaps)
         {
             colorAttachments.emplace_back(color);
             depthAttachments.emplace_back(depth);
         }
 
-        FrameBufferConfig(const std::vector<ColorAttachment> &colors)
+        FrameBufferConfig(const std::vector<ColorAttachment> &colors, bool generateMipmaps = false)
+            : generateMipmaps(generateMipmaps)
         {
             for (auto &color : colors)
             {
@@ -81,7 +86,8 @@ namespace Azimuth
             }
         }
 
-        FrameBufferConfig(const std::vector<ColorAttachment> &colors, const DepthAttachment &depth)
+        FrameBufferConfig(const std::vector<ColorAttachment> &colors, const DepthAttachment &depth, bool generateMipmaps = false)
+            : generateMipmaps(generateMipmaps)
         {
             for (const auto &color : colors)
             {
@@ -91,7 +97,8 @@ namespace Azimuth
             depthAttachments.emplace_back(depth);
         }
 
-        FrameBufferConfig(const std::vector<ColorAttachment> &colors, const std::vector<DepthAttachment> &depths)
+        FrameBufferConfig(const std::vector<ColorAttachment> &colors, const std::vector<DepthAttachment> &depths, bool generateMipmaps = false)
+            : generateMipmaps(generateMipmaps)
         {
             for (const auto &color : colors)
             {

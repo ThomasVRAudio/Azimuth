@@ -43,6 +43,7 @@ uniform vec3 g_ViewPos;
 
 uniform Material u_Material;
 uniform vec3 u_Color;
+uniform float u_HDR;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(-light.direction);
@@ -89,7 +90,7 @@ void main()
         result += CalcPointLight(g_PointLights[i], normal, FragPos, viewDir);
     };
 
-    result *= u_Color;
+    result *= (u_Color * u_HDR);
    
     FragColor = vec4(result, 1.0f); 
 }

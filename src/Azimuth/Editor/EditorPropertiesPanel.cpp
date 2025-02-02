@@ -81,6 +81,7 @@ namespace Azimuth
             }
             ImGui::Checkbox("Active", &component.IsActive);
             ImGui::ColorPicker3("Light Color", &component.Color[0], ImGuiColorEditFlags_NoInputs);
+            ImGui::SliderFloat("HDR Multiplier", &component.HDRMultiplier, 0.0f, 10.0f);
             ImGui::PopItemWidth();
 
             ImGui::Separator();
@@ -142,6 +143,9 @@ namespace Azimuth
 
                     if (uniform.Name.find("shininess")) // TO DO
                         max = 100.0f;
+
+                    if (uniform.Name.find("HDR"))
+                        max = 10.0f;
 
                     ImGui::SliderFloat(uniform.Name.c_str(), &value, 0.0f, max);
                 }

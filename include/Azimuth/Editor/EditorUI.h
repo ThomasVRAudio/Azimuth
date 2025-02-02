@@ -6,6 +6,7 @@
 #include <Azimuth/Core/Application.h>
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
+#include <Azimuth/Editor/EditorSettingsPanel.h>
 #include <Azimuth/Project/Serializer.h>
 #include <dependencies/imgui/ImGuizmo.h>
 #include <Azimuth/ECS/Component.h>
@@ -52,6 +53,7 @@ namespace Azimuth
         inline static bool m_IsManipulating = false;
         inline static Scene *m_Scene = nullptr;
         inline static Entity m_SelectedEntity = -1;
+        inline static bool t_HasOpenedScene = false;
         friend class EditorHierarchyPanel;
         friend class EditorPropertiesPanel;
     };
