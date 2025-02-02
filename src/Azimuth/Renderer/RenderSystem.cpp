@@ -15,24 +15,22 @@ namespace Azimuth
 
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
 
-        ColorAttachment color = {width, height, &m_RenderedSceneTexture, FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA16F};
-        DepthAttachment depth = {width, height};
-
-        m_SceneRenderFrameBuffer = std::make_unique<FrameBufferConfig>(color, depth, true);
+        ColorAttachment sceneColor = {width, height, &m_RenderedSceneTexture, FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA16F};
+        DepthAttachment sceneDepth = {width, height};
+        m_SceneRenderFrameBuffer = std::make_unique<FrameBufferConfig>(sceneColor, sceneDepth, true);
         FrameBuffer::CreateFramebuffer(m_SceneRenderFrameBuffer.get());
 
-        ColorAttachment hdrColor = {width, height, &m_ToneMappedTexture};
-
-        m_TonemappingFrameBuffer = std::make_unique<FrameBufferConfig>(hdrColor);
+        ColorAttachment tonemapColor = {width, height, &m_ToneMappedTexture};
+        m_TonemappingFrameBuffer = std::make_unique<FrameBufferConfig>(tonemapColor);
         FrameBuffer::CreateFramebuffer(m_TonemappingFrameBuffer.get());
 
-        ColorAttachment postProcessingColor = {width, height, &m_PostProcessedTexture};
-        m_PostProcessingFrameBuffer = std::make_unique<FrameBufferConfig>(postProcessingColor);
+        ColorAttachment postProcessColor = {width, height, &m_PostProcessedTexture};
+        m_PostProcessingFrameBuffer = std::make_unique<FrameBufferConfig>(postProcessColor);
         FrameBuffer::CreateFramebuffer(m_PostProcessingFrameBuffer.get());
 
+        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/hdr.vert", "assets/shaders/default/hdr.frag");
         m_PostProcessShader = std::make_unique<Shader>("assets/shaders/default/postprocessing.vert", "assets/shaders/default/postprocessing.frag");
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/default/master.vert", "assets/shaders/default/master.frag");
-        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/hdr.vert", "assets/shaders/default/hdr.frag");
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
