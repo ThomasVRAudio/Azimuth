@@ -77,7 +77,11 @@ namespace Azimuth
 
             YAML::Node root = YAML::Load(fin);
 
-            for (const auto &entityNode : root)
+            YAML::Node sceneSection = root["Scene"];
+
+            scene->Settings->Exposure = sceneSection["Exposure"].as<float>();
+
+            for (const auto &entityNode : root["Entities"])
             {
                 YAML::Node entitySection = entityNode.second;
 
@@ -186,6 +190,7 @@ namespace Azimuth
 
                     component.Type = static_cast<LightType>(lightNode["Type"].as<int>());
                     component.IsActive = lightNode["IsActive"].as<bool>();
+                    component.HDRMultiplier = lightNode["HDRMultiplier"].as<float>();
 
                     scene->AddComponent<LightComponent>(entity, std::move(component));
                 }
@@ -206,6 +211,13 @@ namespace Azimuth
             ECSManager *ECS = scene->ECS;
             YAML::Node root;
 
+            // Save Scene Settings
+            YAML::Node sceneSection;
+            sceneSection["Exposure"] = scene->Settings->Exposure;
+            root["Scene"] = sceneSection;
+
+            // Save Entities
+            YAML::Node entitiesSection;
             for (auto &entity : scene->m_Entities)
             {
                 YAML::Node entitySection;
@@ -334,12 +346,14 @@ namespace Azimuth
 
                     node["Type"] = static_cast<int>(component.Type);
                     node["IsActive"] = static_cast<bool>(component.IsActive);
+                    node["HDRMultiplier"] = static_cast<float>(component.HDRMultiplier);
 
                     entitySection["Light"] = node;
                 }
 
-                root["Entity " + std::to_string(entity)] = entitySection;
+                entitiesSection["Entity " + std::to_string(entity)] = entitySection;
             }
+            root["Entities"] = entitiesSection;
             std::ofstream fout(filePath);
             if (fout.is_open())
             {
