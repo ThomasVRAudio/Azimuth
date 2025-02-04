@@ -23,7 +23,7 @@ namespace Azimuth
                 .Transform = &transform,
                 .Color = &lightComponent.Color,
                 .Type = &lightComponent.Type,
-                .HDRMultiplier = &lightComponent.HDRMultiplier});
+                .Intensity = &lightComponent.Intensity});
 
             switch (lightComponent.Type)
             {

@@ -124,11 +124,12 @@ namespace Azimuth
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void HDRCubemap::DrawHDRCubemap(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+    void HDRCubemap::DrawHDRCubemap(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, float intensity)
     {
         m_BackgroundShader->use();
         m_BackgroundShader->setMat4("view", viewMatrix);
         m_BackgroundShader->setMat4("projection", projectionMatrix);
+        m_BackgroundShader->setFloat("g_Intensity", intensity);
         glActiveTexture(GL_TEXTURE0);
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);

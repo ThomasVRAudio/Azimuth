@@ -20,7 +20,29 @@ namespace Azimuth
 
             ImGui::SliderFloat("Exposure", &Exposure, 0.0f, max);
             Exposure = round(Exposure / 0.25f) * 0.25f;
+
+            float &HDRCubemapIntensity = EditorUI::GetSceneSettings()->HDRCubemapIntensity;
+            ImGui::SliderFloat("Skybox Intensity", &HDRCubemapIntensity, 0.0f, 2.0f);
         }
+
+        ImGui::Text("Application Settings: ");
+
+        ImGui::Checkbox("VSync", &m_VSyncCheckboxState);
+
+        if (m_VSyncCheckboxState != m_VSyncLastCheckboxState)
+        {
+            if (m_VSyncCheckboxState)
+                Window::SetVSync(true);
+            else
+                Window::SetVSync(false);
+
+            m_VSyncLastCheckboxState = m_VSyncCheckboxState;
+        }
+
+        ImGui::Text("Framerate");
+        float delta = 1.0f / Time::deltaTime();
+        ImGui::Text("%.2f", delta);
+
         ImGui::Unindent(left_padding);
         ImGui::End();
     }

@@ -81,7 +81,7 @@ namespace Azimuth
             }
             ImGui::Checkbox("Active", &component.IsActive);
             ImGui::ColorPicker3("Light Color", &component.Color[0], ImGuiColorEditFlags_NoInputs);
-            ImGui::SliderFloat("HDR Multiplier", &component.HDRMultiplier, 0.0f, 10.0f);
+            ImGui::SliderFloat("Intensity", &component.Intensity, 0.0f, 20.0f);
             ImGui::PopItemWidth();
 
             ImGui::Separator();

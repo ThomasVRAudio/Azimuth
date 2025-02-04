@@ -39,6 +39,11 @@ namespace Azimuth
         }
     }
 
+    void Window::SetVSync(boolean on)
+    {
+        glfwSwapInterval(on);
+    }
+
     void Window::OnUpdate()
     {
         glfwSwapBuffers(m_Window);

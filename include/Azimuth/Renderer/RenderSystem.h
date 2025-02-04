@@ -29,7 +29,7 @@ namespace Azimuth
 
     private:
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);
-        void RenderPass(Camera &camera);
+        void RenderPass(Camera &camera, SceneSettings *settings = nullptr);
         void RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps = false);
         ECSManager *m_ECS;
         glm::mat4 m_Model = glm::mat4(1.0f);
@@ -38,10 +38,22 @@ namespace Azimuth
         std::unique_ptr<FrameBufferConfig> m_SceneRenderFrameBuffer;
         std::unique_ptr<FrameBufferConfig> m_TonemappingFrameBuffer;
         unsigned int m_RenderedSceneTexture, m_ToneMappedTexture, m_PostProcessedTexture;
+        // should be unique pointers. change after testing
         std::shared_ptr<Shader> m_PostProcessShader = nullptr;
         std::shared_ptr<Shader> m_FinalCompositeShader = nullptr;
         std::shared_ptr<Shader> m_ToneMappingShader = nullptr;
         std::unique_ptr<FrameBufferConfig> m_PostProcessingFrameBuffer;
         Mesh m_RenderScreenQuad = Geometry::Screen();
+
+        // Bloom
+    private:
+        void BloomDownSampling(unsigned int texture);
+        void BloomUpSampling(float filterRadius);
+        std::vector<ColorAttachment> m_BloomMipChainAttachments;
+        std::unique_ptr<FrameBufferConfig> m_BloomFrameBuffer;
+        std::shared_ptr<Shader> m_BloomDownSampleShader = nullptr;
+        std::shared_ptr<Shader> m_BloomUpSampleShader = nullptr;
+        unsigned int mipChainLength = 6;
+        unsigned int mipTextures[6];
     };
 }

@@ -47,6 +47,7 @@ namespace Azimuth
 
         for (size_t i = 0; i < config->colorAttachments.size(); ++i)
         {
+
             ColorAttachment &attachment = config->colorAttachments[i];
             if (textureIDs.find(*attachment.texture) == textureIDs.end())
             {
@@ -54,8 +55,10 @@ namespace Azimuth
                 textureIDs.insert(*attachment.texture);
                 glBindTexture(GL_TEXTURE_2D, *attachment.texture);
 
+                GLenum textureType = config->colorAttachments[i].internalFormat == FrameBufferTextureFormat::R11FG11FB10F ? GL_FLOAT : GL_UNSIGNED_BYTE;
+
                 glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLenum>(attachment.internalFormat), attachment.width, attachment.height,
-                             0, static_cast<GLenum>(attachment.format), GL_UNSIGNED_BYTE, nullptr);
+                             0, static_cast<GLenum>(attachment.format), textureType, nullptr);
 
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, config->generateMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -74,13 +77,26 @@ namespace Azimuth
                 glBindTexture(GL_TEXTURE_2D, *attachment.texture);
             }
 
-            attachments[i] = GL_COLOR_ATTACHMENT0 + i;
-            glFramebufferTexture2D(GL_FRAMEBUFFER, attachments[i], GL_TEXTURE_2D, *attachment.texture, 0);
+            if (!config->singleRenderOutput)
+            {
+                attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+                glFramebufferTexture2D(GL_FRAMEBUFFER, attachments[i], GL_TEXTURE_2D, *attachment.texture, 0);
+            }
 
             if (config->generateMipmaps)
                 glGenerateMipmap(GL_TEXTURE_2D);
         }
-        glDrawBuffers(config->colorAttachments.size(), attachments);
+
+        if (config->singleRenderOutput)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *config->colorAttachments[0].texture, 0);
+            attachments[0] = GL_COLOR_ATTACHMENT0;
+            glDrawBuffers(1, attachments);
+        }
+        else
+        {
+            glDrawBuffers(config->colorAttachments.size(), attachments);
+        }
 
         for (size_t i = 0; i < config->depthAttachments.size(); ++i)
         {
@@ -108,6 +124,18 @@ namespace Azimuth
         glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
         glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
 
+        glViewport(0, 0, width, height);
+
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (status != GL_FRAMEBUFFER_COMPLETE)
+        {
+            std::cerr << "Bind Framebuffer failed: " << status << std::endl;
+        }
+    }
+
+    void FrameBuffer::BindFramebuffer(unsigned int *framebuffer, unsigned int width, unsigned int height)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, *framebuffer);
         glViewport(0, 0, width, height);
 
         GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

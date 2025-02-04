@@ -16,7 +16,7 @@ namespace Azimuth
     public:
         glm::vec3 Color = glm::vec3(1.0f);
         LightType Type = POINT_LIGHT;
-        float HDRMultiplier = 1.0f;
+        float Intensity = 1.0f;
         bool IsActive = true;
     };
 }

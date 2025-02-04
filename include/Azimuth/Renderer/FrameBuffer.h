@@ -6,8 +6,10 @@ namespace Azimuth
     enum class FrameBufferTextureFormat
     {
         None = 0,
+        RGB = GL_RGB,
         RGBA = GL_RGBA,
         RGBA16F = GL_RGBA16F,
+        R11FG11FB10F = GL_R11F_G11F_B10F,
         RED_INTEGER = GL_RED_INTEGER,
         RED_INTEGER_INTERNAL = GL_R32I
     };
@@ -62,6 +64,7 @@ namespace Azimuth
         std::vector<ColorAttachment> colorAttachments;
         std::vector<DepthAttachment> depthAttachments;
         bool generateMipmaps = false;
+        bool singleRenderOutput = false;
 
         FrameBufferConfig() {}
         FrameBufferConfig(const ColorAttachment &color, bool generateMipmaps = false)
@@ -117,6 +120,7 @@ namespace Azimuth
         static void CreateFramebuffer(unsigned int *framebuffer, unsigned int *texture,
                                       unsigned int width, unsigned int height, bool enableStencilDepth = true);
         static void BindFramebuffer(unsigned int *framebuffer);
+        static void BindFramebuffer(unsigned int *framebuffer, unsigned int width, unsigned int height);
         static void CreateFramebuffer(FrameBufferConfig *config);
     };
 

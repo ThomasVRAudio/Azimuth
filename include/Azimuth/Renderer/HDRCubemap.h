@@ -11,7 +11,7 @@ namespace Azimuth
     {
     public:
         static void LoadHDRCubemap(std::string path, unsigned int resolution);
-        static void DrawHDRCubemap(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+        static void DrawHDRCubemap(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, float intensity = 1.0f);
         ~HDRCubemap()
         {
             if (m_BackgroundShader)

@@ -10,6 +10,7 @@ namespace Azimuth
         static void OnUpdate();
         static float GetWidth() { return m_Width; }
         static float GetHeight() { return m_Height; }
+        static void SetVSync(boolean on);
 
         inline static GLFWwindow *GetMainWindow() { return m_Window; }
 

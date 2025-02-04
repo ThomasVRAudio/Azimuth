@@ -80,6 +80,7 @@ namespace Azimuth
             YAML::Node sceneSection = root["Scene"];
 
             scene->Settings->Exposure = sceneSection["Exposure"].as<float>();
+            scene->Settings->HDRCubemapIntensity = sceneSection["HDRCubemapIntensity"].as<float>();
 
             for (const auto &entityNode : root["Entities"])
             {
@@ -190,7 +191,7 @@ namespace Azimuth
 
                     component.Type = static_cast<LightType>(lightNode["Type"].as<int>());
                     component.IsActive = lightNode["IsActive"].as<bool>();
-                    component.HDRMultiplier = lightNode["HDRMultiplier"].as<float>();
+                    component.Intensity = lightNode["HDRMultiplier"].as<float>();
 
                     scene->AddComponent<LightComponent>(entity, std::move(component));
                 }
@@ -214,6 +215,7 @@ namespace Azimuth
             // Save Scene Settings
             YAML::Node sceneSection;
             sceneSection["Exposure"] = scene->Settings->Exposure;
+            sceneSection["HDRCubemapIntensity"] = scene->Settings->HDRCubemapIntensity;
             root["Scene"] = sceneSection;
 
             // Save Entities
@@ -346,7 +348,7 @@ namespace Azimuth
 
                     node["Type"] = static_cast<int>(component.Type);
                     node["IsActive"] = static_cast<bool>(component.IsActive);
-                    node["HDRMultiplier"] = static_cast<float>(component.HDRMultiplier);
+                    node["HDRMultiplier"] = static_cast<float>(component.Intensity);
 
                     entitySection["Light"] = node;
                 }

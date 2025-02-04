@@ -8,6 +8,10 @@ namespace Azimuth
     {
     public:
         static void DrawPanel();
+
+    private:
+        inline static bool m_VSyncCheckboxState = false;
+        inline static bool m_VSyncLastCheckboxState = false;
     };
 
 }
