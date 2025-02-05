@@ -83,6 +83,7 @@ namespace Azimuth
         BloomDownSampling(m_PrefilteredTexture);
         BloomUpSampling(0.0005f);
 
+        // Blend Bloom with Scene
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glBlendEquation(GL_FUNC_ADD);
