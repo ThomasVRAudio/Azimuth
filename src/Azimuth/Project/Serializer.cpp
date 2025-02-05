@@ -81,6 +81,7 @@ namespace Azimuth
 
             scene->Settings->Exposure = sceneSection["Exposure"].as<float>();
             scene->Settings->HDRCubemapIntensity = sceneSection["HDRCubemapIntensity"].as<float>();
+            scene->Settings->VSync = sceneSection["VSync"].as<bool>();
 
             for (const auto &entityNode : root["Entities"])
             {
@@ -216,6 +217,7 @@ namespace Azimuth
             YAML::Node sceneSection;
             sceneSection["Exposure"] = scene->Settings->Exposure;
             sceneSection["HDRCubemapIntensity"] = scene->Settings->HDRCubemapIntensity;
+            sceneSection["VSync"] = scene->Settings->VSync;
             root["Scene"] = sceneSection;
 
             // Save Entities

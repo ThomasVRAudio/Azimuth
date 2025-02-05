@@ -6,5 +6,6 @@ namespace Azimuth
     {
         float Exposure = 1.0f;
         float HDRCubemapIntensity = 1.0f;
+        bool VSync = true;
     };
 }

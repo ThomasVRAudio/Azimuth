@@ -27,16 +27,18 @@ namespace Azimuth
 
         ImGui::Text("Application Settings: ");
 
-        ImGui::Checkbox("VSync", &m_VSyncCheckboxState);
+        bool &VSync = EditorUI::GetSceneSettings()->VSync;
 
-        if (m_VSyncCheckboxState != m_VSyncLastCheckboxState)
+        ImGui::Checkbox("VSync", &VSync);
+
+        if (VSync != m_VSyncLastCheckboxState)
         {
-            if (m_VSyncCheckboxState)
+            if (VSync)
                 Window::SetVSync(true);
             else
                 Window::SetVSync(false);
 
-            m_VSyncLastCheckboxState = m_VSyncCheckboxState;
+            m_VSyncLastCheckboxState = VSync;
         }
 
         ImGui::Text("Framerate");
