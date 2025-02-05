@@ -56,6 +56,11 @@ namespace Azimuth
         m_BloomDownSampleShader->setInt("srcTexture", 0);
         m_BloomUpSampleShader->use();
         m_BloomUpSampleShader->setInt("srcTexture", 0);
+
+        m_PrefilterShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/prefilter.frag");
+        ColorAttachment prefilterColor = {width, height, &m_PrefilteredTexture};
+        m_PrefilterFrameBuffer = std::make_unique<FrameBufferConfig>(prefilterColor);
+        FrameBuffer::CreateFramebuffer(m_PrefilterFrameBuffer.get());
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
@@ -66,15 +71,24 @@ namespace Azimuth
         RenderPass(camera, settings);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        // Prefilter
+        FrameBuffer::BindFramebuffer(&m_PrefilterFrameBuffer->ID);
+        glClear(GL_COLOR_BUFFER_BIT);
+        RenderScreenQuad(m_PrefilterShader.get(), m_RenderedSceneTexture);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
         // Bloom
         FrameBuffer::BindFramebuffer(&m_BloomFrameBuffer->ID);
         glClear(GL_COLOR_BUFFER_BIT);
-        BloomDownSampling(m_RenderedSceneTexture);
+        BloomDownSampling(m_PrefilteredTexture);
         BloomUpSampling(0.0005f);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, *m_BloomFrameBuffer->colorAttachments[0].texture);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glBlendEquation(GL_FUNC_ADD);
+        RenderScreenQuad(m_FinalCompositeShader.get(), m_RenderedSceneTexture);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDisable(GL_BLEND);
 
         // HDR Tone Mapping
         FrameBuffer::BindFramebuffer(&m_TonemappingFrameBuffer->ID);
@@ -88,7 +102,6 @@ namespace Azimuth
         FrameBuffer::BindFramebuffer(&m_PostProcessingFrameBuffer->ID);
         glClear(GL_COLOR_BUFFER_BIT);
         RenderScreenQuad(m_PostProcessShader.get(), m_ToneMappedTexture);
-
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Final Output

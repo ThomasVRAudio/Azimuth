@@ -37,7 +37,8 @@ namespace Azimuth
         std::shared_ptr<LightSystem> m_LightSystem;
         std::unique_ptr<FrameBufferConfig> m_SceneRenderFrameBuffer;
         std::unique_ptr<FrameBufferConfig> m_TonemappingFrameBuffer;
-        unsigned int m_RenderedSceneTexture, m_ToneMappedTexture, m_PostProcessedTexture;
+        std::unique_ptr<FrameBufferConfig> m_PrefilterFrameBuffer;
+        unsigned int m_RenderedSceneTexture, m_ToneMappedTexture, m_PostProcessedTexture, m_PrefilteredTexture;
         // should be unique pointers. change after testing
         std::shared_ptr<Shader> m_PostProcessShader = nullptr;
         std::shared_ptr<Shader> m_FinalCompositeShader = nullptr;
@@ -53,6 +54,7 @@ namespace Azimuth
         std::unique_ptr<FrameBufferConfig> m_BloomFrameBuffer;
         std::shared_ptr<Shader> m_BloomDownSampleShader = nullptr;
         std::shared_ptr<Shader> m_BloomUpSampleShader = nullptr;
+        std::shared_ptr<Shader> m_PrefilterShader = nullptr;
         unsigned int mipChainLength = 6;
         unsigned int mipTextures[6];
     };
