@@ -23,6 +23,9 @@ namespace Azimuth
 
             float &HDRCubemapIntensity = EditorUI::GetSceneSettings()->HDRCubemapIntensity;
             ImGui::SliderFloat("Skybox Intensity", &HDRCubemapIntensity, 0.0f, 2.0f);
+
+            float &BloomThreshold = EditorUI::GetSceneSettings()->BloomThreshold;
+            ImGui::SliderFloat("Bloom Threshold", &BloomThreshold, 0.0f, 10.0f);
         }
 
         ImGui::Text("Application Settings: ");

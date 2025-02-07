@@ -74,6 +74,8 @@ namespace Azimuth
         // Prefilter
         FrameBuffer::BindFramebuffer(&m_PrefilterFrameBuffer->ID);
         glClear(GL_COLOR_BUFFER_BIT);
+        m_PrefilterShader->use();
+        m_PrefilterShader->setFloat("g_Threshold", settings->BloomThreshold);
         RenderScreenQuad(m_PrefilterShader.get(), m_RenderedSceneTexture);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -82,6 +84,9 @@ namespace Azimuth
         glClear(GL_COLOR_BUFFER_BIT);
         BloomDownSampling(m_PrefilteredTexture);
         BloomUpSampling(0.0005f);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, *m_BloomFrameBuffer->colorAttachments[0].texture);
 
         // Blend Bloom with Scene
         glEnable(GL_BLEND);
