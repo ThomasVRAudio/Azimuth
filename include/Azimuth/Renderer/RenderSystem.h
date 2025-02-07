@@ -10,6 +10,7 @@
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/Renderer/LightSystem.h>
 #include <Azimuth/Scene/SceneSettings.h>
+#include <Azimuth/Renderer/Bloom.h>
 
 namespace Azimuth
 {
@@ -42,18 +43,9 @@ namespace Azimuth
         std::unique_ptr<Shader> m_PostProcessShader = nullptr;
         std::unique_ptr<Shader> m_FinalCompositeShader = nullptr;
         std::unique_ptr<Shader> m_ToneMappingShader = nullptr;
+        std::unique_ptr<Shader> m_PrefilterShader = nullptr;
         std::unique_ptr<FrameBufferConfig> m_PostProcessingFrameBuffer;
         Mesh m_RenderScreenQuad = Geometry::Screen();
-
-    private:
-        void BloomDownSampling(unsigned int texture);
-        void BloomUpSampling(float filterRadius);
-        std::vector<ColorAttachment> m_BloomMipChainAttachments;
-        std::unique_ptr<FrameBufferConfig> m_BloomFrameBuffer;
-        std::unique_ptr<Shader> m_BloomDownSampleShader = nullptr;
-        std::unique_ptr<Shader> m_BloomUpSampleShader = nullptr;
-        std::unique_ptr<Shader> m_PrefilterShader = nullptr;
-        unsigned int mipChainLength = 6;
-        unsigned int mipTextures[6];
+        std::unique_ptr<Bloom> m_Bloom = nullptr;
     };
 }

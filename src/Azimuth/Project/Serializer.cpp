@@ -82,6 +82,8 @@ namespace Azimuth
             scene->Settings->Exposure = sceneSection["Exposure"].as<float>();
             scene->Settings->HDRCubemapIntensity = sceneSection["HDRCubemapIntensity"].as<float>();
             scene->Settings->VSync = sceneSection["VSync"].as<bool>();
+            scene->Settings->BloomBlend = sceneSection["BloomBlend"].as<float>();
+            scene->Settings->BloomThreshold = sceneSection["BloomThreshold"].as<float>();
 
             for (const auto &entityNode : root["Entities"])
             {
@@ -218,6 +220,8 @@ namespace Azimuth
             sceneSection["Exposure"] = scene->Settings->Exposure;
             sceneSection["HDRCubemapIntensity"] = scene->Settings->HDRCubemapIntensity;
             sceneSection["VSync"] = scene->Settings->VSync;
+            sceneSection["BloomThreshold"] = scene->Settings->BloomThreshold;
+            sceneSection["BloomBlend"] = scene->Settings->BloomBlend;
             root["Scene"] = sceneSection;
 
             // Save Entities

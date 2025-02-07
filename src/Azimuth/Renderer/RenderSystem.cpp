@@ -20,6 +20,10 @@ namespace Azimuth
         m_SceneRenderFrameBuffer = std::make_unique<FrameBufferConfig>(sceneColor, sceneDepth, true);
         FrameBuffer::CreateFramebuffer(m_SceneRenderFrameBuffer.get());
 
+        ColorAttachment prefilterColor = {width, height, &m_PrefilteredTexture};
+        m_PrefilterFrameBuffer = std::make_unique<FrameBufferConfig>(prefilterColor);
+        FrameBuffer::CreateFramebuffer(m_PrefilterFrameBuffer.get());
+
         ColorAttachment tonemapColor = {width, height, &m_ToneMappedTexture};
         m_TonemappingFrameBuffer = std::make_unique<FrameBufferConfig>(tonemapColor);
         FrameBuffer::CreateFramebuffer(m_TonemappingFrameBuffer.get());
@@ -28,39 +32,12 @@ namespace Azimuth
         m_PostProcessingFrameBuffer = std::make_unique<FrameBufferConfig>(postProcessColor);
         FrameBuffer::CreateFramebuffer(m_PostProcessingFrameBuffer.get());
 
+        m_Bloom = std::make_unique<Bloom>(width, height);
+
+        m_PrefilterShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/prefilter.frag");
         m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/default/tonemapping.vert", "assets/shaders/default/tonemapping.frag");
         m_PostProcessShader = std::make_unique<Shader>("assets/shaders/default/postprocessing.vert", "assets/shaders/default/postprocessing.frag");
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/default/master.vert", "assets/shaders/default/master.frag");
-
-        // Bloom
-        glm::vec2 currentMipSize = {width, height};
-
-        for (size_t i = 0; i < mipChainLength; i++)
-        {
-            currentMipSize *= (i == 0) ? 1.0f : 0.5f;
-            ColorAttachment mipColorAttachment = {static_cast<unsigned int>(currentMipSize.x), static_cast<unsigned int>(currentMipSize.y), &mipTextures[i],
-                                                  FrameBufferTextureFormat::RGB, FrameBufferTextureFormat::R11FG11FB10F};
-
-            m_BloomMipChainAttachments.emplace_back(mipColorAttachment);
-        }
-
-        m_BloomFrameBuffer = std::make_unique<FrameBufferConfig>(m_BloomMipChainAttachments);
-        m_BloomFrameBuffer->singleRenderOutput = true;
-
-        FrameBuffer::CreateFramebuffer(m_BloomFrameBuffer.get());
-
-        m_BloomDownSampleShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/downsample.frag");
-        m_BloomUpSampleShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/upsample.frag");
-
-        m_BloomDownSampleShader->use();
-        m_BloomDownSampleShader->setInt("srcTexture", 0);
-        m_BloomUpSampleShader->use();
-        m_BloomUpSampleShader->setInt("srcTexture", 0);
-
-        m_PrefilterShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/prefilter.frag");
-        ColorAttachment prefilterColor = {width, height, &m_PrefilteredTexture};
-        m_PrefilterFrameBuffer = std::make_unique<FrameBufferConfig>(prefilterColor);
-        FrameBuffer::CreateFramebuffer(m_PrefilterFrameBuffer.get());
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
@@ -80,28 +57,15 @@ namespace Azimuth
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Bloom
-        FrameBuffer::BindFramebuffer(&m_BloomFrameBuffer->ID);
-        glClear(GL_COLOR_BUFFER_BIT);
-        BloomDownSampling(m_PrefilteredTexture);
-        BloomUpSampling(0.0005f);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, *m_BloomFrameBuffer->colorAttachments[0].texture);
-
-        // Blend Bloom with Scene
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glBlendEquation(GL_FUNC_ADD);
-        RenderScreenQuad(m_FinalCompositeShader.get(), m_RenderedSceneTexture);
+        m_Bloom->RenderPass(m_PrefilteredTexture, 0.0005f, &m_RenderedSceneTexture, settings->BloomBlend);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glDisable(GL_BLEND);
 
         // HDR Tone Mapping
         FrameBuffer::BindFramebuffer(&m_TonemappingFrameBuffer->ID);
         glClear(GL_COLOR_BUFFER_BIT);
         m_ToneMappingShader->use();
         m_ToneMappingShader->setFloat("g_Exposure", settings->Exposure);
-        RenderScreenQuad(m_ToneMappingShader.get(), *m_BloomFrameBuffer->colorAttachments[0].texture);
+        RenderScreenQuad(m_ToneMappingShader.get(), m_Bloom->GetTexture());
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // Post Processing
@@ -229,63 +193,5 @@ namespace Azimuth
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);
         glDrawElements(GL_TRIANGLES, m_RenderScreenQuad.indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-    }
-
-    void RenderSystem::BloomDownSampling(unsigned int texture)
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-
-        m_BloomDownSampleShader->use();
-        glm::vec2 baseResolution = {m_BloomFrameBuffer->colorAttachments[0].width,
-                                    m_BloomFrameBuffer->colorAttachments[0].height};
-
-        m_BloomDownSampleShader->setVec2("srcResolution", baseResolution);
-
-        for (size_t i = 0; i < m_BloomMipChainAttachments.size(); ++i)
-        {
-            ColorAttachment mip = m_BloomMipChainAttachments[i];
-
-            glViewport(0, 0, mip.width, mip.height);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *mip.texture, 0);
-
-            glBindVertexArray(m_RenderScreenQuad.VAO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);
-            glDrawElements(GL_TRIANGLES, m_RenderScreenQuad.indices.size(), GL_UNSIGNED_INT, 0);
-            glBindVertexArray(0);
-
-            m_BloomDownSampleShader->setVec2("srcResolution", {mip.width, mip.height});
-            glBindTexture(GL_TEXTURE_2D, *mip.texture);
-        }
-    }
-
-    void RenderSystem::BloomUpSampling(float filterRadius)
-    {
-        m_BloomUpSampleShader->use();
-        m_BloomUpSampleShader->setFloat("filterRadius", filterRadius);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        glBlendEquation(GL_FUNC_ADD);
-
-        for (unsigned int i = m_BloomMipChainAttachments.size() - 1; i > 0; i--)
-        {
-            ColorAttachment mip = m_BloomMipChainAttachments[i];
-            ColorAttachment nextMip = m_BloomMipChainAttachments[i - 1];
-
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, *mip.texture);
-
-            glViewport(0, 0, nextMip.width, nextMip.height);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *nextMip.texture, 0);
-
-            glBindVertexArray(m_RenderScreenQuad.VAO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);
-
-            glDrawElements(GL_TRIANGLES, m_RenderScreenQuad.indices.size(), GL_UNSIGNED_INT, 0);
-            glBindVertexArray(0);
-        }
-
-        glDisable(GL_BLEND);
     }
 }
