@@ -30,6 +30,7 @@ namespace Azimuth
         fontConfig.OversampleV = 4;
         fontConfig.PixelSnapH = false;
         io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-SemiBold.ttf", 18.0f, &fontConfig);
+        io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-Bold.ttf", 18.0f, &fontConfig);
     }
 
     void EditorUI::DrawUI()
@@ -40,7 +41,7 @@ namespace Azimuth
 
         if (!t_HasOpenedScene)
         {
-            // Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/Basic.scene");
+            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/Basic_3.scene");
             t_HasOpenedScene = true;
         }
 

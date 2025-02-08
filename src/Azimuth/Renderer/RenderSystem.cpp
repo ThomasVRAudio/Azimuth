@@ -103,7 +103,8 @@ namespace Azimuth
             material.shader->setMat4("g_View", viewMatrix);
             material.shader->setMat4("g_Projection", projectionMatrix);
 
-            RenderLights(material.shader, camera);
+            if (material.shader->IsLit())
+                RenderLights(material.shader, camera);
 
             for (auto &uniform : *material.GetUniforms())
                 material.shader->setUniform(uniform);

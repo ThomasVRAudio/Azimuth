@@ -41,6 +41,7 @@
 
 #include <cassert>
 #include <filesystem>
+#include <regex>
 
 #include <windows.h>
 #include <commdlg.h>

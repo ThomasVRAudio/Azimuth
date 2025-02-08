@@ -1,3 +1,8 @@
+/* CREATION INSTRUCTIONS
+# Vert: assets/shaders/library/default/model.vert
+# Lit: 1
+*/
+
 #version 460 core
 layout (location = 0) out vec4 FragColor; 
 

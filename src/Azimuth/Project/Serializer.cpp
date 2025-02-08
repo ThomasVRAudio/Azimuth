@@ -20,11 +20,14 @@ namespace Azimuth
         ofn.nMaxFileTitle = 0;
 
         std::filesystem::path projectPath = std::filesystem::current_path();
-        std::filesystem::path initialDir = projectPath / "Scenes";
-        if (!std::filesystem::exists(initialDir))
-            std::filesystem::create_directories(initialDir);
 
-        std::string initialDirString = std::filesystem::absolute(initialDir).string();
+        if (projectPath.filename() != "Scenes")
+            projectPath /= "Scenes";
+
+        if (!std::filesystem::exists(projectPath))
+            std::filesystem::create_directories(projectPath);
+
+        std::string initialDirString = std::filesystem::absolute(projectPath).string();
         ofn.lpstrInitialDir = initialDirString.c_str();
 
         ofn.lpstrTitle = "Open Scene File";
@@ -132,7 +135,8 @@ namespace Azimuth
 
                     std::string vertexPath = mat["VertexPath"].as<std::string>();
                     std::string fragmentPath = mat["FragmentPath"].as<std::string>();
-                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(vertexPath, fragmentPath);
+                    bool receivesLight = mat["IsLit"].as<bool>();
+                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(vertexPath, fragmentPath, receivesLight);
 
                     std::shared_ptr<std::vector<Uniform>> uniforms = std::make_shared<std::vector<Uniform>>();
                     for (const auto &uniform : mat["Uniforms"])
@@ -285,6 +289,7 @@ namespace Azimuth
 
                     node["VertexPath"] = paths.first;
                     node["FragmentPath"] = paths.second;
+                    node["IsLit"] = component.shader->IsLit();
 
                     YAML::Node uniformsNode;
                     for (auto &uniform : *component.m_Uniforms)

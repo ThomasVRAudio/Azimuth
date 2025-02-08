@@ -10,7 +10,7 @@ namespace Azimuth
 
     void MaterialComponent::CreateMaterial()
     {
-        this->shader = std::make_shared<Shader>("assets/shaders/library/default/blinnphong.vert", "assets/shaders/library/default/blinnphong.frag");
+        this->shader = std::make_shared<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/blinnphong.frag");
         SetUniforms();
     }
 
@@ -22,6 +22,8 @@ namespace Azimuth
 
     void MaterialComponent::SetUniforms()
     {
+        m_Uniforms->clear();
+
         GLint numActiveUniforms = 0;
         glGetProgramiv(this->shader->ID, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
 

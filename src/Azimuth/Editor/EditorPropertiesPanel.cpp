@@ -127,6 +127,35 @@ namespace Azimuth
             MaterialComponent &material = EditorUI::m_Scene->GetComponent<MaterialComponent>(EditorUI::m_SelectedEntity);
             ImGui::PushItemWidth(100.0f);
 
+            std::string currentItem = "";
+
+            std::string selectedShader = material.shader->GetPaths().second;
+
+            size_t lastSlash = selectedShader.find_last_of("/\\");
+            if (lastSlash != std::string::npos)
+                selectedShader = selectedShader.substr(lastSlash + 1);
+
+            size_t lastDot = selectedShader.find_last_of('.');
+            if (lastDot != std::string::npos)
+                selectedShader = selectedShader.substr(0, lastDot);
+
+            ImGui::Text("Shader: ");
+            ImGui::SameLine(70);
+            if (ImGui::Button(selectedShader.c_str()))
+                ImGui::OpenPopup("Shader File Explorer");
+
+            if (ImGui::BeginPopup("Shader File Explorer"))
+            {
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
+                ImGui::Text(" Shader Select ");
+                DirectoryCombo("assets/shaders/library", currentItem, material);
+                ImGui::PopStyleVar();
+
+                ImGui::EndPopup();
+            }
+
+            float left_padding = 10.0f;
+
             for (auto &uniform : *material.GetUniforms())
             {
                 ImGui::PushItemWidth(150.0f);
@@ -294,6 +323,69 @@ namespace Azimuth
             ImGui::EndPopup();
         }
         ImGui::PopStyleVar();
+    }
+
+    void EditorPropertiesPanel::DirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material)
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.0f, 15.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 5.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowTitleAlign, ImVec2(0.0f, 0.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 5.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, 5.0f);
+        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+
+        std::vector<std::pair<FileType, std::string>> filenames = Files::GetFilenamesFromDirectory(path);
+        static std::unordered_map<std::string, bool> dirCollapseStates;
+
+        for (const auto &filename : filenames)
+        {
+            const std::string fullPath = path + "/" + filename.second;
+
+            if (filename.first == FileType::Directory)
+            {
+                ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+                bool isCollapsed = dirCollapseStates[fullPath];
+                if (ImGui::TreeNodeEx(filename.second.c_str(), ImGuiTreeNodeFlags_Leaf | (isCollapsed ? 0 : ImGuiTreeNodeFlags_DefaultOpen)))
+                {
+                    if (ImGui::IsItemClicked())
+                        dirCollapseStates[fullPath] = !isCollapsed;
+
+                    if (!isCollapsed)
+                        DirectoryCombo(fullPath, currentItem, material);
+
+                    ImGui::TreePop();
+                }
+                ImGui::PopFont();
+            }
+            else
+            {
+                if (filename.second.find(".vert") != std::string::npos)
+                    continue;
+
+                bool isSelected = (currentItem == filename.second);
+                std::string fileNoExtension = filename.second.substr(0, filename.second.find_last_of('.'));
+
+                if (ImGui::Selectable(fileNoExtension.c_str(), isSelected))
+                {
+                    std::string vertPath;
+                    bool lit;
+                    if (Files::GetShaderInfoFromFile(path + "/" + filename.second, vertPath, lit))
+                    {
+                        std::shared_ptr<Shader> shader = std::make_shared<Shader>(vertPath, path + "/" + filename.second, lit);
+                        material.shader = shader;
+                        material.SetUniforms();
+                    }
+                    else
+                    {
+                        print("Shader Info not found for: " << path);
+                    }
+                }
+            }
+        }
+
+        ImGui::PopFont();
+
+        ImGui::PopStyleVar(5);
     }
 }
 
