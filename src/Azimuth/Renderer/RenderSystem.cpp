@@ -5,7 +5,6 @@ namespace Azimuth
 
     void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, unsigned int width, unsigned int height)
     {
-
         this->m_ECS = ECS;
         m_LightSystem = lightSystem;
 
@@ -16,20 +15,20 @@ namespace Azimuth
         HDRCubemap::LoadHDRCubemap("assets/hdr/CasualDay4K.hdr", 4096);
 
         ColorAttachment sceneColor = {width, height, &m_RenderedSceneTexture, FrameBufferTextureFormat::RGBA, FrameBufferTextureFormat::RGBA16F};
-        DepthAttachment sceneDepth = {width, height};
-        m_SceneRenderFrameBuffer = std::make_unique<FrameBufferConfig>(sceneColor, sceneDepth, true);
-        FrameBuffer::CreateFramebuffer(m_SceneRenderFrameBuffer.get());
-
         ColorAttachment prefilterColor = {width, height, &m_PrefilteredTexture};
-        m_PrefilterFrameBuffer = std::make_unique<FrameBufferConfig>(prefilterColor);
-        FrameBuffer::CreateFramebuffer(m_PrefilterFrameBuffer.get());
-
         ColorAttachment tonemapColor = {width, height, &m_ToneMappedTexture};
-        m_TonemappingFrameBuffer = std::make_unique<FrameBufferConfig>(tonemapColor);
-        FrameBuffer::CreateFramebuffer(m_TonemappingFrameBuffer.get());
-
         ColorAttachment postProcessColor = {width, height, &m_PostProcessedTexture};
+
+        DepthAttachment sceneDepth = {width, height};
+
+        m_SceneRenderFrameBuffer = std::make_unique<FrameBufferConfig>(sceneColor, sceneDepth, true);
+        m_PrefilterFrameBuffer = std::make_unique<FrameBufferConfig>(prefilterColor);
+        m_TonemappingFrameBuffer = std::make_unique<FrameBufferConfig>(tonemapColor);
         m_PostProcessingFrameBuffer = std::make_unique<FrameBufferConfig>(postProcessColor);
+
+        FrameBuffer::CreateFramebuffer(m_SceneRenderFrameBuffer.get());
+        FrameBuffer::CreateFramebuffer(m_PrefilterFrameBuffer.get());
+        FrameBuffer::CreateFramebuffer(m_TonemappingFrameBuffer.get());
         FrameBuffer::CreateFramebuffer(m_PostProcessingFrameBuffer.get());
 
         m_Bloom = std::make_unique<Bloom>(width, height);
