@@ -34,10 +34,10 @@ namespace Azimuth
 
         m_Bloom = std::make_unique<Bloom>(width, height);
 
-        m_PrefilterShader = std::make_unique<Shader>("assets/shaders/system/post/bloom/bloom.vert", "assets/shaders/system/post/bloom/prefilter.frag");
-        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/system/post/tonemap/tonemapping.vert", "assets/shaders/system/post/tonemap/tonemapping.frag");
-        m_PostProcessShader = std::make_unique<Shader>("assets/shaders/system/post/postprocessing.vert", "assets/shaders/system/post/postprocessing.frag");
-        m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/system/common/master.vert", "assets/shaders/system/common/master.frag");
+        m_PrefilterShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/bloom/prefilter.frag");
+        m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/tonemap/tonemapping.frag");
+        m_PostProcessShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/postprocessing.frag");
+        m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/common/quad.frag");
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)

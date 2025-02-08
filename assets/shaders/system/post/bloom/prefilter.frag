@@ -1,5 +1,5 @@
 #version 460 core
-in vec2 texCoord;
+in vec2 TexCoords;
 out vec4 FragColor;
 
 uniform sampler2D g_Texture;
@@ -11,7 +11,7 @@ float lerp(float a, float b, float t) {
 
 void main() {
 
-    vec3 color = texture(g_Texture, texCoord).rgb;
+    vec3 color = texture(g_Texture, TexCoords).rgb;
 
     float brightness = max(color.r, max(color.g, color.b));
     float contribution = max ( 0, brightness - g_Threshold);
