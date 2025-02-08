@@ -5,7 +5,7 @@ namespace Azimuth
 
     unsigned int Cubemap::LoadCubemap(std::vector<std::string> &faces)
     {
-        Cubemap::m_CubemapShader = new Shader("assets/shaders/cubemap.vert", "assets/shaders/cubemap.frag");
+        Cubemap::m_CubemapShader = new Shader("assets/shaders/system/cubemap/cubemap.vert", "assets/shaders/system/cubemap/cubemap.frag");
 
         unsigned int textureID;
         glGenTextures(1, &textureID);

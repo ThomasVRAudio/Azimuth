@@ -22,9 +22,9 @@ namespace Azimuth
 
         FrameBuffer::CreateFramebuffer(m_BloomFrameBuffer.get());
 
-        m_BloomDownSampleShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/downsample.frag");
-        m_BloomUpSampleShader = std::make_unique<Shader>("assets/shaders/default/bloom/bloom.vert", "assets/shaders/default/bloom/upsample.frag");
-        m_BlendShader = std::make_unique<Shader>("assets/shaders/default/texcoords.vert", "assets/shaders/default/blend.frag");
+        m_BloomDownSampleShader = std::make_unique<Shader>("assets/shaders/system/post/bloom/bloom.vert", "assets/shaders/system/post/bloom/downsample.frag");
+        m_BloomUpSampleShader = std::make_unique<Shader>("assets/shaders/system/post/bloom/bloom.vert", "assets/shaders/system/post/bloom/upsample.frag");
+        m_BlendShader = std::make_unique<Shader>("assets/shaders/system/common/texcoords.vert", "assets/shaders/system/common/blend.frag");
     }
 
     void Bloom::DownSampling(unsigned int texture)

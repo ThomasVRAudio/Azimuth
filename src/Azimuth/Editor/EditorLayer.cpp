@@ -36,7 +36,7 @@ namespace Azimuth
         m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(ColorAttachment{width, height, &m_EditorSceneTexture});
         FrameBuffer::CreateFramebuffer(m_FrameBufferConfig.get());
 
-        m_EditorShader = std::make_shared<Shader>("assets/shaders/editor/unlit.vert", "assets/shaders/editor/unlit.frag");
+        m_EditorShader = std::make_shared<Shader>("assets/shaders/editor/selection/unlit.vert", "assets/shaders/editor/selection/unlit.frag");
         ColorAttachment entityIDAttachment{
             width,
             height,
