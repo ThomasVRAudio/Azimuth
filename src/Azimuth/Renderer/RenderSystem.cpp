@@ -39,8 +39,8 @@ namespace Azimuth
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/common/quad.frag");
 
         // test
-        m_ModelShader = std::make_unique<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/textured/lit.frag");
-        testModel = new Model("assets/models/backpack/backpack.obj");
+        // m_ModelShader = std::make_unique<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/textured/lit.frag");
+        // testModel = new Model("assets/models/backpack/backpack.obj");
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
@@ -110,8 +110,8 @@ namespace Azimuth
             material.shader->setMat4("g_View", viewMatrix);
             material.shader->setMat4("g_Projection", projectionMatrix);
 
-            if (it == 3) // test
-                testModel->Draw(*m_ModelShader.get());
+            // if (it == 3) // test
+            //     testModel->Draw(*m_ModelShader.get());
 
             if (material.shader->IsLit() || it == 3)
                 RenderLights(material.shader, camera);

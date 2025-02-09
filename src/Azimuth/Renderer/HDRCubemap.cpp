@@ -78,6 +78,7 @@ namespace Azimuth
         glDrawElements(GL_TRIANGLES, cubeMesh.indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+        glActiveTexture(GL_TEXTURE0);
     }
 
     void HDRCubemap::CreateIrradianceMap()

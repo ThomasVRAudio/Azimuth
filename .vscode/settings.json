@@ -60,6 +60,7 @@
     "unordered_set": "cpp",
     "bitset": "cpp",
     "variant": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "regex": "cpp"
   }
 }
