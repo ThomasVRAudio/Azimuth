@@ -58,12 +58,12 @@ namespace Azimuth
             if (name == "texture_diffuse")
             {
                 number = std::to_string(diffuseNr++);
-                shader.setFloat((name + number).c_str(), i + offset);
+                shader.setInt((name + number).c_str(), i + offset);
             }
             if (name == "texture_specular")
             {
                 number = std::to_string(specularNr++);
-                shader.setFloat((name + number).c_str(), i + offset);
+                shader.setInt((name + number).c_str(), i + offset);
             }
             if (name == "texture_normal")
             {

@@ -39,7 +39,7 @@ namespace Azimuth
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/common/quad.frag");
 
         // test
-        m_ModelShader = std::make_unique<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/blinnphong.frag");
+        m_ModelShader = std::make_unique<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/textured/lit.frag");
         testModel = new Model("assets/models/backpack/backpack.obj");
     }
 
@@ -179,10 +179,10 @@ namespace Azimuth
             auto &light = m_LightSystem->PointLights[i];
 
             shader->setFloat("g_PointLights[" + std::to_string(i) + "].constant", 1.0f);
-            shader->setFloat("g_PointLights[" + std::to_string(i) + "].linear", 0.009f);
-            shader->setFloat("g_PointLights[" + std::to_string(i) + "].quadratic", 0.0032f);
+            shader->setFloat("g_PointLights[" + std::to_string(i) + "].linear", 0.7f);
+            shader->setFloat("g_PointLights[" + std::to_string(i) + "].quadratic", 1.8f);
             shader->setVec3("g_PointLights[" + std::to_string(i) + "].position", light->Transform->Position);
-            shader->setVec3("g_PointLights[" + std::to_string(i) + "].ambient", *light->Color * *light->Intensity);
+            shader->setVec3("g_PointLights[" + std::to_string(i) + "].ambient", *directionalLight->Color * *light->Intensity);
             shader->setVec3("g_PointLights[" + std::to_string(i) + "].diffuse", *light->Color * *light->Intensity);
             shader->setVec3("g_PointLights[" + std::to_string(i) + "].specular", glm::vec3(1.0f) * *light->Intensity);
         }

@@ -6,7 +6,6 @@
 #version 460 core
 layout (location = 0) out vec4 FragColor; 
 
-
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
@@ -71,6 +70,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_Material.shininess);
 
+    vec3 ambient = light.ambient;
     vec3 diffuse = light.diffuse * diff;
     vec3 specular = light.diffuse * spec;
 
@@ -79,8 +79,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
 
     diffuse *= attenuation;
     specular *= attenuation;
+    ambient *= attenuation;
 
-    return (diffuse + specular);
+    return (ambient + diffuse + specular);
 };
 
 void main()

@@ -152,8 +152,6 @@ namespace Azimuth
     {
         std::string filename = std::string(path);
         filename = directory + '/' + filename;
-        std::cout << "filename" << filename << std::endl;
-        std::cout << "is normal" << isNormal << std::endl;
 
         unsigned int textureID;
         glGenTextures(1, &textureID);

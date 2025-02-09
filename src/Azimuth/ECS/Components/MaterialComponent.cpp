@@ -10,7 +10,7 @@ namespace Azimuth
 
     void MaterialComponent::CreateMaterial()
     {
-        this->shader = std::make_shared<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/blinnphong.frag");
+        this->shader = std::make_shared<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/lit/lit.frag");
         SetUniforms();
     }
 

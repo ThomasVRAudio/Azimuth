@@ -77,6 +77,7 @@ namespace Azimuth
         glBindVertexArray(cubeMesh.VAO);
         glDrawElements(GL_TRIANGLES, cubeMesh.indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
 
     void HDRCubemap::CreateIrradianceMap()
@@ -130,11 +131,11 @@ namespace Azimuth
         m_BackgroundShader->setMat4("view", viewMatrix);
         m_BackgroundShader->setMat4("projection", projectionMatrix);
         m_BackgroundShader->setFloat("g_Intensity", intensity);
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0 + 2);
 
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
 
-        m_BackgroundShader->setInt("environmentMap", 0);
+        m_BackgroundShader->setInt("environmentMap", 2);
 
         RenderProjectionCube();
     }
