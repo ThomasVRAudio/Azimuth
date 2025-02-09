@@ -21,6 +21,12 @@ namespace Azimuth
             return mouseState == GLFW_PRESS;
         }
 
+        static bool IsMouseButtonReleased(MouseButtonCode mouseButton)
+        {
+            auto mouseState = glfwGetMouseButton(Window::GetMainWindow(), static_cast<int>(mouseButton));
+            return mouseState == GLFW_RELEASE;
+        }
+
         static glm::vec2 GetMouseXY()
         {
             glfwGetCursorPos(Window::GetMainWindow(), &mousePosX, &mousePosY);

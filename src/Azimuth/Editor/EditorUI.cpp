@@ -179,6 +179,8 @@ namespace Azimuth
 
         ImGui::Begin("Scene", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
+        m_IsSceneWindowFocused = ImGui::IsWindowFocused();
+
         m_SceneWindowSize = ImGui::GetContentRegionAvail();
         m_SceneWindowPos = ImGui::GetWindowPos() + ImGui::GetCursorPos();
         ImVec2 availableSize = m_SceneWindowSize;
@@ -198,24 +200,11 @@ namespace Azimuth
 
     void EditorUI::ReadPixelID(unsigned int frameBufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment)
     {
+        double texX, texY;
+        bool isHovering = CheckMouseHoverScene(texX, texY, textureWidth, textureHeight);
 
-        if (!Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        if (!m_IsSceneWindowFocused || !Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || !isHovering)
             return;
-
-        double mouseX, mouseY;
-        glfwGetCursorPos(Window::GetMainWindow(), &mouseX, &mouseY);
-
-        double x = mouseX - m_SceneWindowPos.x;
-        double y = m_SceneWindowSize.y - (mouseY - m_SceneWindowPos.y);
-
-        double normalizedX = x / m_SceneWindowSize.x;
-        double normalizedY = y / m_SceneWindowSize.y;
-
-        if (x <= 0.0f || y <= 0.0f || x >= m_SceneWindowSize.x || y >= m_SceneWindowSize.y)
-            return;
-
-        int texX = static_cast<int>(normalizedX * textureWidth);
-        int texY = static_cast<int>(normalizedY * textureHeight);
 
         int pixelData;
         glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
@@ -231,6 +220,28 @@ namespace Azimuth
 
         if (!m_IsManipulating)
             m_SelectedEntity = pixelData;
+    }
+
+    bool EditorUI::CheckMouseHoverScene(double &texX, double &texY, unsigned int textureWidth, unsigned int textureHeight)
+    {
+        double mouseX, mouseY;
+        glfwGetCursorPos(Window::GetMainWindow(), &mouseX, &mouseY);
+
+        double x = mouseX - m_SceneWindowPos.x;
+        double y = m_SceneWindowSize.y - (mouseY - m_SceneWindowPos.y);
+
+        double normalizedX = x / m_SceneWindowSize.x;
+        double normalizedY = y / m_SceneWindowSize.y;
+
+        if (x <= 0.0f || y <= 0.0f || x >= m_SceneWindowSize.x || y >= m_SceneWindowSize.y)
+            m_IsSceneWindowHovered = false;
+        else
+            m_IsSceneWindowHovered = true;
+
+        texX = normalizedX * textureWidth;
+        texY = normalizedY * textureHeight;
+
+        return m_IsSceneWindowHovered;
     }
 
     void EditorUI::EndDraw()

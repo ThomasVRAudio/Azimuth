@@ -1,6 +1,7 @@
 /build/
 /bin/
 /assets/models/*
+/assets/Assets/*
 /src/Sandbox/assets/*
 *.exe
 *.o

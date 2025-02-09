@@ -45,9 +45,9 @@ namespace Azimuth
             uniform.Type = type;
 
             if (type == GL_FLOAT)
-                uniform.Value = 0.0f;
+                uniform.Value = 1.0f;
             else if (type == GL_INT)
-                uniform.Value = 0;
+                uniform.Value = 1;
             else if (type == GL_BOOL)
                 uniform.Value = false;
             else if (type == GL_FLOAT_VEC3)

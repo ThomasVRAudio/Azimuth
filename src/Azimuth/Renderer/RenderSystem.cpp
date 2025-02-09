@@ -120,7 +120,7 @@ namespace Azimuth
                 material.shader->setUniform(uniform);
 
             material.Use();
-            mesh.DrawMesh();
+            mesh.DrawMesh(material.shader.get());
             it++;
         }
     }
@@ -148,7 +148,7 @@ namespace Azimuth
             shader->setMat4("g_Projection", projectionMatrix);
             shader->setInt("g_Entity", entity);
 
-            mesh.DrawMesh();
+            mesh.DrawMesh(shader);
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

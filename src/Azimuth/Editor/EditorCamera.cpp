@@ -1,5 +1,6 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorCamera.h>
+#include <Azimuth/Editor/EditorUI.h>
 
 namespace Azimuth
 {
@@ -45,6 +46,9 @@ namespace Azimuth
 
     void EditorCamera::ProcessMouseScroll(double xoffset, double yoffset)
     {
+        if (!EditorUI::IsSceneHovered() || !EditorUI::IsSceneFocused)
+            return;
+
         m_Zoom -= (float)yoffset;
         if (m_Zoom < 1.0f)
             m_Zoom = 1.0f;
@@ -54,9 +58,12 @@ namespace Azimuth
 
     void EditorCamera::ProcessKeyboard()
     {
+        if (!EditorUI::IsSceneHovered() || !EditorUI::IsSceneHovered)
+            return;
+
         const float velocity = 5.0f * Time::deltaTime();
 
-        if (!Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) // rather check if mouse in window
+        if (!Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
         {
             firstMouse = true;
             return;

@@ -33,6 +33,7 @@ namespace Azimuth
         ofn.lpstrTitle = "Open Scene File";
 
         ofn.Flags = 0;
+        ofn.Flags |= OFN_NOCHANGEDIR;
 
         if (dialogType == SAVE)
             ofn.Flags |= OFN_OVERWRITEPROMPT;

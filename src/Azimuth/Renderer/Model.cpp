@@ -20,7 +20,7 @@ namespace Azimuth
             print("ERROR::ASSIMP: " << importer.GetErrorString());
             return;
         }
-        directory = path.substr(0, path.find_last_of('/'));
+        directory = std::filesystem::path(path).parent_path().string();
 
         ProcessNode(scene->mRootNode, scene);
     };
@@ -150,8 +150,8 @@ namespace Azimuth
 
     unsigned int Model::TextureFromFile(const char *path, const std::string &directory, bool isNormal)
     {
-        std::string filename = std::string(path);
-        filename = directory + '/' + filename;
+        std::filesystem::path filePath = std::filesystem::path(directory) / path;
+        std::string filename = filePath.string();
 
         unsigned int textureID;
         glGenTextures(1, &textureID);

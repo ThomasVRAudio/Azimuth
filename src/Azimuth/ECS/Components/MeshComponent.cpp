@@ -3,38 +3,32 @@
 namespace Azimuth
 {
 
-    void MeshComponent::CreateMesh(GEOMETRY_TYPE geometry)
-    {
-        SetMeshGeometry(geometry);
-    }
-
     void MeshComponent::SetMeshGeometry(GEOMETRY_TYPE geometry)
     {
         switch (geometry)
         {
         case None:
-            m_geometryMesh;
             break;
         case GEOMETRY_POINT:
-            m_geometryMesh = Geometry::Point();
+            m_Mesh = Geometry::Point();
             break;
         case GEOMETRY_LINE:
-            m_geometryMesh = Geometry::Line();
+            m_Mesh = Geometry::Line();
             break;
         case GEOMETRY_TRIANGLE:
-            m_geometryMesh = Geometry::Triangle();
+            m_Mesh = Geometry::Triangle();
             break;
         case GEOMETRY_PLANE:
-            m_geometryMesh = Geometry::Quad();
+            m_Mesh = Geometry::Quad();
             break;
         case GEOMETRY_CUBE:
-            m_geometryMesh = Geometry::Cube();
+            m_Mesh = Geometry::Cube();
             break;
         default:
             print("Geometry not yet implemented.");
         }
 
-        m_Type = geometry;
+        m_GeometryType = geometry;
 
         error = glGetError();
         if (error != GL_NO_ERROR)
@@ -45,30 +39,40 @@ namespace Azimuth
 
     void MeshComponent::UpdateMeshGeometry(GEOMETRY_TYPE geometry)
     {
-        if (geometry == m_Type)
+        if (geometry == m_GeometryType)
             return;
 
+        m_Model = nullptr;
         SetMeshGeometry(geometry);
     }
 
-    void MeshComponent::CreateMesh(std::vector<Vertex> &vertices)
+    void MeshComponent::UpdateMeshModel(std::shared_ptr<Model> model)
     {
+        m_Model = model;
+        SetMeshGeometry(None);
     }
 
-    void MeshComponent::DrawMesh()
+    void MeshComponent::DrawMesh(Shader *shader)
     {
-        if (m_Type == None)
+        if (m_Model != nullptr && shader != nullptr)
+        {
+            m_Model->Draw(*shader);
             return;
+        }
+        else if (m_GeometryType == None)
+        {
+            return;
+        }
 
-        glBindVertexArray(m_geometryMesh.VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_geometryMesh.EBO);
+        glBindVertexArray(m_Mesh.VAO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Mesh.EBO);
 
         GLenum geometryType = GL_TRIANGLES;
-        if (m_Type == GEOMETRY_POINT)
+        if (m_GeometryType == GEOMETRY_POINT)
             geometryType = GL_POINTS;
-        else if (m_Type == GEOMETRY_LINE)
+        else if (m_GeometryType == GEOMETRY_LINE)
             geometryType = GL_LINES;
 
-        glDrawElements(geometryType, m_geometryMesh.indices.size(), GL_UNSIGNED_INT, 0);
+        glDrawElements(geometryType, m_Mesh.indices.size(), GL_UNSIGNED_INT, 0);
     }
 }

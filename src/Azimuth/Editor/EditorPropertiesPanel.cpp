@@ -3,6 +3,8 @@
 
 namespace Azimuth
 {
+    EditorFilepicker EditorPropertiesPanel::m_Filepicker;
+
     void EditorPropertiesPanel::DrawPanel()
     {
         float left_padding = 10.0f;
@@ -92,6 +94,12 @@ namespace Azimuth
             MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
             const char *items[] = {"None", "Point", "Line", "Triangle", "Square", "Cube"};
             auto currentItem = component.GetMeshType();
+
+            if (ImGui::Button("Select Mesh"))
+                m_Filepicker.SetOpenWindow(true);
+
+            if (m_Filepicker.IsOpen())
+                m_Filepicker.DrawPanel("assets/Assets/models", "Select Mesh", false);
 
             ImGui::Text("Mesh");
             ImGui::Text("Shape");

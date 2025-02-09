@@ -17,6 +17,27 @@ namespace Azimuth
         return files;
     }
 
+    std::vector<std::filesystem::path> Files::GetFilesWithExtension(const std::filesystem::path &directory, const std::string &extension)
+    {
+        std::vector<std::filesystem::path> files;
+
+        for (const auto &file : std::filesystem::directory_iterator(directory))
+        {
+            if (file.is_directory())
+            {
+
+                std::vector<std::filesystem::path> childFiles = GetFilesWithExtension(file.path(), extension);
+                files.insert(files.end(), childFiles.begin(), childFiles.end());
+            }
+            else if (file.path().extension() == extension)
+            {
+                files.emplace_back(file.path());
+            }
+        }
+
+        return files;
+    }
+
     bool Files::GetShaderInfoFromFile(const std::string &filepath, std::string &vertPath, bool &lit)
     {
         std::ifstream file(filepath);

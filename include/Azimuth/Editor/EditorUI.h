@@ -7,6 +7,7 @@
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
 #include <Azimuth/Editor/EditorSettingsPanel.h>
+#include <Azimuth/Editor/EditorFilepicker.h>
 #include <Azimuth/Project/Serializer.h>
 #include <dependencies/imgui/ImGuizmo.h>
 #include <Azimuth/ECS/Component.h>
@@ -37,10 +38,13 @@ namespace Azimuth
         static void EndDraw();
         static void CreateDocker();
         static void DrawGizmos(Camera &camera);
+        static bool CheckMouseHoverScene(double &x, double &y, unsigned int textureWidth, unsigned int textureHeight);
         static void ReadPixelID(unsigned int framebufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment);
         inline static ImVec2 GetSceneWindowPos() { return m_SceneWindowPos; }
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
         inline static std::shared_ptr<SceneSettings> GetSceneSettings() { return m_SceneSettings; };
+        inline static bool IsSceneFocused() { return m_IsSceneWindowFocused; }
+        inline static bool IsSceneHovered() { return m_IsSceneWindowHovered; }
 
     private:
         inline static ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -55,9 +59,12 @@ namespace Azimuth
         inline static Scene *m_Scene = nullptr;
         inline static std::shared_ptr<SceneSettings> m_SceneSettings = nullptr;
         inline static Entity m_SelectedEntity = -1;
+        inline static bool m_IsSceneWindowFocused = false;
+        inline static bool m_IsSceneWindowHovered = false;
         inline static bool t_HasOpenedScene = false;
         friend class EditorHierarchyPanel;
         friend class EditorPropertiesPanel;
+        friend class EditorFilepicker;
     };
 
 }

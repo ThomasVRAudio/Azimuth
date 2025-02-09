@@ -4,9 +4,11 @@
 #include <Azimuth/Editor/EditorUI.h>
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/System/Files.h>
+#include <Azimuth/Editor/EditorFilepicker.h>
 
 namespace Azimuth
 {
+    class EditorFilepicker;
     class EditorPropertiesPanel
     {
 
@@ -17,6 +19,7 @@ namespace Azimuth
         static void DrawVec3Box(glm::vec3 &vec3, std::string name, const std::array<std::string, 3> &labels, float speed = 0.01f);
         static void AddComponent();
         static void DirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material);
+        static EditorFilepicker m_Filepicker;
     };
 }
 
