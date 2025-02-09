@@ -41,7 +41,7 @@ namespace Azimuth
 
         if (!t_HasOpenedScene)
         {
-            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/Basic_3.scene");
+            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/Model.scene");
             t_HasOpenedScene = true;
         }
 

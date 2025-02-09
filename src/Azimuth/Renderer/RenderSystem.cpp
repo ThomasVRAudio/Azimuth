@@ -37,6 +37,10 @@ namespace Azimuth
         m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/tonemap/tonemapping.frag");
         m_PostProcessShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/postprocessing.frag");
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/common/quad.frag");
+
+        // test
+        m_ModelShader = std::make_unique<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/blinnphong.frag");
+        testModel = new Model("assets/models/backpack/backpack.obj");
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
@@ -89,6 +93,9 @@ namespace Azimuth
         if (settings)
             intensity = settings->HDRCubemapIntensity;
 
+        // model test
+        float it = 0;
+
         HDRCubemap::DrawHDRCubemap(viewMatrix, projectionMatrix, intensity);
 
         for (auto &entity : m_Entities)
@@ -103,7 +110,10 @@ namespace Azimuth
             material.shader->setMat4("g_View", viewMatrix);
             material.shader->setMat4("g_Projection", projectionMatrix);
 
-            if (material.shader->IsLit())
+            if (it == 3) // test
+                testModel->Draw(*m_ModelShader.get());
+
+            if (material.shader->IsLit() || it == 3)
                 RenderLights(material.shader, camera);
 
             for (auto &uniform : *material.GetUniforms())
@@ -111,6 +121,7 @@ namespace Azimuth
 
             material.Use();
             mesh.DrawMesh();
+            it++;
         }
     }
 
@@ -177,14 +188,14 @@ namespace Azimuth
         }
     }
 
-    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps)
+    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps, unsigned int activeTexture)
     {
         shader->use();
 
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0 + activeTexture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        shader->setInt("g_Texture", 0);
+        shader->setInt("g_Texture", activeTexture);
 
         if (mipmaps)
             shader->setFloat("g_MipmapLevel", 1.0f);
@@ -193,5 +204,7 @@ namespace Azimuth
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);
         glDrawElements(GL_TRIANGLES, m_RenderScreenQuad.indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
+        glActiveTexture(GL_TEXTURE0);
     }
 }

@@ -1,57 +1,9 @@
 #pragma once
 #include <Azimuth/Common.h>
+#include <Azimuth/Renderer/Mesh.h>
 
 namespace Azimuth
 {
-    struct Vertex
-    {
-        glm::vec3 Position;
-        glm::vec3 Normal;
-        glm::vec2 TexCoords;
-        glm::vec3 Tangent;
-        glm::vec3 Bitangent;
-    };
-
-    class Mesh
-    {
-    public:
-        std::vector<Vertex> vertices;
-        std::vector<int> indices;
-        unsigned int VAO, VBO, EBO;
-
-        void SetupMeshBuffers()
-        {
-            glGenVertexArrays(1, &VAO);
-            glBindVertexArray(VAO);
-
-            GLuint VBO;
-            glGenBuffers(1, &VBO);
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)0); // Position
-            glEnableVertexAttribArray(0);
-
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, Normal)); // Normal
-            glEnableVertexAttribArray(1);
-
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, TexCoords)); // TexCoords
-            glEnableVertexAttribArray(2);
-
-            glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, Tangent)); // Tangent
-            glEnableVertexAttribArray(3);
-
-            glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, Bitangent)); // Bitangent
-            glEnableVertexAttribArray(4);
-
-            glGenBuffers(1, &EBO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-
-            glBindVertexArray(0);
-        }
-    };
-
     class Geometry
     {
     public:

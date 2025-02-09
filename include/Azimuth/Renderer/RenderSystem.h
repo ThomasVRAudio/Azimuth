@@ -11,6 +11,7 @@
 #include <Azimuth/Renderer/LightSystem.h>
 #include <Azimuth/Scene/SceneSettings.h>
 #include <Azimuth/Renderer/Bloom.h>
+#include <Azimuth/Renderer/Model.h> // test
 
 namespace Azimuth
 {
@@ -31,7 +32,7 @@ namespace Azimuth
     private:
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);
         void RenderPass(Camera &camera, SceneSettings *settings = nullptr);
-        void RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps = false);
+        void RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps = false, unsigned int activeTexture = 0);
         ECSManager *m_ECS;
         glm::mat4 m_Model = glm::mat4(1.0f);
         glm::mat4 m_Projection = glm::mat4(1.0f);
@@ -47,5 +48,8 @@ namespace Azimuth
         std::unique_ptr<FrameBufferConfig> m_PostProcessingFrameBuffer;
         Mesh m_RenderScreenQuad = Geometry::Screen();
         std::unique_ptr<Bloom> m_Bloom = nullptr;
+        // test
+        Model *testModel;
+        std::unique_ptr<Shader> m_ModelShader = nullptr;
     };
 }

@@ -1,5 +1,6 @@
 /build/
 /bin/
+/assets/models/*
 *.exe
 *.o
 *.a
