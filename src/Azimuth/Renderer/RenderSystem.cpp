@@ -37,10 +37,6 @@ namespace Azimuth
         m_ToneMappingShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/tonemap/tonemapping.frag");
         m_PostProcessShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/post/postprocessing.frag");
         m_FinalCompositeShader = std::make_unique<Shader>("assets/shaders/system/common/quad.vert", "assets/shaders/system/common/quad.frag");
-
-        // test
-        // m_ModelShader = std::make_unique<Shader>("assets/shaders/library/default/model.vert", "assets/shaders/library/default/textured/lit.frag");
-        // testModel = new Model("assets/models/backpack/backpack.obj");
     }
 
     void RenderSystem::RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings)
@@ -93,9 +89,6 @@ namespace Azimuth
         if (settings)
             intensity = settings->HDRCubemapIntensity;
 
-        // model test
-        float it = 0;
-
         HDRCubemap::DrawHDRCubemap(viewMatrix, projectionMatrix, intensity);
 
         for (auto &entity : m_Entities)
@@ -110,10 +103,7 @@ namespace Azimuth
             material.shader->setMat4("g_View", viewMatrix);
             material.shader->setMat4("g_Projection", projectionMatrix);
 
-            // if (it == 3) // test
-            //     testModel->Draw(*m_ModelShader.get());
-
-            if (material.shader->IsLit() || it == 3)
+            if (material.shader->IsLit())
                 RenderLights(material.shader, camera);
 
             for (auto &uniform : *material.GetUniforms())
@@ -121,7 +111,6 @@ namespace Azimuth
 
             material.Use();
             mesh.DrawMesh(material.shader.get());
-            it++;
         }
     }
 

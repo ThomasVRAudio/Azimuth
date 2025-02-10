@@ -18,10 +18,12 @@ namespace Azimuth
             LoadModel(path);
         }
         void Draw(Shader &shader);
+        std::string &GetModelDirectory() { return modelDirectory; }
 
     private:
         std::vector<Texture> textures_loaded;
         std::string directory;
+        std::string modelDirectory;
 
         void LoadModel(std::string path);
         void ProcessNode(aiNode *node, const aiScene *scene);

@@ -21,6 +21,7 @@ namespace Azimuth
             return;
         }
         directory = std::filesystem::path(path).parent_path().string();
+        modelDirectory = path;
 
         ProcessNode(scene->mRootNode, scene);
     };

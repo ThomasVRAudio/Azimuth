@@ -125,7 +125,16 @@ namespace Azimuth
                 {
                     MeshComponent component;
                     GEOMETRY_TYPE type = static_cast<GEOMETRY_TYPE>(entitySection["Mesh"]["Type"].as<int>());
-                    component.CreateMesh(type);
+                    if (entitySection["Mesh"]["Model"].IsDefined())
+                    {
+                        std::string path = entitySection["Mesh"]["Model"].as<std::string>();
+                        std::shared_ptr<Model> model = std::make_shared<Model>(path.c_str());
+                        component.CreateMesh(model);
+                    }
+                    else
+                    {
+                        component.CreateMesh(type);
+                    }
                     scene->AddComponent<MeshComponent>(entity, std::move(component));
                 }
 
@@ -270,6 +279,8 @@ namespace Azimuth
                     YAML::Node node;
 
                     node["Type"] = static_cast<int>(component.GetMeshType());
+                    if (component.m_Model != nullptr)
+                        node["Model"] = static_cast<std::string>(component.m_Model->GetModelDirectory());
 
                     entitySection["Mesh"] = node;
                 }

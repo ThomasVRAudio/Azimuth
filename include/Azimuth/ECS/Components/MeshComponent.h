@@ -16,7 +16,6 @@ namespace Azimuth
         void UpdateMeshGeometry(GEOMETRY_TYPE geometry);
         void UpdateMeshModel(std::shared_ptr<Model> model);
         void DrawMesh(Shader *shader = nullptr);
-
         inline GEOMETRY_TYPE GetMeshType() { return m_GeometryType; };
 
     private:
@@ -28,5 +27,6 @@ namespace Azimuth
         std::vector<float> m_Vertices;
         std::vector<int> m_Indices;
         GLenum error;
+        friend class Serializer;
     };
 }
