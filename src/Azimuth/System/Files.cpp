@@ -17,7 +17,7 @@ namespace Azimuth
         return files;
     }
 
-    std::vector<std::filesystem::path> Files::GetFilesWithExtension(const std::filesystem::path &directory, const std::string &extension)
+    std::vector<std::filesystem::path> Files::GetFilesWithExtension(const std::filesystem::path &directory, const std::vector<std::string> &extensions)
     {
         std::vector<std::filesystem::path> files;
 
@@ -26,10 +26,10 @@ namespace Azimuth
             if (file.is_directory())
             {
 
-                std::vector<std::filesystem::path> childFiles = GetFilesWithExtension(file.path(), extension);
+                std::vector<std::filesystem::path> childFiles = GetFilesWithExtension(file.path(), extensions);
                 files.insert(files.end(), childFiles.begin(), childFiles.end());
             }
-            else if (file.path().extension() == extension)
+            else if (std::find(extensions.begin(), extensions.end(), file.path().extension()) != extensions.end())
             {
                 files.emplace_back(file.path());
             }

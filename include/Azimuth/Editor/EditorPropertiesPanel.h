@@ -20,6 +20,15 @@ namespace Azimuth
         static void AddComponent();
         static void DirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material);
         static EditorFilepicker m_Filepicker;
+
+        enum Filepicker
+        {
+            MESH_PICKER,
+            TEXTURE_PICKER
+        };
+        inline static Filepicker m_SelectedFilepicker = MESH_PICKER;
+        inline static std::string m_SelectedTextureName;
+        inline static unsigned int m_SelectedTextureSlot;
     };
 }
 

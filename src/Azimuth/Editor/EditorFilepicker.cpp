@@ -4,8 +4,10 @@
 namespace Azimuth
 {
 
-    void EditorFilepicker::DrawPanel(const char *path, std::string panelName, bool dockable)
+    const std::string EditorFilepicker::SelectFile(const char *path, std::string panelName, const std::vector<std::string> &fileExtensions, bool dockable, std::function<void()> selectionMenuCallback)
     {
+        std::string filePath = "";
+
         ImGuiWindowFlags flags = 0;
         if (!dockable)
             flags |= ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse;
@@ -18,38 +20,27 @@ namespace Azimuth
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
         ImGui::Indent(left_padding);
 
-        ImGui::SeparatorText("Geometry:");
+        if (selectionMenuCallback != nullptr)
+            selectionMenuCallback();
 
-        std::string geometryOptions[6] = {"None", "Point", "Line", "Triangle", "Square", "Cube"};
-
-        for (size_t i = 0; i < 6; ++i)
-        {
-            if (ImGui::Selectable(geometryOptions[i].c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
-            {
-                m_IsOpen = false;
-                MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
-                component.UpdateMeshGeometry(static_cast<GEOMETRY_TYPE>(i));
-            }
-        }
-
-        std::vector<std::filesystem::path> filenames = Files::GetFilesWithExtension(path, ".obj");
+        std::vector<std::filesystem::path> filenames = Files::GetFilesWithExtension(path, fileExtensions);
 
         ImGui::SeparatorText("Assets:");
 
-        for (const auto &file : filenames)
+        for (size_t i = 0; i < filenames.size(); ++i)
         {
-            std::string filename = file.filename().stem().string();
-            if (ImGui::Selectable(filename.c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
+            std::string filename = filenames[i].filename().stem().string();
+            if (ImGui::Selectable((filename + "##" + std::to_string(i)).c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
             {
                 m_IsOpen = false;
-                MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
-                std::shared_ptr<Model> model = std::make_shared<Model>(file.string().c_str());
-                component.UpdateMeshModel(model);
+                filePath = filenames[i].string();
             }
         }
 
         ImGui::Unindent(left_padding);
         ImGui::End();
+
+        return filePath;
     }
 
 }

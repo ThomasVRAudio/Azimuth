@@ -51,7 +51,6 @@ namespace Azimuth
         unsigned int offset = 32;
         for (unsigned int i = 0; i < textures.size(); i++)
         {
-            glActiveTexture(GL_TEXTURE0 + i + offset);
 
             std::string number;
             std::string name = textures[i].type;
@@ -71,6 +70,7 @@ namespace Azimuth
                 shader.setInt((name + number).c_str(), i + offset);
             }
 
+            glActiveTexture(GL_TEXTURE0 + i + offset);
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
         glActiveTexture(GL_TEXTURE0);

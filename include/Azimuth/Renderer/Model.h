@@ -6,6 +6,7 @@
 #include <dependencies/assimp/postprocess.h>
 #include <dependencies/stb_image.h>
 #include <Azimuth/Common.h>
+#include <Azimuth/Renderer/TextureLoader.h>
 
 namespace Azimuth
 {
@@ -29,6 +30,5 @@ namespace Azimuth
         void ProcessNode(aiNode *node, const aiScene *scene);
         Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<Texture> LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-        unsigned int TextureFromFile(const char *path, const std::string &directory, bool isNormal);
     };
 }

@@ -96,10 +96,40 @@ namespace Azimuth
             auto currentItem = component.GetMeshType();
 
             if (ImGui::Button("Select Mesh"))
+            {
+                m_SelectedFilepicker = MESH_PICKER;
                 m_Filepicker.SetOpenWindow(true);
+            }
 
-            if (m_Filepicker.IsOpen())
-                m_Filepicker.DrawPanel("assets/Assets/models", "Select Mesh", false);
+            if (m_Filepicker.IsOpen() && m_SelectedFilepicker == MESH_PICKER)
+            {
+
+                std::function<void()> handleGeometrySelectionFunction = []()
+                {
+                    ImGui::SeparatorText("Geometry:");
+
+                    std::string geometryOptions[6] = {"None", "Point", "Line", "Triangle", "Square", "Cube"};
+
+                    for (size_t i = 0; i < 6; ++i)
+                    {
+                        if (ImGui::Selectable(geometryOptions[i].c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
+                        {
+                            MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
+                            component.UpdateMeshGeometry(static_cast<GEOMETRY_TYPE>(i));
+                            m_Filepicker.SetOpenWindow(false);
+                        }
+                    }
+                };
+
+                std::vector<std::string> extensions{".obj"};
+                const std::string &file = m_Filepicker.SelectFile("assets/Assets/models", "Select Mesh", extensions, false, handleGeometrySelectionFunction);
+                if (file.length() > 0)
+                {
+                    MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
+                    std::shared_ptr<Model> model = std::make_shared<Model>(file.c_str());
+                    component.UpdateMeshModel(model);
+                }
+            }
 
             ImGui::Text("Mesh");
             ImGui::Text("Shape");
@@ -163,6 +193,9 @@ namespace Azimuth
             }
 
             float left_padding = 10.0f;
+            unsigned int sampleSlot = 0;
+
+            bool isTexturePickerOpened = false;
 
             for (auto &uniform : *material.GetUniforms())
             {
@@ -199,6 +232,35 @@ namespace Azimuth
                 {
                     int &value = std::get<int>(uniform.Value);
                     ImGui::SliderInt(uniform.Name.c_str(), &value, 0, 1000);
+                }
+                break;
+
+                case GL_SAMPLER_2D:
+                {
+                    ImGui::Text(uniform.Name.c_str());
+                    std::string name = uniform.Name;
+                    if (ImGui::Button(("Select Texture##" + name).c_str()))
+                    {
+                        m_SelectedTextureName = uniform.Name;
+                        m_SelectedTextureSlot = sampleSlot;
+                        m_SelectedFilepicker = TEXTURE_PICKER;
+                        m_Filepicker.SetOpenWindow(true);
+                    }
+
+                    if (m_Filepicker.IsOpen() && m_SelectedFilepicker == TEXTURE_PICKER && !isTexturePickerOpened)
+                    {
+                        std::vector<std::string> extensions{".png", ".jpg"};
+                        const std::string &file = m_Filepicker.SelectFile("assets/Assets/textures", "Select Texture", extensions, false);
+                        if (file.length() > 0)
+                        {
+                            MaterialComponent &component = EditorUI::m_Scene->GetComponent<MaterialComponent>(EditorUI::m_SelectedEntity);
+                            component.AddTexture(m_SelectedTextureName.c_str(), file.c_str(), m_SelectedTextureSlot);
+                        }
+
+                        isTexturePickerOpened = true;
+                    }
+
+                    sampleSlot++;
                 }
                 break;
 

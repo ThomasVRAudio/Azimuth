@@ -1,15 +1,10 @@
 #pragma once
 #include <Azimuth/Common.h>
 #include <Azimuth/Renderer/Shader.h>
+#include <Azimuth/Renderer/TextureLoader.h>
 
 namespace Azimuth
 {
-    struct Texture
-    {
-        unsigned int id;
-        std::string type;
-        std::string path;
-    };
 
     struct Vertex
     {

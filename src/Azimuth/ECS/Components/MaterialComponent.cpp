@@ -20,6 +20,36 @@ namespace Azimuth
         m_Uniforms = uniforms;
     }
 
+    void MaterialComponent::BindTextures()
+    {
+        if (shader == nullptr)
+            return;
+
+        for (size_t i = 0; i < m_Textures.size(); ++i)
+        {
+            glActiveTexture(GL_TEXTURE0 + m_Textures[i].slot);
+            glBindTexture(GL_TEXTURE_2D, m_Textures[i].id);
+        }
+        glActiveTexture(GL_TEXTURE0);
+    }
+
+    void MaterialComponent::AddTexture(const std::string &name, const std::string &path, unsigned int slot)
+    {
+        print(name);
+        print(path);
+        print(slot);
+        unsigned int offset = 1;
+
+        Texture texture;
+        texture.id = TextureLoader::LoadTexture(path);
+        texture.path = path;
+        texture.slot = slot + offset;
+        m_Textures.emplace_back(texture);
+
+        shader->use();
+        shader->setInt(name, slot + offset);
+    }
+
     void MaterialComponent::SetUniforms()
     {
         m_Uniforms->clear();
@@ -48,6 +78,8 @@ namespace Azimuth
                 uniform.Value = 1.0f;
             else if (type == GL_INT)
                 uniform.Value = 1;
+            else if (type == GL_SAMPLER_2D)
+                uniform.Value = 0;
             else if (type == GL_BOOL)
                 uniform.Value = false;
             else if (type == GL_FLOAT_VEC3)

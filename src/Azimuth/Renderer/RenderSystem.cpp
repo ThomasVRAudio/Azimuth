@@ -110,6 +110,7 @@ namespace Azimuth
                 material.shader->setUniform(uniform);
 
             material.Use();
+            material.BindTextures();
             mesh.DrawMesh(material.shader.get());
         }
     }
