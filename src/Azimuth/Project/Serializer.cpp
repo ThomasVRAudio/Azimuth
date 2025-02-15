@@ -214,7 +214,7 @@ namespace Azimuth
                 }
             }
 
-            EditorUI::UpdateLights();
+            EditorManager::UpdateLights();
         }
     }
 

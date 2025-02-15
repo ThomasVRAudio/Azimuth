@@ -12,9 +12,9 @@ namespace Azimuth
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
         ImGui::Indent(left_padding);
 
-        if (EditorUI::m_Scene->HasComponent<TagComponent>(EditorUI::m_SelectedEntity))
+        if (EditorManager::m_Scene->HasComponent<TagComponent>(EditorManager::m_SelectedEntity))
         {
-            TagComponent &component = EditorUI::m_Scene->GetComponent<TagComponent>(EditorUI::m_SelectedEntity);
+            TagComponent &component = EditorManager::m_Scene->GetComponent<TagComponent>(EditorManager::m_SelectedEntity);
             static char name[256];
             if (strlen(name) == 0)
             {
@@ -33,10 +33,10 @@ namespace Azimuth
             ImGui::Separator();
         }
 
-        if (EditorUI::m_Scene->HasComponent<TransformComponent>(EditorUI::m_SelectedEntity))
+        if (EditorManager::m_Scene->HasComponent<TransformComponent>(EditorManager::m_SelectedEntity))
         {
             ImGui::Text("Transform");
-            TransformComponent &component = EditorUI::m_Scene->GetComponent<TransformComponent>(EditorUI::m_SelectedEntity);
+            TransformComponent &component = EditorManager::m_Scene->GetComponent<TransformComponent>(EditorManager::m_SelectedEntity);
 
             DrawVec3Box(component.Position, "Translate", {"X", "Y", "Z"});
 
@@ -49,10 +49,10 @@ namespace Azimuth
             ImGui::Separator();
         }
 
-        if (EditorUI::m_Scene->HasComponent<LightComponent>(EditorUI::m_SelectedEntity))
+        if (EditorManager::m_Scene->HasComponent<LightComponent>(EditorManager::m_SelectedEntity))
         {
             ImGui::Text("Light");
-            LightComponent &component = EditorUI::m_Scene->GetComponent<LightComponent>(EditorUI::m_SelectedEntity);
+            LightComponent &component = EditorManager::m_Scene->GetComponent<LightComponent>(EditorManager::m_SelectedEntity);
 
             const char *items[] = {"Point", "Directional", "Spot"};
             auto currentItem = component.Type;
@@ -71,7 +71,7 @@ namespace Azimuth
                         {
                             currentItem = static_cast<LightType>(i);
                             component.Type = currentItem;
-                            EditorUI::UpdateLights();
+                            EditorManager::UpdateLights();
                         }
                     }
                     if (isSelected)
@@ -89,9 +89,9 @@ namespace Azimuth
             ImGui::Separator();
         }
 
-        if (EditorUI::m_Scene->HasComponent<MeshComponent>(EditorUI::m_SelectedEntity))
+        if (EditorManager::m_Scene->HasComponent<MeshComponent>(EditorManager::m_SelectedEntity))
         {
-            MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
+            MeshComponent &component = EditorManager::m_Scene->GetComponent<MeshComponent>(EditorManager::m_SelectedEntity);
             const char *items[] = {"None", "Point", "Line", "Triangle", "Square", "Cube"};
             auto currentItem = component.GetMeshType();
 
@@ -114,7 +114,7 @@ namespace Azimuth
                     {
                         if (ImGui::Selectable(geometryOptions[i].c_str(), false, ImGuiSelectableFlags_AllowDoubleClick))
                         {
-                            MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
+                            MeshComponent &component = EditorManager::m_Scene->GetComponent<MeshComponent>(EditorManager::m_SelectedEntity);
                             component.UpdateMeshGeometry(static_cast<GEOMETRY_TYPE>(i));
                             m_Filepicker.SetOpenWindow(false);
                         }
@@ -125,7 +125,7 @@ namespace Azimuth
                 const std::string &file = m_Filepicker.SelectFile("assets/Assets/models", "Select Mesh", extensions, false, handleGeometrySelectionFunction);
                 if (file.length() > 0)
                 {
-                    MeshComponent &component = EditorUI::m_Scene->GetComponent<MeshComponent>(EditorUI::m_SelectedEntity);
+                    MeshComponent &component = EditorManager::m_Scene->GetComponent<MeshComponent>(EditorManager::m_SelectedEntity);
                     std::shared_ptr<Model> model = std::make_shared<Model>(file.c_str());
                     component.UpdateMeshModel(model);
                 }
@@ -159,10 +159,10 @@ namespace Azimuth
             ImGui::Separator();
         }
 
-        if (EditorUI::m_Scene->HasComponent<MaterialComponent>(EditorUI::m_SelectedEntity))
+        if (EditorManager::m_Scene->HasComponent<MaterialComponent>(EditorManager::m_SelectedEntity))
         {
             ImGui::Text("Material");
-            MaterialComponent &material = EditorUI::m_Scene->GetComponent<MaterialComponent>(EditorUI::m_SelectedEntity);
+            MaterialComponent &material = EditorManager::m_Scene->GetComponent<MaterialComponent>(EditorManager::m_SelectedEntity);
             ImGui::PushItemWidth(100.0f);
 
             std::string currentItem = "";
@@ -247,13 +247,28 @@ namespace Azimuth
                         m_Filepicker.SetOpenWindow(true);
                     }
 
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        m_SelectedTextureName = uniform.Name;
+                        m_SelectedTextureSlot = sampleSlot;
+
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("file"))
+                        {
+                            const char *droppedFilePath = static_cast<const char *>(payload->Data);
+
+                            MaterialComponent &component = EditorManager::m_Scene->GetComponent<MaterialComponent>(EditorManager::m_SelectedEntity);
+                            component.AddTexture(m_SelectedTextureName.c_str(), droppedFilePath, m_SelectedTextureSlot);
+                        }
+                        ImGui::EndDragDropTarget();
+                    }
+
                     if (m_Filepicker.IsOpen() && m_SelectedFilepicker == TEXTURE_PICKER && !isTexturePickerOpened)
                     {
                         std::vector<std::string> extensions{".png", ".jpg"};
                         const std::string &file = m_Filepicker.SelectFile("assets/Assets/textures", "Select Texture", extensions, false);
                         if (file.length() > 0)
                         {
-                            MaterialComponent &component = EditorUI::m_Scene->GetComponent<MaterialComponent>(EditorUI::m_SelectedEntity);
+                            MaterialComponent &component = EditorManager::m_Scene->GetComponent<MaterialComponent>(EditorManager::m_SelectedEntity);
                             component.AddTexture(m_SelectedTextureName.c_str(), file.c_str(), m_SelectedTextureSlot);
                         }
 
@@ -301,7 +316,7 @@ namespace Azimuth
             ImGui::Separator();
         }
 
-        if (EditorUI::m_Scene->HasComponent<AudioComponent>(EditorUI::m_SelectedEntity))
+        if (EditorManager::m_Scene->HasComponent<AudioComponent>(EditorManager::m_SelectedEntity))
         {
             ImGui::Text("AudioComponent");
             ImGui::Separator();
@@ -354,39 +369,39 @@ namespace Azimuth
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         if (ImGui::BeginPopup("Select Component"))
         {
-            if (!EditorUI::m_Scene->HasComponent<TransformComponent>(EditorUI::m_SelectedEntity))
+            if (!EditorManager::m_Scene->HasComponent<TransformComponent>(EditorManager::m_SelectedEntity))
             {
                 if (ImGui::Selectable("Transform"))
                 {
                     TransformComponent component;
-                    EditorUI::m_Scene->AddComponent<TransformComponent>(EditorUI::m_SelectedEntity, std::move(component));
+                    EditorManager::m_Scene->AddComponent<TransformComponent>(EditorManager::m_SelectedEntity, std::move(component));
                 }
             }
 
-            if (!EditorUI::m_Scene->HasComponent<MeshComponent>(EditorUI::m_SelectedEntity))
+            if (!EditorManager::m_Scene->HasComponent<MeshComponent>(EditorManager::m_SelectedEntity))
             {
                 if (ImGui::Selectable("Mesh"))
                 {
                     MeshComponent component;
                     component.UpdateMeshGeometry(GEOMETRY_CUBE);
-                    EditorUI::m_Scene->AddComponent<MeshComponent>(EditorUI::m_SelectedEntity, std::move(component));
+                    EditorManager::m_Scene->AddComponent<MeshComponent>(EditorManager::m_SelectedEntity, std::move(component));
 
-                    if (!EditorUI::m_Scene->HasComponent<MaterialComponent>(EditorUI::m_SelectedEntity))
+                    if (!EditorManager::m_Scene->HasComponent<MaterialComponent>(EditorManager::m_SelectedEntity))
                     {
                         MaterialComponent mat;
                         mat.CreateMaterial();
-                        EditorUI::m_Scene->AddComponent<MaterialComponent>(EditorUI::m_SelectedEntity, std::move(mat));
+                        EditorManager::m_Scene->AddComponent<MaterialComponent>(EditorManager::m_SelectedEntity, std::move(mat));
                     }
                 }
             }
 
-            if (!EditorUI::m_Scene->HasComponent<LightComponent>(EditorUI::m_SelectedEntity))
+            if (!EditorManager::m_Scene->HasComponent<LightComponent>(EditorManager::m_SelectedEntity))
             {
                 if (ImGui::Selectable("Light"))
                 {
                     LightComponent component;
-                    EditorUI::m_Scene->AddComponent<LightComponent>(EditorUI::m_SelectedEntity, std::move(component));
-                    EditorUI::UpdateLights();
+                    EditorManager::m_Scene->AddComponent<LightComponent>(EditorManager::m_SelectedEntity, std::move(component));
+                    EditorManager::UpdateLights();
                 };
             }
 

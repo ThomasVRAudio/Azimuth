@@ -3,7 +3,7 @@
 #include <Azimuth/Common.h>
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/System/Files.h>
-#include <Azimuth/Editor/EditorUI.h>
+#include <Azimuth/Editor/EditorManager.h>
 #include <Azimuth/Renderer/Model.h>
 
 namespace Azimuth

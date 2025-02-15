@@ -12,30 +12,34 @@ namespace Azimuth
         ImGui::Checkbox("Play Scene", &Application::s_PlayingEditorScene);
 
         float max = 20.0f;
-        ImGui::Text("HDR Settings: ");
+        ImGui::SeparatorText("HDR Settings");
 
-        if (EditorUI::GetSceneSettings() != nullptr)
+        if (EditorManager::GetSceneSettings() != nullptr)
         {
-            float &Exposure = EditorUI::GetSceneSettings()->Exposure;
+            float &Exposure = EditorManager::GetSceneSettings()->Exposure;
 
-            ImGui::SliderFloat("Exposure", &Exposure, 0.0f, max);
+            ImGui::Text("Exposure");
+            ImGui::SliderFloat("##HDRExposure", &Exposure, 0.0f, max);
             Exposure = round(Exposure / 0.25f) * 0.25f;
 
-            float &HDRCubemapIntensity = EditorUI::GetSceneSettings()->HDRCubemapIntensity;
-            ImGui::SliderFloat("Skybox Intensity", &HDRCubemapIntensity, 0.0f, 2.0f);
+            ImGui::Text("Skybox Intensity");
+            float &HDRCubemapIntensity = EditorManager::GetSceneSettings()->HDRCubemapIntensity;
+            ImGui::SliderFloat("##SkyboxIntensity", &HDRCubemapIntensity, 0.0f, 2.0f);
 
-            ImGui::Text("Bloom Settings: ");
+            ImGui::SeparatorText("Bloom Settings");
 
-            float &BloomThreshold = EditorUI::GetSceneSettings()->BloomThreshold;
-            ImGui::SliderFloat("Bloom Threshold", &BloomThreshold, 0.0f, 10.0f);
+            ImGui::Text("Threshold");
+            float &BloomThreshold = EditorManager::GetSceneSettings()->BloomThreshold;
+            ImGui::SliderFloat("##BloomThreshold", &BloomThreshold, 0.0f, 10.0f);
 
-            float &BloomMix = EditorUI::GetSceneSettings()->BloomBlend;
-            ImGui::SliderFloat("Bloom Blend Mix", &BloomMix, 0.0f, 1.0f);
+            ImGui::Text("Blend Mix");
+            float &BloomMix = EditorManager::GetSceneSettings()->BloomBlend;
+            ImGui::SliderFloat("##BloomBlendMix", &BloomMix, 0.0f, 1.0f);
         }
 
-        ImGui::Text("Application Settings: ");
+        ImGui::SeparatorText("Application Settings: ");
 
-        bool &VSync = EditorUI::GetSceneSettings()->VSync;
+        bool &VSync = EditorManager::GetSceneSettings()->VSync;
 
         ImGui::Checkbox("VSync", &VSync);
 

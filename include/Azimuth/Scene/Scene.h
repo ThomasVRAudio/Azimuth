@@ -14,7 +14,7 @@ namespace Azimuth
     class EditorLayer;
 
 #ifdef AZIMUTH_EDITOR
-    class EditorUI;
+    class EditorManager;
 #endif
 
     class Scene
@@ -64,7 +64,7 @@ namespace Azimuth
         ScriptLayer *m_ScriptLayer;
         std::vector<Entity> m_Entities;
 #ifdef AZIMUTH_EDITOR
-        friend EditorUI;
+        friend EditorManager;
         friend class Serializer;
         friend class EditorHierarchyPanel;
 #endif

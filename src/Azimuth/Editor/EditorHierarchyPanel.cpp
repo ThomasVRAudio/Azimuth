@@ -14,13 +14,13 @@ namespace Azimuth
         static Entity selectedEntityForRenaming;
         static char buffer[256];
 
-        for (auto &entity : EditorUI::m_Scene->m_Entities)
+        for (auto &entity : EditorManager::m_Scene->m_Entities)
         {
-            std::string name = EditorUI::m_Scene->GetComponent<TagComponent>(entity).name;
-            bool isSelected = (EditorUI::m_SelectedEntity == entity);
+            std::string name = EditorManager::m_Scene->GetComponent<TagComponent>(entity).name;
+            bool isSelected = (EditorManager::m_SelectedEntity == entity);
             if (ImGui::Selectable(name.c_str(), isSelected, ImGuiSelectableFlags_AllowDoubleClick))
             {
-                EditorUI::m_SelectedEntity = entity;
+                EditorManager::m_SelectedEntity = entity;
             }
 
             if (isSelected && ImGui::IsKeyPressed(ImGuiKey_F2))
@@ -36,7 +36,7 @@ namespace Azimuth
                 ImGui::SetKeyboardFocusHere();
                 if (ImGui::InputText("##Rename", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
                 {
-                    EditorUI::m_Scene->GetComponent<TagComponent>(entity).name = buffer;
+                    EditorManager::m_Scene->GetComponent<TagComponent>(entity).name = buffer;
                     isRenaming = false;
                 }
             }
@@ -56,10 +56,10 @@ namespace Azimuth
 
         if (ImGui::Button("Add Gameobject", ImVec2(buttonWidth, buttonHeight)))
         {
-            Entity entity = EditorUI::m_Scene->CreateEntity("Gameobject");
-            std::string &name = EditorUI::m_Scene->GetComponent<TagComponent>(entity).name;
+            Entity entity = EditorManager::m_Scene->CreateEntity("Gameobject");
+            std::string &name = EditorManager::m_Scene->GetComponent<TagComponent>(entity).name;
             name += std::to_string(entity);
-            EditorUI::m_SelectedEntity = entity;
+            EditorManager::m_SelectedEntity = entity;
         }
 
         ImGui::Unindent(left_padding);

@@ -15,6 +15,6 @@ namespace Azimuth
     class TextureLoader
     {
     public:
-        static unsigned int LoadTexture(const std::string &path, bool isNormal = false);
+        static unsigned int LoadTexture(const std::string &path, bool isNormal = false, bool flip = true);
     };
 }

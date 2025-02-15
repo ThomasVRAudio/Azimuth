@@ -6,7 +6,7 @@
 #include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/Renderer/LightSystem.h>
 #include <Azimuth/Renderer/FrameBuffer.h>
-#include <Azimuth/Editor/EditorUI.h>
+#include <Azimuth/Editor/EditorManager.h>
 #include <Azimuth/Editor/EditorCamera.h>
 #include <Azimuth/Core/Time.h>
 #include <Azimuth/ECS/Component.h>

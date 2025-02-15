@@ -164,6 +164,8 @@ namespace Azimuth
         {
             std::cout << "OpenGL Failed to load HDR image." << std::endl;
         }
+
+        stbi_set_flip_vertically_on_load(false);
         return hdrTexture;
     }
 

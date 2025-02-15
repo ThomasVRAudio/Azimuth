@@ -26,9 +26,9 @@ namespace Azimuth
         m_LightSystem->Init(ECS);
         m_RenderSystem->Init(ECS, m_LightSystem);
 
-        EditorUI::Init(scene);
-        EditorUI::SetLightsUpdateCallback([&]()
-                                          { m_LightSystem->UpdateLights(); });
+        EditorManager::Init(scene);
+        EditorManager::SetLightsUpdateCallback([&]()
+                                               { m_LightSystem->UpdateLights(); });
 
         unsigned int width = static_cast<unsigned int>(m_EditorSceneTextureWidth);
         unsigned int height = static_cast<unsigned int>(m_EditorSceneTextureWidth * (9.0f / 16.0f));
@@ -36,7 +36,6 @@ namespace Azimuth
         m_FrameBufferConfig = std::make_unique<FrameBufferConfig>(ColorAttachment{width, height, &m_EditorSceneTexture});
         FrameBuffer::CreateFramebuffer(m_FrameBufferConfig.get());
 
-        m_EditorShader = std::make_shared<Shader>("assets/shaders/editor/selection/unlit.vert", "assets/shaders/editor/selection/unlit.frag");
         ColorAttachment entityIDAttachment{
             width,
             height,
@@ -47,6 +46,8 @@ namespace Azimuth
 
         m_FrameBufferEditorConfig = std::make_unique<FrameBufferConfig>(entityIDAttachment, depth);
         FrameBuffer::CreateFramebuffer(m_FrameBufferEditorConfig.get());
+
+        m_EditorShader = std::make_shared<Shader>("assets/shaders/editor/selection/unlit.vert", "assets/shaders/editor/selection/unlit.frag");
     }
 
     void EditorLayer::OnStart() {}
@@ -58,16 +59,7 @@ namespace Azimuth
         m_RenderSystem->RenderScene(m_EditorCamera, m_FrameBufferConfig->ID, m_SceneSettings.get());
         m_RenderSystem->RenderEditorPass(m_EditorCamera, m_FrameBufferEditorConfig->ID, m_EditorShader.get(), m_EditorIDTexture);
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGuizmo::BeginFrame();
-
-        EditorUI::CreateDocker();
-        EditorUI::DrawUI();
-        EditorUI::DrawEditorScene(&m_EditorSceneTexture, m_EditorCamera);
-        EditorUI::ReadPixelID(m_FrameBufferEditorConfig->ID, m_EditorSceneTextureWidth, m_EditorSceneTextureWidth * (9.0f / 16.0f), 0);
-        EditorUI::EndDraw();
+        EditorManager::OnUpdate(m_EditorCamera, m_FrameBufferConfig.get(), m_FrameBufferEditorConfig.get());
 
         m_EditorCamera.ProcessKeyboard();
 

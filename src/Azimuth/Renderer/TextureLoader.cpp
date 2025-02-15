@@ -2,8 +2,10 @@
 
 namespace Azimuth
 {
-    unsigned int TextureLoader::LoadTexture(const std::string &path, bool isNormal)
+    unsigned int TextureLoader::LoadTexture(const std::string &path, bool isNormal, bool flip)
     {
+
+        stbi_set_flip_vertically_on_load(flip);
 
         int width, height, nrComponents;
         unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);

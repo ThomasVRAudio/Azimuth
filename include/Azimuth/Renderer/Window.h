@@ -6,7 +6,7 @@ namespace Azimuth
     class Window
     {
     public:
-        static void Create(unsigned int width = 1600, unsigned int height = 900, const char *name = "Azimuth");
+        static void Create(unsigned int width = 2000, unsigned int height = 1200, const char *name = "Azimuth");
         static void OnUpdate();
         static float GetWidth() { return m_Width; }
         static float GetHeight() { return m_Height; }

@@ -1,9 +1,9 @@
 #ifdef AZIMUTH_EDITOR
-#include <Azimuth/Editor/EditorUI.h>
+#include <Azimuth/Editor/EditorManager.h>
 
 namespace Azimuth
 {
-    void EditorUI::Init(Scene *scene)
+    void EditorManager::Init(Scene *scene)
     {
         m_Scene = scene;
         m_SceneSettings = scene->Settings;
@@ -31,9 +31,33 @@ namespace Azimuth
         fontConfig.PixelSnapH = false;
         io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-SemiBold.ttf", 18.0f, &fontConfig);
         io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-Bold.ttf", 18.0f, &fontConfig);
+
+        EditorTextureLoader::LoadEditorTextures();
     }
 
-    void EditorUI::DrawUI()
+    void EditorManager::OnUpdate(Camera &camera, FrameBufferConfig *sceneBuffer, FrameBufferConfig *entityBuffer)
+    {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
+
+        CreateDocker();
+        DrawUI();
+        DrawEditorScene(camera, sceneBuffer, entityBuffer);
+
+        if (IsSceneFocused() && Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            unsigned int entity = ReadPixelID(entityBuffer);
+
+            if (!m_IsManipulating && entity != -1)
+                m_SelectedEntity = entity;
+        }
+
+        EndDraw();
+    }
+
+    void EditorManager::DrawUI()
     {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
@@ -41,7 +65,7 @@ namespace Azimuth
 
         if (!t_HasOpenedScene)
         {
-            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/Model.scene");
+            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Engine/build/Scenes/nomodel.scene");
             t_HasOpenedScene = true;
         }
 
@@ -71,18 +95,10 @@ namespace Azimuth
         EditorHierarchyPanel::DrawPanel();
         EditorPropertiesPanel::DrawPanel();
         EditorSettingsPanel::DrawPanel();
-
-        ImGui::Begin("Logs");
-        ImGui::Dummy(ImVec2(4.0f, 4.0f));
-        ImGui::Indent(left_padding);
-        ImGui::Text("Right click!");
-        ImGui::Text("Loaded entity");
-        ImGui::Text("Printing ..");
-        ImGui::Unindent(left_padding);
-        ImGui::End();
+        EditorFileTrayPanel::DrawPanel();
     }
 
-    void EditorUI::DrawGizmos(Camera &camera)
+    void EditorManager::DrawGizmos(Camera &camera)
     {
         if (m_SelectedEntity < 0)
             return;
@@ -159,7 +175,7 @@ namespace Azimuth
         }
     }
 
-    void EditorUI::SetAspectConstraints(ImGuiSizeCallbackData *data)
+    void EditorManager::SetAspectConstraints(ImGuiSizeCallbackData *data)
     {
         float width = data->CurrentSize.x;
         float height = data->CurrentSize.y;
@@ -172,7 +188,7 @@ namespace Azimuth
         data->DesiredSize = ImVec2(width, height);
     }
 
-    void EditorUI::DrawEditorScene(unsigned int *texture, Camera &camera)
+    void EditorManager::DrawEditorScene(Camera &camera, FrameBufferConfig *frameBuffer, FrameBufferConfig *entityFrameBuffer)
     {
 
         ImGui::SetNextWindowSizeConstraints(ImVec2(100, 100), ImVec2(FLT_MAX, FLT_MAX), SetAspectConstraints);
@@ -192,23 +208,39 @@ namespace Azimuth
 
         m_SceneWindowPadding = ImGui::GetCursorPos();
 
-        ImGui::Image((ImTextureID)(*texture), m_SceneWindowSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((ImTextureID)(*(frameBuffer->colorAttachments[0].texture)), m_SceneWindowSize, ImVec2(0, 1), ImVec2(1, 0));
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("file"))
+            {
+                const char *droppedFilePath = static_cast<const char *>(payload->Data);
+                unsigned int entity = ReadPixelID(entityFrameBuffer);
+
+                if (EditorManager::m_Scene->HasComponent<MaterialComponent>(entity) && entity != -1)
+                {
+                    MaterialComponent &component = EditorManager::m_Scene->GetComponent<MaterialComponent>(entity);
+                    component.AddTexture("texture_diffuse1", droppedFilePath, 0);
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         DrawGizmos(camera);
         ImGui::End();
     }
 
-    void EditorUI::ReadPixelID(unsigned int frameBufferID, unsigned int textureWidth, unsigned int textureHeight, unsigned int attachment)
+    int EditorManager::ReadPixelID(FrameBufferConfig *frameBuffer)
     {
         double texX, texY;
-        bool isHovering = CheckMouseHoverScene(texX, texY, textureWidth, textureHeight);
+        bool isHovering = CheckMouseHoverScene(texX, texY, frameBuffer->colorAttachments[0].width, frameBuffer->colorAttachments[0].height);
 
-        if (!m_IsSceneWindowFocused || !Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || !isHovering)
-            return;
+        if (!isHovering)
+            return -1;
 
         int pixelData;
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->ID);
+        glReadBuffer(GL_COLOR_ATTACHMENT0);
         glReadPixels(texX, texY, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 
         GLenum error;
@@ -218,11 +250,10 @@ namespace Azimuth
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        if (!m_IsManipulating)
-            m_SelectedEntity = pixelData;
+        return pixelData;
     }
 
-    bool EditorUI::CheckMouseHoverScene(double &texX, double &texY, unsigned int textureWidth, unsigned int textureHeight)
+    bool EditorManager::CheckMouseHoverScene(double &texX, double &texY, unsigned int textureWidth, unsigned int textureHeight)
     {
         double mouseX, mouseY;
         glfwGetCursorPos(Window::GetMainWindow(), &mouseX, &mouseY);
@@ -244,13 +275,13 @@ namespace Azimuth
         return m_IsSceneWindowHovered;
     }
 
-    void EditorUI::EndDraw()
+    void EditorManager::EndDraw()
     {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void EditorUI::CreateDocker()
+    void EditorManager::CreateDocker()
     {
         ImGuiViewport *viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos);

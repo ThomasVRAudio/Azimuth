@@ -115,7 +115,6 @@ namespace Azimuth
 
     std::vector<Texture> Model::LoadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
     {
-        stbi_set_flip_vertically_on_load(true);
         std::vector<Texture> textures;
         for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
         {
@@ -147,7 +146,6 @@ namespace Azimuth
                 textures_loaded.push_back(texture);
             }
         }
-        stbi_set_flip_vertically_on_load(false);
         return textures;
     };
 }
