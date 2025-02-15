@@ -58,7 +58,7 @@ namespace Azimuth
 
     void EditorCamera::ProcessKeyboard()
     {
-        if (!EditorManager::IsSceneHovered() || !EditorManager::IsSceneHovered)
+        if (!EditorManager::IsSceneHovered() && !EditorManager::IsSceneFocused())
             return;
 
         const float velocity = 5.0f * Time::deltaTime();

@@ -62,9 +62,6 @@ namespace Azimuth
         EditorManager::OnUpdate(m_EditorCamera, m_FrameBufferConfig.get(), m_FrameBufferEditorConfig.get());
 
         m_EditorCamera.ProcessKeyboard();
-
-        if (Input::IsKeyPressed(Escape))
-            glfwSetInputMode(Window::GetMainWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
 
