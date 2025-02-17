@@ -4,6 +4,11 @@
 namespace Azimuth
 {
 
+    void EditorFileTrayPanel::Init()
+    {
+        EditorTextureLoader::LoadDirectoryTextures();
+    }
+
     void EditorFileTrayPanel::DrawPanel()
     {
         float left_padding = 10.0f;
@@ -21,10 +26,6 @@ namespace Azimuth
 
             ImGui::PopStyleColor();
         }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Load"))
-            EditorTextureLoader::LoadDirectoryTextures();
 
         ImGui::SameLine();
         ImGui::SeparatorText(m_CurrentPath.filename().stem().string().c_str());
@@ -77,10 +78,7 @@ namespace Azimuth
                 else
                     texture = EditorTextureLoader::GetTextureID("file");
 
-                if (ImGui::ImageButton(file.path().string().c_str(), texture, buttonSize - image_padding))
-                {
-                    print("hi");
-                }
+                ImGui::ImageButton(file.path().string().c_str(), texture, buttonSize - image_padding);
 
                 if (ImGui::BeginDragDropSource())
                 {

@@ -18,7 +18,7 @@ namespace Azimuth
     private:
         static void DrawVec3Box(glm::vec3 &vec3, std::string name, const std::array<std::string, 3> &labels, float speed = 0.01f);
         static void AddComponent();
-        static void DirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material);
+        static void ShaderDirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material);
         static EditorFilepicker m_Filepicker;
 
         enum Filepicker

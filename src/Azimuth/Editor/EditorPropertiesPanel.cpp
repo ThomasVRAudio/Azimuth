@@ -95,6 +95,7 @@ namespace Azimuth
             const char *items[] = {"None", "Point", "Line", "Triangle", "Square", "Cube"};
             auto currentItem = component.GetMeshType();
 
+            ImGui::Text("Mesh");
             if (ImGui::Button("Select Mesh"))
             {
                 m_SelectedFilepicker = MESH_PICKER;
@@ -131,31 +132,6 @@ namespace Azimuth
                 }
             }
 
-            ImGui::Text("Mesh");
-            ImGui::Text("Shape");
-            ImGui::SameLine();
-            ImGui::PushItemWidth(100.0f);
-            if (ImGui::BeginCombo("##MeshCombo", items[currentItem]))
-            {
-                for (int i = 0; i < IM_ARRAYSIZE(items); i++)
-                {
-                    bool isSelected = (currentItem == i);
-                    if (ImGui::Selectable(items[i], isSelected))
-                    {
-                        if (currentItem != i)
-                        {
-                            currentItem = static_cast<GEOMETRY_TYPE>(i);
-                            component.UpdateMeshGeometry(static_cast<GEOMETRY_TYPE>(i));
-                        }
-                    }
-                    if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-            ImGui::PopItemWidth();
             ImGui::Separator();
         }
 
@@ -186,7 +162,7 @@ namespace Azimuth
             {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
                 ImGui::Text(" Shader Select ");
-                DirectoryCombo("assets/shaders/library", currentItem, material);
+                ShaderDirectoryCombo("assets/shaders/library", currentItem, material);
                 ImGui::PopStyleVar();
 
                 ImGui::EndPopup();
@@ -410,7 +386,7 @@ namespace Azimuth
         ImGui::PopStyleVar();
     }
 
-    void EditorPropertiesPanel::DirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material)
+    void EditorPropertiesPanel::ShaderDirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material)
     {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.0f, 15.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 5.0f));
@@ -430,13 +406,13 @@ namespace Azimuth
             {
                 ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
                 bool isCollapsed = dirCollapseStates[fullPath];
-                if (ImGui::TreeNodeEx(filename.second.c_str(), ImGuiTreeNodeFlags_Leaf | (isCollapsed ? 0 : ImGuiTreeNodeFlags_DefaultOpen)))
+                if (ImGui::TreeNodeEx(filename.second.c_str(), (isCollapsed ? 0 : ImGuiTreeNodeFlags_DefaultOpen)))
                 {
                     if (ImGui::IsItemClicked())
                         dirCollapseStates[fullPath] = !isCollapsed;
 
                     if (!isCollapsed)
-                        DirectoryCombo(fullPath, currentItem, material);
+                        ShaderDirectoryCombo(fullPath, currentItem, material);
 
                     ImGui::TreePop();
                 }

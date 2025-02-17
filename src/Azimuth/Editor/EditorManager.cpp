@@ -33,6 +33,7 @@ namespace Azimuth
         io.Fonts->AddFontFromFileTTF("assets/fonts/Open_Sans/OpenSans-Bold.ttf", 18.0f, &fontConfig);
 
         EditorTextureLoader::LoadEditorTextures();
+        EditorFileTrayPanel::Init();
     }
 
     void EditorManager::OnUpdate(Camera &camera, FrameBufferConfig *sceneBuffer, FrameBufferConfig *entityBuffer)
@@ -46,7 +47,7 @@ namespace Azimuth
         DrawUI();
         DrawEditorScene(camera, sceneBuffer, entityBuffer);
 
-        if (IsSceneFocused() && Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        if (m_IsSceneWindowFocused && Input::IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             unsigned int entity = ReadPixelID(entityBuffer);
 

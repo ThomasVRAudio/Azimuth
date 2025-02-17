@@ -32,7 +32,7 @@ namespace Azimuth
     private:
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);
         void RenderPass(Camera &camera, SceneSettings *settings = nullptr);
-        void RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps = false, unsigned int activeTexture = 0);
+        void RenderScreenQuad(Shader *shader, unsigned int texture, unsigned int activeTexture = 0);
         ECSManager *m_ECS;
         glm::mat4 m_Model = glm::mat4(1.0f);
         glm::mat4 m_Projection = glm::mat4(1.0f);
@@ -40,7 +40,6 @@ namespace Azimuth
         std::unique_ptr<FrameBufferConfig> m_SceneRenderFrameBuffer;
         std::unique_ptr<FrameBufferConfig> m_TonemappingFrameBuffer;
         std::unique_ptr<FrameBufferConfig> m_PrefilterFrameBuffer;
-        unsigned int m_RenderedSceneTexture, m_ToneMappedTexture, m_PostProcessedTexture, m_PrefilteredTexture;
         std::unique_ptr<Shader> m_PostProcessShader = nullptr;
         std::unique_ptr<Shader> m_FinalCompositeShader = nullptr;
         std::unique_ptr<Shader> m_ToneMappingShader = nullptr;
@@ -48,8 +47,6 @@ namespace Azimuth
         std::unique_ptr<FrameBufferConfig> m_PostProcessingFrameBuffer;
         Mesh m_RenderScreenQuad = Geometry::Screen();
         std::unique_ptr<Bloom> m_Bloom = nullptr;
-        // test
-        Model *testModel;
-        std::unique_ptr<Shader> m_ModelShader = nullptr;
+        unsigned int m_RenderedSceneTexture, m_ToneMappedTexture, m_PostProcessedTexture, m_PrefilteredTexture;
     };
 }

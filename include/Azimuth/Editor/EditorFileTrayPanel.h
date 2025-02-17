@@ -8,6 +8,7 @@ namespace Azimuth
     class EditorFileTrayPanel
     {
     public:
+        static void Init();
         static void DrawPanel();
 
     private:

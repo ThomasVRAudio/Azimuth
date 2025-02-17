@@ -178,7 +178,7 @@ namespace Azimuth
         }
     }
 
-    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture, bool mipmaps, unsigned int activeTexture)
+    void RenderSystem::RenderScreenQuad(Shader *shader, unsigned int texture, unsigned int activeTexture)
     {
         shader->use();
 
@@ -186,9 +186,6 @@ namespace Azimuth
         glBindTexture(GL_TEXTURE_2D, texture);
 
         shader->setInt("g_Texture", activeTexture);
-
-        if (mipmaps)
-            shader->setFloat("g_MipmapLevel", 1.0f);
 
         glBindVertexArray(m_RenderScreenQuad.VAO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderScreenQuad.EBO);
