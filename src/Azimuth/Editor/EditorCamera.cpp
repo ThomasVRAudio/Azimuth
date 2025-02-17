@@ -46,7 +46,7 @@ namespace Azimuth
 
     void EditorCamera::ProcessMouseScroll(double xoffset, double yoffset)
     {
-        if (!EditorManager::IsSceneHovered() || !EditorManager::IsSceneFocused)
+        if (!EditorManager::IsSceneHovered() || !EditorManager::IsSceneFocused())
             return;
 
         m_Zoom -= (float)yoffset;
@@ -58,8 +58,6 @@ namespace Azimuth
 
     void EditorCamera::ProcessKeyboard()
     {
-        if (!EditorManager::IsSceneHovered() && !EditorManager::IsSceneFocused())
-            return;
 
         const float velocity = 5.0f * Time::deltaTime();
 
