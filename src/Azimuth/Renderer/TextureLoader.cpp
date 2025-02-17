@@ -50,7 +50,7 @@ namespace Azimuth
         std::vector<TextureLoadData> data;
 
         for (auto &future : futures)
-            data.push_back(future.get());
+            data.emplace_back(future.get());
 
         return data;
     }
