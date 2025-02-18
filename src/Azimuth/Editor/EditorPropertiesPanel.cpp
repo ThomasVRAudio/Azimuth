@@ -158,6 +158,7 @@ namespace Azimuth
             if (ImGui::Button(selectedShader.c_str()))
                 ImGui::OpenPopup("Shader File Explorer");
 
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.0f, 10.0f));
             if (ImGui::BeginPopup("Shader File Explorer"))
             {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 10.0f));
@@ -167,6 +168,7 @@ namespace Azimuth
 
                 ImGui::EndPopup();
             }
+            ImGui::PopStyleVar();
 
             float left_padding = 10.0f;
             unsigned int sampleSlot = 0;
@@ -396,7 +398,6 @@ namespace Azimuth
         ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
         std::vector<std::pair<FileType, std::string>> filenames = Files::GetFilenamesFromDirectory(path);
-        static std::unordered_map<std::string, bool> dirCollapseStates;
 
         for (const auto &filename : filenames)
         {
@@ -405,15 +406,9 @@ namespace Azimuth
             if (filename.first == FileType::Directory)
             {
                 ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-                bool isCollapsed = dirCollapseStates[fullPath];
-                if (ImGui::TreeNodeEx(filename.second.c_str(), (isCollapsed ? 0 : ImGuiTreeNodeFlags_DefaultOpen)))
+                if (ImGui::TreeNodeEx(filename.second.c_str()))
                 {
-                    if (ImGui::IsItemClicked())
-                        dirCollapseStates[fullPath] = !isCollapsed;
-
-                    if (!isCollapsed)
-                        ShaderDirectoryCombo(fullPath, currentItem, material);
-
+                    ShaderDirectoryCombo(fullPath, currentItem, material);
                     ImGui::TreePop();
                 }
                 ImGui::PopFont();
@@ -425,7 +420,7 @@ namespace Azimuth
 
                 bool isSelected = (currentItem == filename.second);
                 std::string fileNoExtension = filename.second.substr(0, filename.second.find_last_of('.'));
-
+                ImGui::Indent(14.0f);
                 if (ImGui::Selectable(fileNoExtension.c_str(), isSelected))
                 {
                     std::string vertPath;
@@ -441,6 +436,7 @@ namespace Azimuth
                         print("Shader Info not found for: " << path);
                     }
                 }
+                ImGui::Unindent();
             }
         }
 

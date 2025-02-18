@@ -70,7 +70,7 @@ namespace Azimuth
             colors[ImGuiCol_ModalWindowDimBg] = BACKGROUND_DARK;
             colors[ImGuiCol_TabSelectedOverline] = BACKGROUND;
 
-            ImGui::GetStyle().FrameRounding = 1;
+            ImGui::GetStyle().FrameRounding = 2;
             ImGui::GetStyle().FramePadding = ImVec2(7, 3);
             ImGui::GetStyle().ItemSpacing = ImVec2(10, 7);
             ImGui::GetStyle().ScrollbarSize = 10;
