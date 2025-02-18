@@ -390,7 +390,6 @@ namespace Azimuth
 
     void EditorPropertiesPanel::ShaderDirectoryCombo(const std::string &path, std::string &currentItem, MaterialComponent &material)
     {
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.0f, 15.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 5.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowTitleAlign, ImVec2(0.0f, 0.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 5.0f));
@@ -441,8 +440,7 @@ namespace Azimuth
         }
 
         ImGui::PopFont();
-
-        ImGui::PopStyleVar(5);
+        ImGui::PopStyleVar(4);
     }
 }
 
