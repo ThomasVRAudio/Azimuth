@@ -19,7 +19,8 @@ namespace Azimuth
         ofn.lpstrFileTitle = nullptr;
         ofn.nMaxFileTitle = 0;
 
-        std::filesystem::path projectPath = std::filesystem::current_path();
+        // std::filesystem::path projectPath = std::filesystem::current_path();
+        std::filesystem::path projectPath = Application::projectSettings->ProjectFolder;
 
         if (projectPath.filename() != "Scenes")
             projectPath /= "Scenes";

@@ -75,4 +75,63 @@ namespace Azimuth
 
         return foundVert && foundLit;
     }
+
+    bool Files::OpenFolderDialog(std::string &outFolderPath)
+    {
+        CoInitialize(nullptr);
+
+        IFileDialog *pfd;
+        HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&pfd));
+        if (FAILED(hr))
+        {
+            CoUninitialize();
+            return false;
+        }
+
+        DWORD dwOptions;
+        pfd->GetOptions(&dwOptions);
+        pfd->SetOptions(dwOptions | FOS_PICKFOLDERS);
+
+        std::wstring initialPath = Application::projectSettings->ProjectFolder.wstring();
+        IShellItem *pInitialFolder;
+        hr = SHCreateItemFromParsingName(initialPath.c_str(), nullptr, IID_PPV_ARGS(&pInitialFolder));
+        if (SUCCEEDED(hr))
+        {
+            pfd->SetFolder(pInitialFolder);
+            pInitialFolder->Release();
+        }
+        else
+        {
+            pfd->Release();
+            CoUninitialize();
+            return false;
+        }
+
+        hr = pfd->Show(nullptr);
+        if (SUCCEEDED(hr))
+        {
+            IShellItem *psi;
+            hr = pfd->GetResult(&psi);
+            if (SUCCEEDED(hr))
+            {
+                PWSTR pszPath = nullptr;
+                hr = psi->GetDisplayName(SIGDN_FILESYSPATH, &pszPath);
+                if (SUCCEEDED(hr))
+                {
+                    std::wstring wstr(pszPath);
+                    outFolderPath = std::string(wstr.begin(), wstr.end());
+                    CoTaskMemFree(pszPath);
+                    psi->Release();
+                    pfd->Release();
+                    CoUninitialize();
+                    return true;
+                }
+                psi->Release();
+            }
+        }
+
+        pfd->Release();
+        CoUninitialize();
+        return false;
+    }
 }

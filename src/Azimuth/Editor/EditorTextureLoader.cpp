@@ -17,7 +17,7 @@ namespace Azimuth
 
     void EditorTextureLoader::LoadDirectoryTextures()
     {
-        std::vector<std::filesystem::path> textureFiles = Files::GetFilesWithExtension("assets/Assets", {".png", ".jpg"});
+        std::vector<std::filesystem::path> textureFiles = Files::GetFilesWithExtension(Application::projectSettings->ProjectFolder.string(), {".png", ".jpg"});
         std::vector<unsigned int> textures = TextureLoader::LoadTextures(textureFiles);
         for (size_t i = 0; i < textureFiles.size(); ++i)
             m_TextureMap[textureFiles[i].string()] = textures[i];

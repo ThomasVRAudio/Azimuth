@@ -6,6 +6,9 @@ namespace Azimuth
 
     void EditorFileTrayPanel::Init()
     {
+        m_AssetPath = Application::projectSettings->ProjectFolder;
+        m_CurrentPath = m_AssetPath;
+
         EditorTextureLoader::LoadDirectoryTextures();
     }
 

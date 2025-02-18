@@ -12,8 +12,7 @@ namespace Azimuth
         static void DrawPanel();
 
     private:
-        inline static std::filesystem::path m_AssetPath = "assets/Assets",
-                                            m_CurrentPath = "assets/Assets";
+        inline static std::filesystem::path m_AssetPath, m_CurrentPath;
     };
 }
 

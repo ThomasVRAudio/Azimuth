@@ -57,6 +57,22 @@ namespace Azimuth
         float delta = 1.0f / Time::deltaTime();
         ImGui::Text("%.2f", delta);
 
+        ImGui::SeparatorText("Project Settings: ");
+        char pathBuffer[512];
+        strcpy(pathBuffer, Application::projectSettings.get()->ProjectFolder.string().c_str());
+        ImGui::InputText("##path", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
+
+        ImGui::SameLine();
+        if (ImGui::Button("Change"))
+        {
+            std::string filepath;
+            if (Files::OpenFolderDialog(filepath))
+            {
+                Application::projectSettings.get()->ProjectFolder = std::filesystem::path(filepath);
+                EditorFileTrayPanel::Init();
+            }
+        }
+
         ImGui::Unindent(left_padding);
         ImGui::End();
     }
