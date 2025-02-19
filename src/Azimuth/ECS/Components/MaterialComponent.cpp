@@ -33,17 +33,24 @@ namespace Azimuth
         glActiveTexture(GL_TEXTURE0);
     }
 
+    void MaterialComponent::AddTexture(Texture &texture)
+    {
+        texture.id = TextureLoader::LoadTexture(texture.path);
+        m_Textures.emplace_back(texture);
+        shader->use();
+        shader->setInt(texture.name, texture.slot);
+    }
+
     void MaterialComponent::AddTexture(const std::string &name, const std::string &path, unsigned int slot)
     {
-        print(name);
-        print(path);
-        print(slot);
         unsigned int offset = 1;
 
         Texture texture;
         texture.id = TextureLoader::LoadTexture(path);
         texture.path = path;
         texture.slot = slot + offset;
+        texture.name = name;
+
         m_Textures.emplace_back(texture);
 
         shader->use();

@@ -25,6 +25,7 @@ namespace Azimuth
         void SetUniforms();
         void BindTextures();
         void AddTexture(const std::string &name, const std::string &path, unsigned int slot);
+        void AddTexture(Texture &texture);
         void Use() { shader->use(); }
 
     private:

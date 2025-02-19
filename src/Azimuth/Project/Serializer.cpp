@@ -191,6 +191,18 @@ namespace Azimuth
                     }
 
                     component.CreateMaterial(shader, uniforms);
+
+                    for (const auto &texture : mat["Textures"])
+                    {
+                        Texture tex;
+                        tex.id = texture["Texture"]["id"].as<int>();
+                        tex.path = texture["Texture"]["path"].as<std::string>();
+                        tex.slot = texture["Texture"]["slot"].as<int>();
+                        tex.type = texture["Texture"]["type"].as<std::string>();
+                        tex.name = texture["Texture"]["name"].as<std::string>();
+                        component.AddTexture(tex);
+                    }
+
                     scene->AddComponent<MaterialComponent>(entity, std::move(component));
                 }
 
@@ -355,6 +367,25 @@ namespace Azimuth
                     };
 
                     node["Uniforms"] = uniformsNode;
+
+                    YAML::Node texturesNode;
+                    for (const auto &texture : component.m_Textures)
+                    {
+                        YAML::Node textureNode;
+
+                        textureNode["id"] = texture.id;
+                        textureNode["type"] = texture.type;
+                        textureNode["path"] = texture.path;
+                        textureNode["slot"] = texture.slot;
+                        textureNode["name"] = texture.name;
+
+                        YAML::Node textureWrapper;
+                        textureWrapper["Texture"] = textureNode;
+
+                        texturesNode.push_back(textureWrapper);
+                    }
+
+                    node["Textures"] = texturesNode;
 
                     entitySection["Material"] = node;
                 }

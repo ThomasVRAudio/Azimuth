@@ -81,7 +81,17 @@ namespace Azimuth
                 else
                     texture = EditorTextureLoader::GetTextureID("file");
 
-                ImGui::ImageButton(file.path().string().c_str(), texture, buttonSize - image_padding);
+                if (ImGui::ImageButton(file.path().string().c_str(), texture, buttonSize - image_padding))
+                {
+
+                    if (file.path().extension() == ".scene")
+                    {
+                        EditorManager::m_SelectedEntity = -1;
+                        std::string newScenePath;
+                        Serializer::OpenScene(EditorManager::m_Scene, file.path().string(), &newScenePath);
+                        Application::projectSettings->MainScenePath = std::filesystem::path(newScenePath);
+                    }
+                }
 
                 if (ImGui::BeginDragDropSource())
                 {

@@ -59,7 +59,7 @@ namespace Azimuth
         friend class EditorHierarchyPanel;
         friend class EditorPropertiesPanel;
         friend class EditorFilepicker;
-        friend class EditorFileTray;
+        friend class EditorFileTrayPanel;
     };
 
 }
