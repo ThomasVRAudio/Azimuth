@@ -74,17 +74,34 @@ namespace Azimuth
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("Open"))
+                if (ImGui::MenuItem("Open Project"))
                 {
                     m_SelectedEntity = -1;
-                    Serializer::OpenScene(m_Scene);
+                    Serializer::OpenProject();
+                    Serializer::OpenScene(m_Scene, Application::projectSettings->MainScenePath.string());
                 }
-                if (ImGui::MenuItem("Save As..."))
+                if (ImGui::MenuItem("Save Project As..."))
                 {
-                    Serializer::SaveScene(m_Scene);
+                    Serializer::SaveProject();
                 }
                 if (ImGui::MenuItem("Quit"))
                 {
+                }
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::BeginMenu("Scene"))
+            {
+                if (ImGui::MenuItem("Open Scene"))
+                {
+                    m_SelectedEntity = -1;
+                    std::string newScenePath;
+                    Serializer::OpenScene(m_Scene, "", &newScenePath);
+                    Application::projectSettings->MainScenePath = std::filesystem::path(newScenePath);
+                }
+                if (ImGui::MenuItem("Save Scene As..."))
+                {
+                    Serializer::SaveScene(m_Scene);
                 }
                 ImGui::EndMenu();
             }

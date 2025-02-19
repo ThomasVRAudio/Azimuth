@@ -123,7 +123,7 @@ namespace Azimuth
                 };
 
                 std::vector<std::string> extensions{".obj"};
-                const std::string &file = m_Filepicker.SelectFile("assets/Assets/models", "Select Mesh", extensions, false, handleGeometrySelectionFunction);
+                const std::string &file = m_Filepicker.SelectFile(Application::projectSettings->ProjectFolder.string().c_str(), "Select Mesh", extensions, false, handleGeometrySelectionFunction);
                 if (file.length() > 0)
                 {
                     MeshComponent &component = EditorManager::m_Scene->GetComponent<MeshComponent>(EditorManager::m_SelectedEntity);

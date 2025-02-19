@@ -25,7 +25,6 @@ namespace Azimuth
         {
             if (file.is_directory())
             {
-
                 std::vector<std::filesystem::path> childFiles = GetFilesWithExtension(file.path(), extensions);
                 files.insert(files.end(), childFiles.begin(), childFiles.end());
             }

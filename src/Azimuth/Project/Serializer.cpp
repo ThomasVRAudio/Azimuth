@@ -3,7 +3,7 @@
 namespace Azimuth
 {
 
-    bool Serializer::OpenFileDialog(std::string &outFilePath, FileDialogType dialogType)
+    bool Serializer::OpenFileDialog(std::string &outFilePath, FileDialogType dialogType, const char *fileFilter)
     {
         OPENFILENAME ofn;
         char szFile[1024] = {0};
@@ -14,16 +14,15 @@ namespace Azimuth
         ofn.lStructSize = sizeof(ofn);
         ofn.lpstrFile = szFile;
         ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = "Scene Files\0*.scene\0All Files\0*.*\0";
+        ofn.lpstrFilter = fileFilter;
         ofn.nFilterIndex = 1;
         ofn.lpstrFileTitle = nullptr;
         ofn.nMaxFileTitle = 0;
 
-        // std::filesystem::path projectPath = std::filesystem::current_path();
         std::filesystem::path projectPath = Application::projectSettings->ProjectFolder;
 
-        if (projectPath.filename() != "Scenes")
-            projectPath /= "Scenes";
+        if (projectPath.filename() != "scenes")
+            projectPath /= "scenes";
 
         if (!std::filesystem::exists(projectPath))
             std::filesystem::create_directories(projectPath);
@@ -31,7 +30,7 @@ namespace Azimuth
         std::string initialDirString = std::filesystem::absolute(projectPath).string();
         ofn.lpstrInitialDir = initialDirString.c_str();
 
-        ofn.lpstrTitle = "Open Scene File";
+        ofn.lpstrTitle = "Open File";
 
         ofn.Flags = 0;
         ofn.Flags |= OFN_NOCHANGEDIR;
@@ -58,20 +57,18 @@ namespace Azimuth
         return false;
     }
 
-    void Serializer::OpenScene(Scene *scene, std::string path)
+    void Serializer::OpenScene(Scene *scene, std::string path, std::string *outPath)
     {
         std::string filePath;
 
         if (path.length())
             filePath = path;
 
-        if (path.length() || OpenFileDialog(filePath, OPEN))
+        const char *fileFilter = "Scene Files\0*.scene\0All Files\0*.*\0";
+
+        if (path.length() || OpenFileDialog(filePath, OPEN, fileFilter))
         {
-            for (auto &e : scene->m_Entities)
-            {
-                scene->DestroyEntity(e);
-            }
-            scene->m_Entities.clear();
+            ClearScene(scene);
 
             std::ifstream fin(filePath);
             if (!fin.is_open())
@@ -214,15 +211,17 @@ namespace Azimuth
                     scene->AddComponent<LightComponent>(entity, std::move(component));
                 }
             }
-
             EditorManager::UpdateLights();
+            if (outPath != nullptr)
+                *outPath = filePath;
         }
     }
 
     void Serializer::SaveScene(Scene *scene)
     {
         std::string filePath;
-        if (OpenFileDialog(filePath, SAVE))
+        const char *fileFilter = "Scene Files\0*.scene\0All Files\0*.*\0";
+        if (OpenFileDialog(filePath, SAVE, fileFilter))
         {
             if (filePath.find_last_of(".") == std::string::npos)
                 filePath += ".scene";
@@ -392,5 +391,78 @@ namespace Azimuth
                 print("Failed to open file for saving: " << filePath);
             }
         }
+    }
+
+    void Serializer::OpenProject(const std::string &path, Scene *scene)
+    {
+        std::string filePath;
+
+        if (path.length())
+            filePath = path;
+
+        const char *fileFilter = "Project Files\0*.azimuth\0All Files\0*.*\0";
+
+        if (path.length() || OpenFileDialog(filePath, OPEN, fileFilter))
+        {
+            ClearScene(scene);
+
+            std::ifstream fin(filePath);
+            if (!fin.is_open())
+            {
+                std::cerr << "Failed to open file: " << filePath << std::endl;
+                return;
+            }
+
+            YAML::Node root = YAML::Load(fin);
+
+            if (root["ProjectDir"])
+                Application::projectSettings->ProjectFolder = std::filesystem::path(root["ProjectDir"].as<std::string>());
+            else
+                Application::projectSettings->ProjectFolder = std::filesystem::current_path();
+
+            if (root["MainSceneDir"])
+                Application::projectSettings->MainScenePath = std::filesystem::path(root["MainSceneDir"].as<std::string>());
+            else
+                Application::projectSettings->MainScenePath = std::filesystem::current_path();
+        }
+    }
+
+    void Serializer::SaveProject()
+    {
+        std::string filePath;
+        const char *fileFilter = "Project Files\0*.azimuth\0All Files\0*.*\0";
+        if (OpenFileDialog(filePath, SAVE, fileFilter))
+        {
+            if (filePath.find_last_of(".") == std::string::npos)
+                filePath += ".azimuth";
+
+            YAML::Node root;
+
+            root["ProjectDir"] = Application::projectSettings->ProjectFolder.string();
+            root["MainSceneDir"] = Application::projectSettings->MainScenePath.string();
+
+            std::ofstream fout(filePath);
+            if (fout.is_open())
+            {
+                fout << root;
+                fout.close();
+                print("Project saved to: " << filePath);
+            }
+            else
+            {
+                print("Failed to open file for saving: " << filePath);
+            }
+        }
+    }
+
+    void Serializer::ClearScene(Scene *scene)
+    {
+        if (scene == nullptr)
+            return;
+
+        for (auto &e : scene->m_Entities)
+            scene->DestroyEntity(e);
+
+        scene->m_Entities.clear();
     }
 }

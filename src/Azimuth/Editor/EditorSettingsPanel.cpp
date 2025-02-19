@@ -59,8 +59,10 @@ namespace Azimuth
 
         ImGui::SeparatorText("Project Settings: ");
         char pathBuffer[512];
+        ImGui::Text("Project Path: ");
         strcpy(pathBuffer, Application::projectSettings.get()->ProjectFolder.string().c_str());
-        ImGui::InputText("##path", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
+        pathBuffer[sizeof(pathBuffer) - 1] = '\0';
+        ImGui::InputText("##projectpath", pathBuffer, sizeof(pathBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
 
         ImGui::SameLine();
         if (ImGui::Button("Change"))
@@ -72,6 +74,12 @@ namespace Azimuth
                 EditorFileTrayPanel::Init();
             }
         }
+
+        ImGui::Text("Main Scene: ");
+        char mainSceneBuffer[512];
+        strcpy(mainSceneBuffer, Application::projectSettings.get()->MainScenePath.filename().string().c_str());
+        mainSceneBuffer[sizeof(mainSceneBuffer) - 1] = '\0';
+        ImGui::InputText("##mainscene", mainSceneBuffer, sizeof(mainSceneBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
 
         ImGui::Unindent(left_padding);
         ImGui::End();
