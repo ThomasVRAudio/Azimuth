@@ -1,6 +1,7 @@
 #pragma once
 #include <Azimuth/ECS/System.h>
 #include <Azimuth/ECS/ECSManager.h>
+#include <Azimuth/Scripts/ScriptModuleLoader.h>
 
 namespace Azimuth
 {

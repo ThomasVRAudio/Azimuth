@@ -11,3 +11,4 @@
 #include "Azimuth/Core/KeyCodes.h"
 #include "Azimuth/ECS/Components/ScriptComponent.h"
 #include "Azimuth/Renderer/Model.h"
+#include "Azimuth/Scripts/ScriptModuleLoader.h"

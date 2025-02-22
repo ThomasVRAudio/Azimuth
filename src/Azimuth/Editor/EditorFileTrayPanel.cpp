@@ -42,8 +42,21 @@ namespace Azimuth
 
         ImVec2 image_padding(2.0f, 2.0f);
 
+        if (ImGui::Button("Create Scripts"))
+        {
+            FileGenerator::GenerateScripts(m_CurrentPath, "Test");
+        }
+
+        if (ImGui::Button("Create Project Files"))
+        {
+            FileGenerator::GenerateProjectFiles();
+        }
+
         for (const auto &file : std::filesystem::directory_iterator(m_CurrentPath))
         {
+            if ((file.is_directory() && file.path().filename().string()[0] == '.') || file.path().filename().string() == "build")
+                continue;
+
             if (file.is_directory())
             {
                 ImGui::BeginGroup();
@@ -90,6 +103,12 @@ namespace Azimuth
                         std::string newScenePath;
                         Serializer::OpenScene(EditorManager::m_Scene, file.path().string(), &newScenePath);
                         Application::projectSettings->MainScenePath = std::filesystem::path(newScenePath);
+                    }
+
+                    if (std::filesystem::exists(file.path()) && (file.path().extension() == ".cpp" || file.path().extension() == ".h"))
+                    {
+                        std::string command = "code \"" + file.path().string() + "\"";
+                        int result = system(command.c_str());
                     }
                 }
 

@@ -6,3 +6,14 @@
 #include <Azimuth/ECS/Components/TransformComponent.h>
 #include <Azimuth/ECS/Components/TagComponent.h>
 #include <Azimuth/ECS/Components/LightComponent.h>
+
+// temp
+namespace Azimuth
+{
+    class TestScript
+    {
+    public:
+        virtual void OnStart() = 0;
+        virtual void OnUpdate() = 0;
+    };
+}
