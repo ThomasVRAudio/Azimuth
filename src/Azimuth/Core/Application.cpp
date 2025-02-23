@@ -20,6 +20,9 @@ namespace Azimuth
 
         if (m_GameLayer)
             delete m_GameLayer;
+
+        if (m_ScriptLayer)
+            delete m_ScriptLayer;
     }
 
     void Application::Init()
@@ -39,6 +42,9 @@ namespace Azimuth
         m_GameLayer = new GameModeLayer();
 #endif
         AddLayer(m_GameLayer);
+
+        m_ScriptLayer = new ScriptLayer();
+        AddLayer(m_ScriptLayer);
 
         for (auto const layer : m_Layers)
         {

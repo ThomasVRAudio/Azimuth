@@ -1,17 +1,12 @@
 #pragma once
 #include <Azimuth/ECS/ECSManager.h>
-#include <Azimuth/Editor/EditorLayer.h>
-#include <Azimuth/Scripts/ScriptLayer.h>
 #include <Azimuth/ECS/Component.h>
-#include <Azimuth/Renderer/RenderSystem.h>
 #include <Azimuth/Core/Application.h>
 #include <Azimuth/Scene/SceneSettings.h>
 
 namespace Azimuth
 {
     class MonoScript;
-    class Application;
-    class EditorLayer;
 
 #ifdef AZIMUTH_EDITOR
     class EditorManager;
@@ -19,7 +14,6 @@ namespace Azimuth
 
     class Scene
     {
-
     public:
         Scene(Application &application);
         ~Scene();
@@ -52,16 +46,12 @@ namespace Azimuth
         Entity CreateEntity(std::string name);
         void DestroyEntity(Entity entity);
 
-        void InitScriptsIfNotExist(Entity entity);
-
-        void AddScript(Entity entity, std::shared_ptr<MonoScript> script);
         inline ECSManager *GetECSManager() { return ECS; }
         std::shared_ptr<SceneSettings> Settings = std::make_shared<SceneSettings>();
 
     private:
         ECSManager *ECS = new ECSManager();
         Application &m_Application;
-        ScriptLayer *m_ScriptLayer;
         std::vector<Entity> m_Entities;
 #ifdef AZIMUTH_EDITOR
         friend EditorManager;

@@ -2,6 +2,7 @@
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Game/GameModeLayer.h>
+#include <Azimuth/Scripts/ScriptLayer.h>
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/Core/Time.h>
 #include <Azimuth/Core/Input.h>
@@ -35,7 +36,7 @@ namespace Azimuth
 
     private:
         bool m_isRunning = false;
-        Layer *m_GameLayer;
+        Layer *m_GameLayer, *m_ScriptLayer;
         std::vector<Layer *> m_Layers;
     };
 }

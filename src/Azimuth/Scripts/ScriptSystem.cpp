@@ -1,5 +1,7 @@
 #include <Azimuth/Scripts/ScriptSystem.h>
-#include <Azimuth/ECS/Components/ScriptComponent.h>
+#include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+// temp
+#include <Azimuth/Scripts/MonoScript.h>
 
 namespace Azimuth
 {
@@ -10,40 +12,53 @@ namespace Azimuth
 
     void ScriptSystem::OnStart()
     {
-        for (auto &entity : m_Entities)
-        {
-            ECS->GetComponent<ScriptComponent>(entity).OnStart();
-        }
+        // INIT
 
-        // TESTING
+        std::wstring dllPath = (std::filesystem::current_path() / L"libEntityScripts.dll").wstring();
 
-        std::string dllPath = (std::filesystem::current_path() / "libEntityScripts.dll").string();
-
-        HMODULE hModule = LoadLibrary(dllPath.c_str());
+        HMODULE hModule = LoadLibraryW(dllPath.c_str());
         if (!hModule)
         {
-            std::cerr << "Failed to load " << dllPath << std::endl;
+            std::cerr << "Failed to load " << dllPath.c_str() << std::endl;
             return;
         }
 
         auto GetModuleInstance = (ScriptModuleLoader * (*)()) GetProcAddress(hModule, "GetModule");
         if (!GetModuleInstance)
         {
-            std::cerr << "Failed to locate GetModule in " << dllPath << std::endl;
+            std::cerr << "Failed to locate GetModule in " << dllPath.c_str() << std::endl;
             FreeLibrary(hModule);
             hModule = nullptr;
         }
 
         ScriptModuleLoader *instance = GetModuleInstance();
-        if (instance)
+        if (!instance)
         {
-            instance->Init();
-            std::vector<TestScript *> scripts = instance->GetScripts();
+            print("No ScriptModule DLL Found");
+            return;
+        }
 
-            for (TestScript *script : scripts)
+        instance->Init();
+        std::vector<std::shared_ptr<MonoScript>> scripts = instance->GetScripts();
+
+        std::unordered_map<std::string, std::shared_ptr<MonoScript>> scriptPairs;
+
+        for (const auto &script : scripts)
+            scriptPairs[script->GetID()] = script;
+
+        for (auto &entity : m_Entities)
+        {
+            ScriptContainerComponent &scriptContainer = ECS->GetComponent<ScriptContainerComponent>(entity);
+            scriptContainer.GetScriptIDs();
+
+            for (auto const id : scriptContainer.GetScriptIDs())
             {
-                script->OnStart();
-                script->OnUpdate();
+                if (scriptPairs.find(id) != scriptPairs.end())
+                {
+                    auto copy = scriptPairs.at(id)->Clone();
+                    print(copy->GetID());
+                    scriptContainer.AddScriptComponent(copy);
+                }
             }
         }
     }
@@ -52,7 +67,7 @@ namespace Azimuth
     {
         for (auto &entity : m_Entities)
         {
-            ECS->GetComponent<ScriptComponent>(entity).OnUpdate();
+            ECS->GetComponent<ScriptContainerComponent>(entity).OnUpdate();
         };
     }
 }

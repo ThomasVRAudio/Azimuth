@@ -1,5 +1,5 @@
 #include <Azimuth/Game/GameModeLayer.h>
-#include <Azimuth/ECS/Components/ScriptComponent.h>
+#include <Azimuth/ECS/Components/ScriptContainerComponent.h>
 
 namespace Azimuth
 {

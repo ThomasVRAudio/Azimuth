@@ -9,6 +9,7 @@
 #include "Azimuth/Core/Time.h"
 #include "Azimuth/Core/Input.h"
 #include "Azimuth/Core/KeyCodes.h"
-#include "Azimuth/ECS/Components/ScriptComponent.h"
+#include "Azimuth/ECS/Components/ScriptContainerComponent.h"
 #include "Azimuth/Renderer/Model.h"
 #include "Azimuth/Scripts/ScriptModuleLoader.h"
+#include "Azimuth/Scripts/MonoScript.h"

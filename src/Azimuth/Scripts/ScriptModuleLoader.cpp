@@ -1,14 +1,7 @@
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
+#include <Azimuth/Scripts/MonoScript.h>
 
 namespace Azimuth
 {
-    std::vector<TestScript *> ScriptModuleLoader::GetScripts()
-    {
-        std::vector<TestScript *> scripts;
-        for (const auto &script : m_Scripts)
-        {
-            scripts.emplace_back(script.get());
-        }
-        return scripts;
-    }
+    std::vector<std::shared_ptr<MonoScript>> ScriptModuleLoader::GetScripts() { return m_Scripts; };
 }

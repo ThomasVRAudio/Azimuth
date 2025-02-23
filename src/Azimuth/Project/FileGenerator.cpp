@@ -28,7 +28,7 @@ namespace Azimuth
             "#include <Azimuth.h>\n\n"
             "namespace Azimuth\n"
             "{\n"
-            "    class {name} : public TestScript\n"
+            "    class {name} : public MonoScript\n"
             "    {\n"
             "    public:\n"
             "        void OnStart() override;\n"

@@ -1,5 +1,5 @@
 #include <Azimuth/Scripts/ScriptLayer.h>
-#include <Azimuth/ECS/Components/ScriptComponent.h>
+#include <Azimuth/ECS/Components/ScriptContainerComponent.h>
 
 namespace Azimuth
 {
@@ -10,7 +10,7 @@ namespace Azimuth
 
         ComponentMask mask;
 
-        mask.set(ECS->GetComponentBitType<ScriptComponent>(), true);
+        mask.set(ECS->GetComponentBitType<ScriptContainerComponent>(), true);
         m_ScriptSystem = ECS->RegisterSystem<ScriptSystem>();
         ECS->SetSystemComponentMask<ScriptSystem>(mask);
         m_ScriptSystem->Init(ECS);
