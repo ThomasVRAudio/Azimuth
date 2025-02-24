@@ -1,5 +1,7 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorFileTrayPanel.h>
+#include <Azimuth/Editor/EditorTextureLoader.h>
+#include <Azimuth/Project/Serializer.h>
 
 namespace Azimuth
 {

@@ -1,6 +1,11 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
+#include <Azimuth/Project/FileGenerator.h>
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/Editor/EditorManager.h>
+#include <Azimuth/ECS/Component.h>
+#include <Azimuth/System/Files.h>
+#include <Azimuth/Scripts/ScriptModuleLoader.h>
 
 namespace Azimuth
 {
@@ -313,6 +318,9 @@ namespace Azimuth
                 strncpy(scriptBuffer, script.string().c_str(), sizeof(scriptBuffer) - 1);
                 scriptBuffer[sizeof(scriptBuffer) - 1] = '\0';
                 ImGui::InputText(("##ScriptComponent" + script.string()).c_str(), scriptBuffer, IM_ARRAYSIZE(scriptBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
+                if (ImGui::Button("Reload ScriptModule"))
+                    ScriptModuleLoader::LoadModule();
+
                 ImGui::Separator();
             }
         }
@@ -337,6 +345,7 @@ namespace Azimuth
                     component.AddScriptPath((scriptPath / nameBuffer).string() + ".h");
                     m_IsAddingScript = false;
                     nameBuffer[0] = '\0';
+                    ScriptModuleLoader::LoadModule();
                 }
             }
         }

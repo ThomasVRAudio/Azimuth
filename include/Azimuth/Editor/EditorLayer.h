@@ -2,19 +2,17 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Common.h>
 #include <Azimuth/Core/Layer.h>
-#include <Azimuth/ECS/ECSManager.h>
-#include <Azimuth/Renderer/RenderSystem.h>
-#include <Azimuth/Renderer/LightSystem.h>
-#include <Azimuth/Renderer/FrameBuffer.h>
-#include <Azimuth/Editor/EditorManager.h>
 #include <Azimuth/Editor/EditorCamera.h>
-#include <Azimuth/Core/Time.h>
-#include <Azimuth/ECS/Component.h>
-#include <Azimuth/Events/MouseEvents.h>
+#include <Azimuth/Renderer/LightSystem.h>
 
 namespace Azimuth
 {
     class Scene;
+    class EditorCamera;
+    class SceneSettings;
+    class RenderSystem;
+    class Shader;
+    class FrameBufferConfig;
 
     class EditorLayer : public Layer
     {

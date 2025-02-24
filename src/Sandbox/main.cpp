@@ -6,7 +6,7 @@ using namespace Azimuth;
 int main()
 {
     Application *app = new Azimuth::Application();
-    Scene *scene = app->ActiveScene;
+    Scene *scene = app->GetActiveScene();
 
     // Entity player = scene->CreateEntity("Player");
     // Entity otherEntity = scene->CreateEntity("Meshless Entity");

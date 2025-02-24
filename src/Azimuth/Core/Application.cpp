@@ -6,7 +6,7 @@ namespace Azimuth
     Application::Application()
         : m_isRunning(true)
     {
-        ActiveScene = new Scene(*this);
+        m_ActiveScene = new Scene(*this);
         Init();
     }
 
@@ -15,8 +15,8 @@ namespace Azimuth
         for (auto const layer : m_Layers)
             delete layer;
 
-        if (ActiveScene)
-            delete ActiveScene;
+        if (m_ActiveScene)
+            delete m_ActiveScene;
 
         if (m_GameLayer)
             delete m_GameLayer;
@@ -34,7 +34,7 @@ namespace Azimuth
         g_ScrollEvent.InitializeCallbacks();
         g_CursorEvent.InitializeCallbacks();
 
-        ActiveScene->Init();
+        m_ActiveScene->Init();
 
 #ifdef AZIMUTH_EDITOR
         m_GameLayer = new EditorLayer();
@@ -48,7 +48,7 @@ namespace Azimuth
 
         for (auto const layer : m_Layers)
         {
-            layer->Init(ActiveScene);
+            layer->Init(m_ActiveScene);
         }
     }
 

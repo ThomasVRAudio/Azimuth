@@ -3,6 +3,7 @@
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Scripts/ScriptSystem.h>
 #include <Azimuth/ECS/Component.h>
+#include <Azimuth/Scripts/ScriptModuleLoader.h>
 
 namespace Azimuth
 {
@@ -17,5 +18,6 @@ namespace Azimuth
 
     private:
         std::shared_ptr<ScriptSystem> m_ScriptSystem;
+        std::shared_ptr<ScriptModuleLoader> m_ScriptModuleLoader;
     };
 }

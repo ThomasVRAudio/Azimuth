@@ -48,6 +48,7 @@ namespace Azimuth
 
         inline ECSManager *GetECSManager() { return ECS; }
         std::shared_ptr<SceneSettings> Settings = std::make_shared<SceneSettings>();
+        inline std::vector<Entity> GetSceneEntities() { return m_Entities; }
 
     private:
         ECSManager *ECS = new ECSManager();

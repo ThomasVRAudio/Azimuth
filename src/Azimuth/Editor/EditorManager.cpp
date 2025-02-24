@@ -1,5 +1,13 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorManager.h>
+#include <Azimuth/Editor/ImGuiStyling.h>
+#include <Azimuth/Editor/EditorTextureLoader.h>
+#include <Azimuth/Editor/EditorFileTrayPanel.h>
+#include <Azimuth/Editor/EditorHierarchyPanel.h>
+#include <Azimuth/Editor/EditorPropertiesPanel.h>
+#include <Azimuth/Editor/EditorSettingsPanel.h>
+#include <Azimuth/Project/Serializer.h>
+#include <dependencies/imgui/ImGuizmo.h>
 
 namespace Azimuth
 {

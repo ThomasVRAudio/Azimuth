@@ -1,12 +1,10 @@
 #pragma once
 #include <Azimuth/Common.h>
-#include <Azimuth/Renderer/Window.h>
-#include <Azimuth/Scene/Scene.h>
-#include <dependencies/yaml-cpp/yaml.h>
-#include <Azimuth/Project/YamlConversions.h>
 
 namespace Azimuth
 {
+    class Scene;
+
     enum FileDialogType
     {
         OPEN,

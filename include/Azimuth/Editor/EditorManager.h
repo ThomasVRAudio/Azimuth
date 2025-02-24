@@ -1,22 +1,19 @@
 #pragma once
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Common.h>
-#include <Azimuth/Editor/ImGuiStyling.h>
-#include <Azimuth/Renderer/Window.h>
-#include <Azimuth/Core/Application.h>
-#include <Azimuth/Editor/EditorPropertiesPanel.h>
-#include <Azimuth/Editor/EditorHierarchyPanel.h>
-#include <Azimuth/Editor/EditorSettingsPanel.h>
-#include <Azimuth/Editor/EditorFilepicker.h>
-#include <Azimuth/Editor/EditorFileTrayPanel.h>
-#include <Azimuth/Editor/EditorTextureLoader.h>
-#include <Azimuth/Project/Serializer.h>
 #include <dependencies/imgui/ImGuizmo.h>
-#include <Azimuth/ECS/Component.h>
+#include <memory>
 
 namespace Azimuth
 {
     class Scene;
+    class Camera;
+    class FrameBufferConfig;
+    class SceneSettings;
+    class EditorHierarchyPanel;
+    class EditorPropertiesPanel;
+    class EditorFilepicker;
+    class EditorFileTrayPanel;
 
     class EditorManager
     {

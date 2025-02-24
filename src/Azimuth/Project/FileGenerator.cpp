@@ -173,7 +173,7 @@ namespace Azimuth
             "\n"
             "namespace Azimuth\n"
             "{\n"
-            "    class DLLExport : public ScriptModuleLoader\n"
+            "    class DLLExport : public ScriptModule\n"
             "    {\n"
             "    public:\n"
             "        SCRIPTS_API void Init() override\n"

@@ -4,15 +4,15 @@
 namespace Azimuth
 {
     class MonoScript;
-
     class ScriptModuleLoader
     {
     public:
-        virtual void Init() = 0;
-        std::vector<std::shared_ptr<MonoScript>> GetScripts();
-        virtual ~ScriptModuleLoader() = default;
+        static void LoadModule();
+        static void UnloadModule();
 
-    protected:
-        std::vector<std::shared_ptr<MonoScript>> m_Scripts;
+    private:
+        inline static HMODULE hModule;
+        inline static std::unordered_map<std::string, std::shared_ptr<MonoScript>> m_ScriptPairs;
+        static void AttachScriptComponents();
     };
 }

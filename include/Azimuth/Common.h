@@ -47,5 +47,6 @@
 #include <commdlg.h>
 
 #include <future>
+#include <Azimuth/ECS/Entity.h>
 
 #endif

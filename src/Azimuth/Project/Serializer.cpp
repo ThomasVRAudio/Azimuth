@@ -1,4 +1,10 @@
 #include <Azimuth/Project/Serializer.h>
+#include <Azimuth/Editor/EditorManager.h>
+#include <Azimuth/Scripts/ScriptModuleLoader.h>
+#include <Azimuth/Renderer/Window.h>
+#include <Azimuth/Scene/Scene.h>
+#include <dependencies/yaml-cpp/yaml.h>
+#include <Azimuth/Project/YamlConversions.h>
 
 namespace Azimuth
 {

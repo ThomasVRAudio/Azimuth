@@ -11,6 +11,7 @@ namespace Azimuth
 
     private:
         inline static bool m_VSyncLastCheckboxState = false;
+        inline static bool m_PreviousPlayingState = false;
     };
 
 }

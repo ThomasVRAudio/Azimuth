@@ -25,7 +25,7 @@ namespace Azimuth
         void Start();
         void Run();
         void AddLayer(Layer *layer);
-        Scene *ActiveScene;
+        inline static Scene *GetActiveScene() { return m_ActiveScene; }
         inline static std::shared_ptr<Azimuth::ProjectSettings> projectSettings =
             std::make_shared<Azimuth::ProjectSettings>(std::filesystem::path(R"(D:\Users\Thomas\Documents\Dev\Azimuth_Engine\ProjectAssets)"));
 
@@ -35,6 +35,7 @@ namespace Azimuth
 #endif
 
     private:
+        inline static Scene *m_ActiveScene;
         bool m_isRunning = false;
         Layer *m_GameLayer, *m_ScriptLayer;
         std::vector<Layer *> m_Layers;
