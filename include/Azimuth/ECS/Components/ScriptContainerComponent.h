@@ -38,14 +38,22 @@ namespace Azimuth
             return m_Scene->RemoveComponent<T>(m_Entity);
         }
 
-        std::vector<std::string> GetScriptIDs()
+        std::vector<std::filesystem::path> GetScriptPaths()
         {
-            return m_IDs;
+            return m_Paths;
         }
+
+        void AddScriptPath(const std::filesystem::path &path)
+        {
+            std::filesystem::path relative = std::filesystem::relative(path, Application::projectSettings->ProjectFolder);
+            m_Paths.emplace_back(relative);
+        }
+
+        virtual void GetDebugSettings();
 
     private:
         std::vector<std::shared_ptr<MonoScript>> m_Scripts;
-        std::vector<std::string> m_IDs;
+        std::vector<std::filesystem::path> m_Paths;
         Entity m_Entity;
         Scene *m_Scene;
     };

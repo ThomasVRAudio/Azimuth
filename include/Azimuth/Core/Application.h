@@ -26,12 +26,12 @@ namespace Azimuth
         void Run();
         void AddLayer(Layer *layer);
         Scene *ActiveScene;
+        inline static std::shared_ptr<Azimuth::ProjectSettings> projectSettings =
+            std::make_shared<Azimuth::ProjectSettings>(std::filesystem::path(R"(D:\Users\Thomas\Documents\Dev\Azimuth_Engine\ProjectAssets)"));
 
 #ifdef AZIMUTH_EDITOR
         inline static bool s_PlayingEditorScene = false;
         inline static bool s_IsFirstPlayFrame = true;
-        inline static std::shared_ptr<Azimuth::ProjectSettings> projectSettings =
-            std::make_shared<Azimuth::ProjectSettings>(std::filesystem::path(R"(D:\Users\Thomas\Documents\Dev\Azimuth_Engine\ProjectAssets)"));
 #endif
 
     private:

@@ -1,5 +1,6 @@
 #pragma once
 #include <Azimuth/ECS/ComponentArray.h>
+#include <typeindex>
 
 namespace Azimuth
 {
@@ -10,12 +11,13 @@ namespace Azimuth
         template <typename T>
         void RegisterComponent()
         {
-            const char *typeName = typeid(T).name(); // unique
 
-            assert(m_ComponentBitTypes.find(typeName) == m_ComponentBitTypes.end() && "Registering component type more than once");
+            std::type_index typeIndex(typeid(T));
 
-            m_ComponentBitTypes.insert({typeName, m_NextComponentBitType});
-            m_ComponentArrays.insert({typeName, std::make_shared<ComponentArray<T>>()});
+            assert(m_ComponentBitTypes.find(typeIndex) == m_ComponentBitTypes.end() && "Registering component type more than once");
+
+            m_ComponentBitTypes.insert({typeIndex, m_NextComponentBitType});
+            m_ComponentArrays.insert({typeIndex, std::make_shared<ComponentArray<T>>()});
 
             ++m_NextComponentBitType;
         }
@@ -23,11 +25,11 @@ namespace Azimuth
         template <typename T>
         ComponentBitType GetComponentBitType()
         {
-            const char *typeName = typeid(T).name();
+            std::type_index typeIndex(typeid(T));
 
-            assert(m_ComponentBitTypes.find(typeName) != m_ComponentBitTypes.end() && "Component not registered before use");
+            assert(m_ComponentBitTypes.find(typeIndex) != m_ComponentBitTypes.end() && "Component not registered before use");
 
-            return m_ComponentBitTypes[typeName];
+            return m_ComponentBitTypes[typeIndex];
         }
 
         template <typename T>
@@ -63,18 +65,17 @@ namespace Azimuth
         }
 
     private:
-        std::unordered_map<const char *, ComponentBitType> m_ComponentBitTypes{};
-        std::unordered_map<const char *, std::shared_ptr<IComponentArray>> m_ComponentArrays{};
+        std::unordered_map<std::type_index, ComponentBitType> m_ComponentBitTypes{};
+        std::unordered_map<std::type_index, std::shared_ptr<IComponentArray>> m_ComponentArrays{};
         ComponentBitType m_NextComponentBitType{};
 
         template <typename T>
         std::shared_ptr<ComponentArray<T>> GetComponentArray()
         {
-            const char *typeName = typeid(T).name();
+            std::type_index typeIndex(typeid(T));
+            assert(m_ComponentBitTypes.find(typeIndex) != m_ComponentBitTypes.end() && "Component not registered before use.");
 
-            assert(m_ComponentBitTypes.find(typeName) != m_ComponentBitTypes.end() && "Component not registered before use.");
-
-            return std::static_pointer_cast<ComponentArray<T>>(m_ComponentArrays[typeName]);
+            return std::static_pointer_cast<ComponentArray<T>>(m_ComponentArrays[typeIndex]);
         }
     };
 }

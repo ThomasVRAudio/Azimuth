@@ -44,22 +44,28 @@ namespace Azimuth
         std::unordered_map<std::string, std::shared_ptr<MonoScript>> scriptPairs;
 
         for (const auto &script : scripts)
-            scriptPairs[script->GetID()] = script;
+            scriptPairs[script->GetPath().filename().string()] = script;
 
         for (auto &entity : m_Entities)
         {
             ScriptContainerComponent &scriptContainer = ECS->GetComponent<ScriptContainerComponent>(entity);
-            scriptContainer.GetScriptIDs();
+            scriptContainer.GetScriptPaths();
 
-            for (auto const id : scriptContainer.GetScriptIDs())
+            for (auto const id : scriptContainer.GetScriptPaths())
             {
-                if (scriptPairs.find(id) != scriptPairs.end())
+                if (scriptPairs.find(id.string()) != scriptPairs.end())
                 {
-                    auto copy = scriptPairs.at(id)->Clone();
-                    print(copy->GetID());
+                    auto copy = scriptPairs.at(id.string())->Clone();
+                    copy->SetParent(&scriptContainer);
                     scriptContainer.AddScriptComponent(copy);
                 }
             }
+        }
+
+        for (auto &entity : m_Entities)
+        {
+            auto &container = ECS->GetComponent<ScriptContainerComponent>(entity);
+            container.OnStart();
         }
     }
 

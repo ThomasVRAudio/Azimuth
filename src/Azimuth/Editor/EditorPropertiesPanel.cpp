@@ -1,5 +1,6 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
+#include <Azimuth/ECS/Components/ScriptContainerComponent.h>
 
 namespace Azimuth
 {
@@ -300,6 +301,46 @@ namespace Azimuth
             ImGui::Separator();
         }
 
+        if (EditorManager::m_Scene->HasComponent<ScriptContainerComponent>(EditorManager::m_SelectedEntity))
+        {
+            ScriptContainerComponent &container = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(selectedPropertiesEntity);
+
+            for (const auto &script : container.GetScriptPaths())
+            {
+                ImGui::Text("ScriptComponent");
+
+                char scriptBuffer[512];
+                strncpy(scriptBuffer, script.string().c_str(), sizeof(scriptBuffer) - 1);
+                scriptBuffer[sizeof(scriptBuffer) - 1] = '\0';
+                ImGui::InputText(("##ScriptComponent" + script.string()).c_str(), scriptBuffer, IM_ARRAYSIZE(scriptBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
+                ImGui::Separator();
+            }
+        }
+
+        if (m_IsAddingScript && EditorManager::m_SelectedEntity == selectedPropertiesEntity)
+        {
+            static char nameBuffer[256];
+            ImGui::Text("Script Name: ");
+            ImGui::SetKeyboardFocusHere();
+            if (ImGui::InputText("##AddScript", nameBuffer, IM_ARRAYSIZE(nameBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                if (nameBuffer[0] == '\0')
+                {
+                    print("Script name can't be empty");
+                }
+                else
+                {
+                    std::filesystem::path scriptPath = Application::projectSettings->ProjectFolder;
+
+                    FileGenerator::GenerateScripts(scriptPath, nameBuffer);
+                    ScriptContainerComponent &component = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(selectedPropertiesEntity);
+                    component.AddScriptPath((scriptPath / nameBuffer).string() + ".h");
+                    m_IsAddingScript = false;
+                    nameBuffer[0] = '\0';
+                }
+            }
+        }
+
         AddComponent();
 
         ImGui::Unindent(left_padding);
@@ -381,6 +422,12 @@ namespace Azimuth
                     EditorManager::m_Scene->AddComponent<LightComponent>(EditorManager::m_SelectedEntity, std::move(component));
                     EditorManager::UpdateLights();
                 };
+            }
+
+            if (ImGui::Selectable("Script"))
+            {
+                m_IsAddingScript = true;
+                selectedPropertiesEntity = EditorManager::m_SelectedEntity;
             }
 
             ImGui::EndPopup();

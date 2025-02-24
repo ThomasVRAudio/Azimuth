@@ -28,12 +28,19 @@ namespace Azimuth
             "#include <Azimuth.h>\n\n"
             "namespace Azimuth\n"
             "{\n"
-            "    class {name} : public MonoScript\n"
-            "    {\n"
-            "    public:\n"
-            "        void OnStart() override;\n"
-            "        void OnUpdate() override;\n"
-            "    };\n"
+            "   class {name} : public MonoScript\n"
+            "   {\n"
+            "   public:\n"
+            "       {name}() : MonoScript(__FILE__) {}\n"
+            "\n"
+            "       std::shared_ptr<MonoScript> Clone() const override\n"
+            "       {\n"
+            "           return std::make_shared<{name}>(*this);\n"
+            "       }\n"
+            "\n"
+            "       void OnStart() override;\n"
+            "       void OnUpdate() override;\n"
+            "   };\n"
             "}\n";
 
         size_t pos;
@@ -110,7 +117,7 @@ namespace Azimuth
 
             if (!registryFound && line.find("//[Registry]") != std::string::npos)
             {
-                std::string registry = "m_Scripts.emplace_back(std::make_unique<" + name + ">());\n";
+                std::string registry = "m_Scripts.emplace_back(std::make_shared<" + name + ">());\n";
                 fileContent += registry;
                 registryFound = true;
             }

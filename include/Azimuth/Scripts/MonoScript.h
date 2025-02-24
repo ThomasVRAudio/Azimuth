@@ -8,7 +8,10 @@ namespace Azimuth
     class MonoScript
     {
     public:
-        MonoScript(const std::string &ID) : m_ID(ID) {}
+        MonoScript(const std::filesystem::path &path)
+            : m_Path(path)
+        {
+        }
 
         virtual void OnStart() {};
         virtual void OnUpdate() {};
@@ -41,11 +44,16 @@ namespace Azimuth
             m_ScriptContainer = parent;
         }
 
-        const std::string &GetID() const { return m_ID; }
-        void SetID(const std::string &ID) { m_ID = ID; }
+        ScriptContainerComponent *GetParent() { return m_ScriptContainer; }
+
+        const std::filesystem::path &GetPath() const { return m_Path; }
+        void SetPath(const std::filesystem::path &path)
+        {
+            m_Path = path;
+        }
 
     private:
-        std::string m_ID;
+        std::filesystem::path m_Path;
         ScriptContainerComponent *m_ScriptContainer;
     };
 }
