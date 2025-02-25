@@ -1,8 +1,5 @@
 #pragma once
 #include <Azimuth/Common.h>
-#include <Azimuth/Events/MouseEvents.h>
-#include <Azimuth/Core/Time.h>
-#include <Azimuth/Core/Input.h>
 
 namespace Azimuth
 {

@@ -1,12 +1,12 @@
 #pragma once
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Common.h>
+#include <Azimuth/Scene/Scene.h>
 #include <dependencies/imgui/ImGuizmo.h>
 #include <memory>
 
 namespace Azimuth
 {
-    class Scene;
     class Camera;
     class FrameBufferConfig;
     class SceneSettings;

@@ -1,8 +1,6 @@
 #ifdef AZIMUTH_EDITOR
 #pragma once
 #include <Azimuth/Common.h>
-#include <Azimuth/Renderer/TextureLoader.h>
-#include <Azimuth/System/Files.h>
 
 namespace Azimuth
 {

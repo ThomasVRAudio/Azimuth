@@ -15,6 +15,8 @@ namespace Azimuth
         void Setup(Scene *ECS, Entity entity);
         void OnStart();
         void OnUpdate();
+        void AddScriptPath(const std::filesystem::path &path);
+        virtual void GetDebugSettings();
 
         template <typename T>
         typename std::enable_if<std::is_base_of_v<IComponent, T>, T &>::type
@@ -42,14 +44,6 @@ namespace Azimuth
         {
             return m_Paths;
         }
-
-        void AddScriptPath(const std::filesystem::path &path)
-        {
-            std::filesystem::path relative = std::filesystem::relative(path, Application::projectSettings->ProjectFolder);
-            m_Paths.emplace_back(relative);
-        }
-
-        virtual void GetDebugSettings();
 
     private:
         std::vector<std::shared_ptr<MonoScript>> m_Scripts;

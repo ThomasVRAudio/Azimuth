@@ -1,8 +1,6 @@
 #pragma once
-#include <Azimuth/Common.h>
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Scripts/ScriptSystem.h>
-#include <Azimuth/ECS/Component.h>
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
 
 namespace Azimuth

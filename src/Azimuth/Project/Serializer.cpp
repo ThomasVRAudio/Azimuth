@@ -3,6 +3,7 @@
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Scene/Scene.h>
+#include <Azimuth/Core/Application.h>
 #include <dependencies/yaml-cpp/yaml.h>
 #include <Azimuth/Project/YamlConversions.h>
 

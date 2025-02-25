@@ -1,11 +1,7 @@
 #pragma once
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Layer.h>
-#include <Azimuth/Game/GameModeLayer.h>
-#include <Azimuth/Scripts/ScriptLayer.h>
 #include <Azimuth/Scene/Scene.h>
-#include <Azimuth/Core/Time.h>
-#include <Azimuth/Core/Input.h>
 #include <Azimuth/Project/ProjectSettings.h>
 #include <Azimuth/Common.h>
 
@@ -15,7 +11,6 @@
 
 namespace Azimuth
 {
-
     class Application
     {
     public:

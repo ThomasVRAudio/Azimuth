@@ -1,4 +1,5 @@
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/Core/Application.h>
 #include <Azimuth/Scripts/MonoScript.h>
 
 namespace Azimuth
@@ -45,6 +46,12 @@ namespace Azimuth
 
         print("Entity: " << m_Entity);
         print("Scene has transform: " << m_Scene->HasComponent<TransformComponent>(m_Entity));
+    }
+
+    void ScriptContainerComponent::AddScriptPath(const std::filesystem::path &path)
+    {
+        std::filesystem::path relative = std::filesystem::relative(path, Application::projectSettings->ProjectFolder);
+        m_Paths.emplace_back(relative);
     }
 
 }

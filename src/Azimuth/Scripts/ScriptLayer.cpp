@@ -1,5 +1,7 @@
 #include <Azimuth/Scripts/ScriptLayer.h>
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/Core/Application.h>
+#include <Azimuth/Common.h>
 
 namespace Azimuth
 {

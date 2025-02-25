@@ -1,4 +1,8 @@
 #include <Azimuth/Core/Application.h>
+#include <Azimuth/Core/Time.h>
+#include <Azimuth/Core/Input.h>
+#include <Azimuth/Game/GameModeLayer.h>
+#include <Azimuth/Scripts/ScriptLayer.h>
 
 namespace Azimuth
 {

@@ -1,8 +1,6 @@
 #ifdef AZIMUTH_EDITOR
 #pragma once
 #include <Azimuth/Common.h>
-#include <Azimuth/Project/FileGenerator.h>
-#include <Azimuth/Editor/EditorManager.h>
 
 namespace Azimuth
 {

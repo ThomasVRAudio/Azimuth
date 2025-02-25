@@ -1,4 +1,7 @@
 #include <Azimuth/Renderer/Camera.h>
+#include <Azimuth/Core/Time.h>
+#include <Azimuth/Core/Input.h>
+#include <Azimuth/Events/MouseEvents.h>
 
 namespace Azimuth
 {

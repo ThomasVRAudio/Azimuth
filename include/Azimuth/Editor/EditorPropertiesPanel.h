@@ -5,7 +5,8 @@
 
 namespace Azimuth
 {
-    class EditorFilepicker;
+    class MaterialComponent;
+
     class EditorPropertiesPanel
     {
 

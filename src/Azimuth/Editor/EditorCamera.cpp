@@ -1,6 +1,8 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorCamera.h>
 #include <Azimuth/Editor/EditorManager.h>
+#include <Azimuth/Core/Input.h>
+#include <Azimuth/Core/Time.h>
 
 namespace Azimuth
 {

@@ -1,5 +1,7 @@
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/Core/Application.h>
+#include <Azimuth/Scripts/ScriptModule.h>
 #include <Azimuth/Scripts/MonoScript.h>
 
 namespace Azimuth
@@ -65,24 +67,12 @@ namespace Azimuth
 
     void ScriptModuleLoader::UnloadModule()
     {
+
         m_ScriptPairs.clear();
-        if (FreeLibrary(hModule))
-        {
-            std::cout << "DLL successfully unloaded.\n";
-        }
-        else
-        {
-            DWORD error = GetLastError();
-            std::cerr << "FreeLibrary failed! Error code: " << error << std::endl;
-        }
+        FreeLibrary(hModule);
         hModule = nullptr;
-        if (GetModuleHandleW(L"libEntityScripts.dll") == nullptr)
-        {
-            std::cout << "DLL fully unloaded.\n";
-        }
-        else
-        {
-            std::cerr << "DLL still loaded!\n";
-        }
+
+        if (GetModuleHandleW(L"libEntityScripts.dll") != nullptr)
+            print("DLL still unloaded.");
     }
 }

@@ -4,6 +4,7 @@
 #include <Azimuth/Core/Layer.h>
 #include <Azimuth/Editor/EditorCamera.h>
 #include <Azimuth/Renderer/LightSystem.h>
+#include <Azimuth/Renderer/FrameBuffer.h>
 
 namespace Azimuth
 {
@@ -12,7 +13,6 @@ namespace Azimuth
     class SceneSettings;
     class RenderSystem;
     class Shader;
-    class FrameBufferConfig;
 
     class EditorLayer : public Layer
     {

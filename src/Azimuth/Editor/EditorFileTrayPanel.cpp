@@ -2,6 +2,8 @@
 #include <Azimuth/Editor/EditorFileTrayPanel.h>
 #include <Azimuth/Editor/EditorTextureLoader.h>
 #include <Azimuth/Project/Serializer.h>
+#include <Azimuth/Project/FileGenerator.h>
+#include <Azimuth/Editor/EditorManager.h>
 
 namespace Azimuth
 {

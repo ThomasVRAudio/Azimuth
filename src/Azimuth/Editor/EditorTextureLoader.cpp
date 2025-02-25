@@ -1,5 +1,7 @@
 #ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorTextureLoader.h>
+#include <Azimuth/Renderer/TextureLoader.h>
+#include <Azimuth/System/Files.h>
 
 namespace Azimuth
 {

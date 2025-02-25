@@ -1,5 +1,9 @@
-#include <Azimuth/Editor/EditorFilepicker.h>
 #ifdef AZIMUTH_EDITOR
+#include <Azimuth/Editor/EditorFilepicker.h>
+#include <Azimuth/Renderer/Window.h>
+#include <Azimuth/System/Files.h>
+#include <Azimuth/Editor/EditorManager.h>
+#include <Azimuth/Renderer/Model.h>
 
 namespace Azimuth
 {

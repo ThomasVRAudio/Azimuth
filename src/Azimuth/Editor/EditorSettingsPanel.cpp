@@ -3,6 +3,8 @@
 #include <Azimuth/Editor/EditorFileTrayPanel.h>
 #include <Azimuth/System/Files.h>
 #include <Azimuth/Core/Application.h>
+#include <Azimuth/Scripts/ScriptModuleLoader.h>
+#include <Azimuth/Core/Time.h>
 
 namespace Azimuth
 {

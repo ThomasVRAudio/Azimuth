@@ -1,5 +1,6 @@
 #include <Azimuth/Game/GameModeLayer.h>
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/Core/Input.h>
 
 namespace Azimuth
 {

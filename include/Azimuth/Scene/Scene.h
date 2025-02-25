@@ -1,12 +1,12 @@
 #pragma once
 #include <Azimuth/ECS/ECSManager.h>
 #include <Azimuth/ECS/Component.h>
-#include <Azimuth/Core/Application.h>
 #include <Azimuth/Scene/SceneSettings.h>
 
 namespace Azimuth
 {
     class MonoScript;
+    class Application;
 
 #ifdef AZIMUTH_EDITOR
     class EditorManager;

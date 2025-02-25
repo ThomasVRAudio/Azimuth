@@ -318,8 +318,6 @@ namespace Azimuth
                 strncpy(scriptBuffer, script.string().c_str(), sizeof(scriptBuffer) - 1);
                 scriptBuffer[sizeof(scriptBuffer) - 1] = '\0';
                 ImGui::InputText(("##ScriptComponent" + script.string()).c_str(), scriptBuffer, IM_ARRAYSIZE(scriptBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
-                if (ImGui::Button("Reload ScriptModule"))
-                    ScriptModuleLoader::LoadModule();
 
                 ImGui::Separator();
             }
