@@ -15,6 +15,15 @@ namespace Azimuth
 
         texture = TextureLoader::LoadTexture("assets/editor/textures/back_button.png", false, false);
         m_TextureMap["back"] = texture;
+
+        texture = TextureLoader::LoadTexture("assets/editor/textures/play_button.png", false, false);
+        m_TextureMap["play"] = texture;
+
+        texture = TextureLoader::LoadTexture("assets/editor/textures/pause_button.png", false, false);
+        m_TextureMap["pause"] = texture;
+
+        texture = TextureLoader::LoadTexture("assets/editor/textures/stop_button.png", false, false);
+        m_TextureMap["stop"] = texture;
     }
 
     void EditorTextureLoader::LoadDirectoryTextures()

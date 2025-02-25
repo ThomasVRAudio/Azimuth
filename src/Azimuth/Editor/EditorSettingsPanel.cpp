@@ -14,20 +14,6 @@ namespace Azimuth
         ImGui::Begin("Settings");
         ImGui::Indent(left_padding);
         ImGui::Dummy(ImVec2(4.0f, 4.0f));
-        ImGui::Checkbox("Play Scene", &Application::s_PlayingEditorScene);
-
-        if (Application::s_PlayingEditorScene != m_PreviousPlayingState)
-        {
-            if (Application::s_PlayingEditorScene)
-                ScriptModuleLoader::LoadModule();
-            else
-            {
-                print("unloaded ");
-                ScriptModuleLoader::UnloadModule();
-            }
-
-            m_PreviousPlayingState = Application::s_PlayingEditorScene;
-        }
 
         float max = 20.0f;
         ImGui::SeparatorText("HDR Settings");

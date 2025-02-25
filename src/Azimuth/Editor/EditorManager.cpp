@@ -6,6 +6,7 @@
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
 #include <Azimuth/Editor/EditorPropertiesPanel.h>
 #include <Azimuth/Editor/EditorSettingsPanel.h>
+#include <Azimuth/Editor/EditorSceneControlPanel.h>
 #include <Azimuth/Project/Serializer.h>
 #include <dependencies/imgui/ImGuizmo.h>
 #include <Azimuth/Renderer/Window.h>
@@ -254,6 +255,8 @@ namespace Azimuth
             }
             ImGui::EndDragDropTarget();
         }
+
+        EditorSceneControlPanel::DrawPanel();
 
         DrawGizmos(camera);
         ImGui::End();

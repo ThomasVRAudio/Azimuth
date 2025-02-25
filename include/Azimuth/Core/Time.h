@@ -31,8 +31,8 @@ namespace Azimuth
             m_LastTimeStep = currentTime;
         }
         inline static double m_DeltaTime;
-        static std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
-        static std::chrono::time_point<std::chrono::high_resolution_clock> m_LastTimeStep;
+        inline static std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
+        inline static std::chrono::time_point<std::chrono::high_resolution_clock> m_LastTimeStep;
         friend Application;
     };
 }
