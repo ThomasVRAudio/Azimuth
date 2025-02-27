@@ -45,6 +45,8 @@ namespace Azimuth
             return m_Paths;
         }
 
+        void ClearScripts();
+
     private:
         std::vector<std::shared_ptr<MonoScript>> m_Scripts;
         std::vector<std::filesystem::path> m_Paths;

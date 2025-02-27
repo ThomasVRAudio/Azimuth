@@ -65,9 +65,18 @@ namespace Azimuth
         }
     }
 
+    void ScriptModuleLoader::DetachScriptComponents()
+    {
+        Scene *scene = Application::GetActiveScene();
+        ECSManager *ECS = scene->GetECSManager();
+
+        for (auto &entity : scene->GetSceneEntities())
+            ECS->GetComponent<ScriptContainerComponent>(entity).ClearScripts();
+    }
+
     void ScriptModuleLoader::UnloadModule()
     {
-
+        DetachScriptComponents();
         m_ScriptPairs.clear();
         FreeLibrary(hModule);
         hModule = nullptr;

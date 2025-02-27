@@ -26,17 +26,21 @@ namespace Azimuth
         }
 
         for (auto &script : m_Scripts)
-        {
-
-            print(script->GetParent());
             script->OnStart();
-        }
     }
 
     void ScriptContainerComponent::OnUpdate()
     {
         for (auto &script : m_Scripts)
             script->OnUpdate();
+    }
+
+    void ScriptContainerComponent::ClearScripts()
+    {
+        for (auto &ptr : m_Scripts)
+            ptr.reset();
+
+        m_Scripts.clear();
     }
 
     void ScriptContainerComponent::GetDebugSettings()
