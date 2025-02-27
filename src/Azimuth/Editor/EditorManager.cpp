@@ -12,6 +12,8 @@
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Core/Input.h>
 #include <Azimuth/Core/Application.h>
+#include <Azimuth/System/Files.h>
+#include <Azimuth/Project/FileGenerator.h>
 
 namespace Azimuth
 {
@@ -86,11 +88,27 @@ namespace Azimuth
         {
             if (ImGui::BeginMenu("File"))
             {
+                if (ImGui::MenuItem("New Project"))
+                {
+                    std::string filePath;
+                    const char *fileFilter = "Project Files\0*.azimuth\0All Files\0*.*\0";
+                    if (Files::OpenFileDialog(filePath, FileDialogType::SAVE, fileFilter))
+                    {
+                        m_SelectedEntity = -1;
+                        if (m_Scene != nullptr)
+                            m_Scene->ClearScene();
+
+                        FileGenerator::GenerateProjectFiles(filePath, m_Scene);
+                        EditorFileTrayPanel::Init();
+                    }
+                }
                 if (ImGui::MenuItem("Open Project"))
                 {
                     m_SelectedEntity = -1;
+
                     Serializer::OpenProject();
                     Serializer::OpenScene(m_Scene, Application::projectSettings->MainScenePath.string());
+                    EditorFileTrayPanel::Init();
                 }
                 if (ImGui::MenuItem("Save Project As..."))
                 {

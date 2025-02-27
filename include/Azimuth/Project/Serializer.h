@@ -5,16 +5,9 @@ namespace Azimuth
 {
     class Scene;
 
-    enum FileDialogType
-    {
-        OPEN,
-        SAVE
-    };
-
     class Serializer
     {
     public:
-        static bool OpenFileDialog(std::string &outFilePath, FileDialogType dialogType, const char *fileFilter);
         static void OpenProject(const std::string &path = "", Scene *scene = nullptr);
         static void SaveProject();
         static void OpenScene(Scene *scene, std::string path = "", std::string *outPath = nullptr);

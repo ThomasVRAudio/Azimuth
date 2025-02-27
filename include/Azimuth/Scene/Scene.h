@@ -45,6 +45,7 @@ namespace Azimuth
 
         Entity CreateEntity(std::string name);
         void DestroyEntity(Entity entity);
+        void ClearScene();
 
         inline ECSManager *GetECSManager() { return ECS; }
         std::shared_ptr<SceneSettings> Settings = std::make_shared<SceneSettings>();

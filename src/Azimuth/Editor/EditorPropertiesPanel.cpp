@@ -308,7 +308,7 @@ namespace Azimuth
 
         if (EditorManager::m_Scene->HasComponent<ScriptContainerComponent>(EditorManager::m_SelectedEntity))
         {
-            ScriptContainerComponent &container = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(selectedPropertiesEntity);
+            ScriptContainerComponent &container = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(EditorManager::m_SelectedEntity);
 
             for (const auto &script : container.GetScriptPaths())
             {

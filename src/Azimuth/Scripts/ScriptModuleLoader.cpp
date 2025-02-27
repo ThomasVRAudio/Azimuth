@@ -12,7 +12,7 @@ namespace Azimuth
         if (hModule != nullptr)
             UnloadModule();
 
-        std::wstring dllPath = (std::filesystem::current_path() / L"libEntityScripts.dll").wstring();
+        std::wstring dllPath = (Application::projectSettings->ProjectFolder / "azimuth" / L"libEntityScripts.dll").wstring();
 
         hModule = LoadLibraryW(dllPath.c_str());
         if (!hModule)

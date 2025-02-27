@@ -133,4 +133,55 @@ namespace Azimuth
         CoUninitialize();
         return false;
     }
+
+    bool Files::OpenFileDialog(std::string &outFilePath, FileDialogType dialogType, const char *fileFilter)
+    {
+        OPENFILENAME ofn;
+        char szFile[1024] = {0};
+
+        ofn.hwndOwner = glfwGetWin32Window(Window::GetMainWindow());
+
+        ZeroMemory(&ofn, sizeof(ofn));
+        ofn.lStructSize = sizeof(ofn);
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = fileFilter;
+        ofn.nFilterIndex = 1;
+        ofn.lpstrFileTitle = nullptr;
+        ofn.nMaxFileTitle = 0;
+
+        std::filesystem::path projectPath = Application::projectSettings->ProjectFolder;
+
+        if (!std::filesystem::exists(projectPath))
+            std::filesystem::create_directories(projectPath);
+
+        std::string initialDirString = std::filesystem::absolute(projectPath).string();
+        ofn.lpstrInitialDir = initialDirString.c_str();
+
+        ofn.lpstrTitle = "Open File";
+
+        ofn.Flags = 0;
+        ofn.Flags |= OFN_NOCHANGEDIR;
+
+        if (dialogType == FileDialogType::SAVE)
+            ofn.Flags |= OFN_OVERWRITEPROMPT;
+        else
+            ofn.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+
+        BOOL result = (dialogType == FileDialogType::OPEN) ? GetOpenFileName(&ofn) : GetSaveFileName(&ofn);
+
+        if (result == TRUE)
+        {
+            outFilePath = szFile;
+            return true;
+        }
+        else
+        {
+            DWORD error = CommDlgExtendedError();
+            std::cerr << "Dialog failed with error code: " << error << std::endl;
+            return false;
+        }
+
+        return false;
+    }
 }

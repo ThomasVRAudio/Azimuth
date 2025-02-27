@@ -47,4 +47,12 @@ namespace Azimuth
         ECS->DestroyEntity(entity);
     }
 
+    void Scene::ClearScene()
+    {
+        for (auto &entity : m_Entities)
+            DestroyEntity(entity);
+
+        m_Entities.clear();
+    }
+
 }

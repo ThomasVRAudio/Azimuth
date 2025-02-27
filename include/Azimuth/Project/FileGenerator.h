@@ -8,11 +8,13 @@ namespace Azimuth
     {
     public:
         static void GenerateScripts(std::filesystem::path path, const std::string &name);
-        static void GenerateProjectFiles();
+        static void GenerateProjectFiles(const std::filesystem::path &filePath, Scene *scene);
 
     private:
-        static void GenerateDLLExportFiles();
-        static void GenerateCMakeFile();
-        static void UpdateDLLExportFile(std::filesystem::path path, const std::string &name);
+        static void GenerateDLLExportFiles(const std::filesystem::path &folderPath);
+        static void GenerateCMakeFile(const std::filesystem::path &folderPath);
+        static void GenerateSceneFile(const std::filesystem::path &folderPath);
+        static void GenerateProjectSettingsFile(const std::filesystem::path &fileName);
+        static void UpdateDLLExportFile(const std::filesystem::path &path, const std::string &name, const std::filesystem::path &projectFolder);
     };
 }

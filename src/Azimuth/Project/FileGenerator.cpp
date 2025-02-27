@@ -1,4 +1,5 @@
 #include <Azimuth/Project/FileGenerator.h>
+#include <Azimuth/Project/Serializer.h>
 
 namespace Azimuth
 {
@@ -78,12 +79,12 @@ namespace Azimuth
             return;
         }
 
-        UpdateDLLExportFile(directory, name);
+        UpdateDLLExportFile(directory, name, Application::projectSettings->ProjectFolder);
     }
 
-    void FileGenerator::UpdateDLLExportFile(std::filesystem::path path, const std::string &name)
+    void FileGenerator::UpdateDLLExportFile(const std::filesystem::path &filepath, const std::string &name, const std::filesystem::path &projectFolder)
     {
-        std::filesystem::path targetPath = Application::projectSettings->ProjectFolder / "azimuth" / "dllexport.h";
+        std::filesystem::path targetPath = projectFolder / "azimuth" / "dllexport.h";
         if (!std::filesystem::exists(targetPath))
         {
             print("Project Files should be created first");
@@ -110,7 +111,7 @@ namespace Azimuth
 
             if (lineNumber == 2)
             {
-                std::filesystem::path relative = std::filesystem::relative(path, Application::projectSettings->ProjectFolder);
+                std::filesystem::path relative = std::filesystem::relative(filepath, projectFolder);
 
                 fileContent += "#include <" + relative.string() + "/" + name + ".h>\n";
             }
@@ -142,15 +143,21 @@ namespace Azimuth
         outputFile.close();
     }
 
-    void FileGenerator::GenerateProjectFiles()
+    void FileGenerator::GenerateProjectFiles(const std::filesystem::path &filePath, Scene *scene)
     {
-        GenerateDLLExportFiles();
-        GenerateCMakeFile();
+        GenerateProjectSettingsFile(filePath);
+        Serializer::OpenProject((filePath.string() + ".azimuth"), nullptr);
+
+        GenerateSceneFile(filePath.parent_path());
+        GenerateDLLExportFiles(filePath.parent_path());
+        GenerateCMakeFile(filePath.parent_path());
+
+        Serializer::OpenScene(scene, Application::projectSettings->MainScenePath.string());
     }
 
-    void FileGenerator::GenerateDLLExportFiles()
+    void FileGenerator::GenerateDLLExportFiles(const std::filesystem::path &folderPath)
     {
-        std::filesystem::path targetDirectory = Application::projectSettings->ProjectFolder / "azimuth";
+        std::filesystem::path targetDirectory = folderPath / "azimuth";
         if (std::filesystem::exists(targetDirectory))
         {
             print("DLL Export Files already created");
@@ -217,10 +224,10 @@ namespace Azimuth
         }
     }
 
-    void FileGenerator::GenerateCMakeFile()
+    void FileGenerator::GenerateCMakeFile(const std::filesystem::path &folderPath)
     {
 
-        std::filesystem::path targetPath = Application::projectSettings->ProjectFolder / "CMakeLists.txt";
+        std::filesystem::path targetPath = folderPath / "CMakeLists.txt";
         if (std::filesystem::exists(targetPath))
         {
             print("CMake file already created");
@@ -244,7 +251,8 @@ namespace Azimuth
             "add_library(EntityScripts SHARED ${GAME_SCRIPTS} ${ENGINE_SOURCES})\n"
             "\n"
             "set_target_properties(EntityScripts PROPERTIES\n"
-            "    RUNTIME_OUTPUT_DIRECTORY ${AZIMUTH_ENGINE_PATH}/build\n"
+            "   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/azimuth\n"
+
             ")\n"
             "\n"
             "target_include_directories(EntityScripts PUBLIC ${CMAKE_SOURCE_DIR})\n"
@@ -266,6 +274,56 @@ namespace Azimuth
         else
         {
             print("Failed to create CMakeLists.txt file");
+            return;
+        }
+    }
+
+    void FileGenerator::GenerateProjectSettingsFile(const std::filesystem::path &filePath)
+    {
+        std::filesystem::path targetDirectory = filePath.parent_path();
+        print("project settings file path: " << filePath);
+
+        std::string projDir = "ProjectDir: " + targetDirectory.generic_string();
+        std::string sceneDir = "MainSceneDir: " + (targetDirectory / "scenes").generic_string() + "/default_scene.scene";
+
+        std::string file = projDir + "\n" + sceneDir;
+
+        std::ofstream fileStream(targetDirectory / (filePath.filename().string() + ".azimuth"));
+        if (fileStream.is_open())
+        {
+            fileStream << file;
+            fileStream.close();
+        }
+        else
+        {
+            print("Failed to create: " + filePath.filename().string() + ".azimuth");
+            return;
+        }
+    }
+
+    void FileGenerator::GenerateSceneFile(const std::filesystem::path &projectFolder)
+    {
+        std::filesystem::path targetDirectory = projectFolder / "scenes";
+        if (!std::filesystem::exists(targetDirectory))
+            std::filesystem::create_directory(targetDirectory);
+
+        std::string file =
+            "Scene:\n"
+            "  Exposure: 1.0\n"
+            "  HDRCubemapIntensity: 1.0\n"
+            "  VSync: true\n"
+            "  BloomThreshold: 1.0\n"
+            "  BloomBlend: 0.5\n";
+
+        std::ofstream fileStream(targetDirectory / "default_scene.scene");
+        if (fileStream.is_open())
+        {
+            fileStream << file;
+            fileStream.close();
+        }
+        else
+        {
+            print("Failed to create default scene file");
             return;
         }
     }

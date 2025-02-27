@@ -6,63 +6,10 @@
 #include <Azimuth/Core/Application.h>
 #include <dependencies/yaml-cpp/yaml.h>
 #include <Azimuth/Project/YamlConversions.h>
+#include <Azimuth/System/Files.h>
 
 namespace Azimuth
 {
-
-    bool Serializer::OpenFileDialog(std::string &outFilePath, FileDialogType dialogType, const char *fileFilter)
-    {
-        OPENFILENAME ofn;
-        char szFile[1024] = {0};
-
-        ofn.hwndOwner = glfwGetWin32Window(Window::GetMainWindow());
-
-        ZeroMemory(&ofn, sizeof(ofn));
-        ofn.lStructSize = sizeof(ofn);
-        ofn.lpstrFile = szFile;
-        ofn.nMaxFile = sizeof(szFile);
-        ofn.lpstrFilter = fileFilter;
-        ofn.nFilterIndex = 1;
-        ofn.lpstrFileTitle = nullptr;
-        ofn.nMaxFileTitle = 0;
-
-        std::filesystem::path projectPath = Application::projectSettings->ProjectFolder;
-
-        if (projectPath.filename() != "scenes")
-            projectPath /= "scenes";
-
-        if (!std::filesystem::exists(projectPath))
-            std::filesystem::create_directories(projectPath);
-
-        std::string initialDirString = std::filesystem::absolute(projectPath).string();
-        ofn.lpstrInitialDir = initialDirString.c_str();
-
-        ofn.lpstrTitle = "Open File";
-
-        ofn.Flags = 0;
-        ofn.Flags |= OFN_NOCHANGEDIR;
-
-        if (dialogType == SAVE)
-            ofn.Flags |= OFN_OVERWRITEPROMPT;
-        else
-            ofn.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
-
-        BOOL result = (dialogType == OPEN) ? GetOpenFileName(&ofn) : GetSaveFileName(&ofn);
-
-        if (result == TRUE)
-        {
-            outFilePath = szFile;
-            return true;
-        }
-        else
-        {
-            DWORD error = CommDlgExtendedError();
-            std::cerr << "Dialog failed with error code: " << error << std::endl;
-            return false;
-        }
-
-        return false;
-    }
 
     void Serializer::OpenScene(Scene *scene, std::string path, std::string *outPath)
     {
@@ -73,7 +20,7 @@ namespace Azimuth
 
         const char *fileFilter = "Scene Files\0*.scene\0All Files\0*.*\0";
 
-        if (path.length() || OpenFileDialog(filePath, OPEN, fileFilter))
+        if (path.length() || Files::OpenFileDialog(filePath, FileDialogType::OPEN, fileFilter))
         {
             ClearScene(scene);
 
@@ -240,7 +187,7 @@ namespace Azimuth
     {
         std::string filePath;
         const char *fileFilter = "Scene Files\0*.scene\0All Files\0*.*\0";
-        if (OpenFileDialog(filePath, SAVE, fileFilter))
+        if (Files::OpenFileDialog(filePath, FileDialogType::SAVE, fileFilter))
         {
             if (filePath.find_last_of(".") == std::string::npos)
                 filePath += ".scene";
@@ -440,9 +387,10 @@ namespace Azimuth
 
         const char *fileFilter = "Project Files\0*.azimuth\0All Files\0*.*\0";
 
-        if (path.length() || OpenFileDialog(filePath, OPEN, fileFilter))
+        if (path.length() || Files::OpenFileDialog(filePath, FileDialogType::OPEN, fileFilter))
         {
-            ClearScene(scene);
+            if (scene != nullptr)
+                ClearScene(scene);
 
             std::ifstream fin(filePath);
             if (!fin.is_open())
@@ -469,7 +417,7 @@ namespace Azimuth
     {
         std::string filePath;
         const char *fileFilter = "Project Files\0*.azimuth\0All Files\0*.*\0";
-        if (OpenFileDialog(filePath, SAVE, fileFilter))
+        if (Files::OpenFileDialog(filePath, FileDialogType::SAVE, fileFilter))
         {
             if (filePath.find_last_of(".") == std::string::npos)
                 filePath += ".azimuth";

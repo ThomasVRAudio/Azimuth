@@ -49,11 +49,6 @@ namespace Azimuth
             FileGenerator::GenerateScripts(m_CurrentPath, "Test");
         }
 
-        if (ImGui::Button("Create Project Files"))
-        {
-            FileGenerator::GenerateProjectFiles();
-        }
-
         for (const auto &file : std::filesystem::directory_iterator(m_CurrentPath))
         {
             if ((file.is_directory() && file.path().filename().string()[0] == '.') || file.path().filename().string() == "build")
