@@ -111,7 +111,11 @@ namespace Azimuth
 
                 if (ImGui::BeginDragDropSource())
                 {
-                    ImGui::SetDragDropPayload("file", file.path().string().c_str(), file.path().string().size() + 1);
+                    std::string payloadType = "file";
+                    if (file.path().extension() == ".h" || file.path().extension() == ".cpp")
+                        payloadType = "script";
+
+                    ImGui::SetDragDropPayload(payloadType.c_str(), file.path().string().c_str(), file.path().string().size() + 1);
                     ImGui::Text("%s", file.path().filename().string().c_str());
                     ImGui::EndDragDropSource();
                 }

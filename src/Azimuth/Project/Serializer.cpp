@@ -1,6 +1,7 @@
 #include <Azimuth/Project/Serializer.h>
 #include <Azimuth/Editor/EditorManager.h>
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
+#include <Azimuth/ECS/Components/ScriptContainerComponent.h>
 #include <Azimuth/Renderer/Window.h>
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/Core/Application.h>
@@ -175,6 +176,13 @@ namespace Azimuth
                     component.Intensity = lightNode["HDRMultiplier"].as<float>();
 
                     scene->AddComponent<LightComponent>(entity, std::move(component));
+                }
+
+                if (entitySection["Scripts"])
+                {
+                    ScriptContainerComponent &component = scene->GetComponent<ScriptContainerComponent>(entity);
+                    for (const auto &node : entitySection["Scripts"])
+                        component.AddScriptPath(std::filesystem::path(node["Path"].as<std::string>()));
                 }
             }
             EditorManager::UpdateLights();
@@ -359,6 +367,21 @@ namespace Azimuth
                     node["HDRMultiplier"] = static_cast<float>(component.Intensity);
 
                     entitySection["Light"] = node;
+                }
+
+                if (ECS->HasComponent<ScriptContainerComponent>(entity))
+                {
+                    auto component = ECS->GetComponent<ScriptContainerComponent>(entity);
+                    YAML::Node node = YAML::Node(YAML::NodeType::Sequence);
+
+                    for (const auto &path : component.GetScriptPaths())
+                    {
+                        YAML::Node scriptNode;
+                        scriptNode["Path"] = path.string();
+                        node.push_back(scriptNode);
+                    }
+
+                    entitySection["Scripts"] = node;
                 }
 
                 entitiesSection["Entity " + std::to_string(entity)] = entitySection;

@@ -54,8 +54,13 @@ namespace Azimuth
 
     void ScriptContainerComponent::AddScriptPath(const std::filesystem::path &path)
     {
-        std::filesystem::path relative = std::filesystem::relative(path, Application::projectSettings->ProjectFolder);
-        m_Paths.emplace_back(relative);
+        m_Paths.emplace_back(path);
     }
 
+    void ScriptContainerComponent::ReplaceScriptPathRelative(const std::filesystem::path &currentPath, const std::filesystem::path &newPath)
+    {
+        auto it = std::find(m_Paths.begin(), m_Paths.end(), currentPath);
+        if (it != m_Paths.end())
+            *it = newPath.filename().stem().string() + ".h";
+    }
 }

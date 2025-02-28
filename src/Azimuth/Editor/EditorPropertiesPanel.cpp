@@ -312,12 +312,27 @@ namespace Azimuth
 
             for (const auto &script : container.GetScriptPaths())
             {
-                ImGui::Text("ScriptComponent");
+
+                ImGui::Text("Script");
 
                 char scriptBuffer[512];
                 strncpy(scriptBuffer, script.string().c_str(), sizeof(scriptBuffer) - 1);
                 scriptBuffer[sizeof(scriptBuffer) - 1] = '\0';
+
                 ImGui::InputText(("##ScriptComponent" + script.string()).c_str(), scriptBuffer, IM_ARRAYSIZE(scriptBuffer), ImGuiInputTextFlags_ReadOnly | ImGuiInputTextFlags_NoUndoRedo);
+                if (ImGui::BeginDragDropTarget())
+                {
+                    m_SelectedScriptPath = script;
+
+                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("script"))
+                    {
+                        const char *droppedFilePath = static_cast<const char *>(payload->Data);
+
+                        ScriptContainerComponent &component = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(EditorManager::m_SelectedEntity);
+                        component.ReplaceScriptPathRelative(m_SelectedScriptPath, droppedFilePath);
+                    }
+                    ImGui::EndDragDropTarget();
+                }
 
                 ImGui::Separator();
             }
@@ -340,7 +355,7 @@ namespace Azimuth
 
                     FileGenerator::GenerateScripts(scriptPath, nameBuffer);
                     ScriptContainerComponent &component = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(selectedPropertiesEntity);
-                    component.AddScriptPath((scriptPath / nameBuffer).string() + ".h");
+                    component.AddScriptPath(std::string(nameBuffer) + ".h");
                     m_IsAddingScript = false;
                     nameBuffer[0] = '\0';
                     ScriptModuleLoader::LoadModule();
@@ -391,6 +406,18 @@ namespace Azimuth
 
         if (ImGui::Button("Add Component", ImVec2(buttonWidth, buttonHeight)))
             ImGui::OpenPopup("Select Component");
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("script"))
+            {
+                const char *droppedFilePath = static_cast<const char *>(payload->Data);
+
+                ScriptContainerComponent &component = EditorManager::m_Scene->GetComponent<ScriptContainerComponent>(EditorManager::m_SelectedEntity);
+                component.AddScriptPath(std::filesystem::path(droppedFilePath).filename().stem().string() + ".h");
+            }
+            ImGui::EndDragDropTarget();
+        }
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         if (ImGui::BeginPopup("Select Component"))

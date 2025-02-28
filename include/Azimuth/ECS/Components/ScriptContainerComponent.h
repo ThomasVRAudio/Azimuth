@@ -16,6 +16,7 @@ namespace Azimuth
         void OnStart();
         void OnUpdate();
         void AddScriptPath(const std::filesystem::path &path);
+        void ReplaceScriptPathRelative(const std::filesystem::path &currentPath, const std::filesystem::path &newPath);
         virtual void GetDebugSettings();
 
         template <typename T>

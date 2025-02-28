@@ -26,6 +26,7 @@ namespace Azimuth
         };
         inline static Filepicker m_SelectedFilepicker = MESH_PICKER;
         inline static std::string m_SelectedTextureName;
+        inline static std::filesystem::path m_SelectedScriptPath;
         inline static unsigned int m_SelectedTextureSlot;
         inline static bool m_IsAddingScript = false;
         inline static Entity selectedPropertiesEntity;
