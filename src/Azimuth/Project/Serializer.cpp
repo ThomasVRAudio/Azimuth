@@ -23,7 +23,8 @@ namespace Azimuth
 
         if (path.length() || Files::OpenFileDialog(filePath, FileDialogType::OPEN, fileFilter))
         {
-            ClearScene(scene);
+            if (scene != nullptr)
+                scene->ClearScene();
 
             std::ifstream fin(filePath);
             if (!fin.is_open())
@@ -200,7 +201,7 @@ namespace Azimuth
             if (filePath.find_last_of(".") == std::string::npos)
                 filePath += ".scene";
 
-            ECSManager *ECS = scene->ECS;
+            ECSManager *ECS = scene->GetECSManager();
             YAML::Node root;
 
             // Save Scene Settings
@@ -214,7 +215,7 @@ namespace Azimuth
 
             // Save Entities
             YAML::Node entitiesSection;
-            for (auto &entity : scene->m_Entities)
+            for (auto &entity : scene->GetSceneEntities())
             {
                 YAML::Node entitySection;
                 entitySection["ID"] = entity;
@@ -413,7 +414,7 @@ namespace Azimuth
         if (path.length() || Files::OpenFileDialog(filePath, FileDialogType::OPEN, fileFilter))
         {
             if (scene != nullptr)
-                ClearScene(scene);
+                scene->ClearScene();
 
             std::ifstream fin(filePath);
             if (!fin.is_open())
@@ -462,16 +463,5 @@ namespace Azimuth
                 print("Failed to open file for saving: " << filePath);
             }
         }
-    }
-
-    void Serializer::ClearScene(Scene *scene)
-    {
-        if (scene == nullptr)
-            return;
-
-        for (auto &e : scene->m_Entities)
-            scene->DestroyEntity(e);
-
-        scene->m_Entities.clear();
     }
 }

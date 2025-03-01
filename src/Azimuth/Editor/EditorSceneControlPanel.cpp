@@ -1,7 +1,9 @@
+#ifdef AZIMUTH_EDITOR
 #include <Azimuth/Editor/EditorSceneControlPanel.h>
 #include <Azimuth/Editor/EditorTextureLoader.h>
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
 #include <Azimuth/Core/Application.h>
+#include <Azimuth/Editor/EditorPlayState.h>
 #include <Azimuth/Common.h>
 
 namespace Azimuth
@@ -43,32 +45,24 @@ namespace Azimuth
                                 IM_COL32(backgroundColor.x * 255, backgroundColor.y * 255, backgroundColor.z * 255, backgroundColor.w * 255),
                                 4.0f, ImDrawFlags_RoundCornersAll);
 
-        ImGui::BeginDisabled(m_PlayState == PlayState::PLAYING);
+        ImGui::BeginDisabled(EditorPlayState::GetPlayState() == PlayState::PLAYING);
         if (ImGui::ImageButton("play_button", EditorTextureLoader::GetTextureID("play"), buttonSize - image_padding))
-        {
-            ScriptModuleLoader::LoadModule();
-            Application::s_PlayingEditorScene = true;
-            m_PlayState = PlayState::PLAYING;
-        }
+            EditorPlayState::SetPlayState(PlayState::PLAYING);
+
         ImGui::EndDisabled();
 
         ImGui::SameLine();
-        ImGui::BeginDisabled(m_PlayState == PlayState::STOPPED);
+        ImGui::BeginDisabled(EditorPlayState::GetPlayState() == PlayState::STOPPED);
         if (ImGui::ImageButton("stop_button", EditorTextureLoader::GetTextureID("stop"), buttonSize - image_padding))
-        {
-            Application::s_PlayingEditorScene = false;
-            ScriptModuleLoader::UnloadModule();
-            m_PlayState = PlayState::STOPPED;
-        }
+            EditorPlayState::SetPlayState(PlayState::STOPPED);
+
         ImGui::EndDisabled();
 
         ImGui::SameLine();
-        ImGui::BeginDisabled(m_PlayState != PlayState::PLAYING);
+        ImGui::BeginDisabled(EditorPlayState::GetPlayState() != PlayState::PLAYING);
         if (ImGui::ImageButton("pause_button", EditorTextureLoader::GetTextureID("pause"), buttonSize - image_padding))
-        {
-            Application::s_PlayingEditorScene = false;
-            m_PlayState = PlayState::PAUSED;
-        }
+            EditorPlayState::SetPlayState(PlayState::PAUSED);
+
         ImGui::EndDisabled();
 
         ImGui::PopStyleColor(3);
@@ -77,3 +71,4 @@ namespace Azimuth
         ImGui::End();
     }
 }
+#endif

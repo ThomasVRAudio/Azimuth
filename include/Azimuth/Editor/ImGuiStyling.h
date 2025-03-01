@@ -7,18 +7,38 @@ namespace Azimuth
     class ImGuiStyling
     {
     public:
+        static void SetEditorPlayingStyling()
+        {
+            BACKGROUND = ImVec4(0.05f, 0.05f, 0.05f, 1.00f);           // rgb(13, 13, 13)
+            BACKGROUND_DARK = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);      // rgb(31, 31, 31)
+            BORDER = ImVec4(0.22f, 0.22f, 0.22f, 1.00f);               // rgb(56, 56, 56)
+            MID = ImVec4(0.3275f, 0.3275f, 0.3275f, 1.00f);            // rgb(160, 160, 160)
+            HIGHLIGHT = ImVec4(0.4f, 0.4f, 0.4f, 1.00f);               // rgb(204, 204, 204)
+            TEXT_PRIMARY = ImVec4(0.8980f, 0.8980f, 0.8980f, 1.00f);   // rgb(229, 229, 229)
+            TEXT_SECONDARY = ImVec4(0.9451f, 0.9451f, 0.9451f, 1.00f); // rgb(241, 241, 241)
+            TEXT_DISABLED = ImVec4(0.6275f, 0.6275f, 0.6275f, 1.00f);  // rgb(160, 160, 160)
+
+            SetStyling();
+        }
+
+        static void SetEditorDefaultStyling()
+        {
+            BACKGROUND = ImVec4(0.1014f, 0.1014f, 0.1014f, 1.00f);      // rgb(59, 59, 59)
+            BACKGROUND_DARK = ImVec4(0.2294f, 0.2294f, 0.2294f, 1.00f); // rgb(84, 84, 84)
+            BORDER = ImVec4(0.4588f, 0.4588f, 0.4588f, 1.00f);          // rgb(117, 117, 117)
+            MID = ImVec4(0.3275f, 0.3275f, 0.3275f, 1.00f);             // rgb(160, 160, 160)
+            HIGHLIGHT = ImVec4(0.4f, 0.4f, 0.4f, 1.00f);                // rgb(204, 204, 204)
+            TEXT_PRIMARY = ImVec4(0.8980f, 0.8980f, 0.8980f, 1.00f);    // rgb(229, 229, 229)
+            TEXT_SECONDARY = ImVec4(0.9451f, 0.9451f, 0.9451f, 1.00f);  // rgb(241, 241, 241)
+            TEXT_DISABLED = ImVec4(0.6275f, 0.6275f, 0.6275f, 1.00f);   // rgb(160, 160, 160)
+
+            SetStyling();
+        }
+
+    private:
         static void SetStyling()
         {
             ImVec4 *colors = ImGui::GetStyle().Colors;
-
-            ImVec4 BACKGROUND = ImVec4(0.1014f, 0.1014f, 0.1014f, 1.00f);      // rgb(59, 59, 59)
-            ImVec4 BACKGROUND_DARK = ImVec4(0.2294f, 0.2294f, 0.2294f, 1.00f); // rgb(84, 84, 84)
-            ImVec4 BORDER = ImVec4(0.4588f, 0.4588f, 0.4588f, 1.00f);          // rgb(117, 117, 117)
-            ImVec4 MID = ImVec4(0.3275f, 0.3275f, 0.3275f, 1.00f);             // rgb(160, 160, 160)
-            ImVec4 HIGHLIGHT = ImVec4(0.4f, 0.4f, 0.4f, 1.00f);                // rgb(204, 204, 204)
-            ImVec4 TEXT_PRIMARY = ImVec4(0.8980f, 0.8980f, 0.8980f, 1.00f);    // rgb(229, 229, 229)
-            ImVec4 TEXT_SECONDARY = ImVec4(0.9451f, 0.9451f, 0.9451f, 1.00f);  // rgb(241, 241, 241)
-            ImVec4 TEXT_DISABLED = ImVec4(0.6275f, 0.6275f, 0.6275f, 1.00f);   // rgb(160, 160, 160)
 
             colors[ImGuiCol_WindowBg] = BACKGROUND;
             colors[ImGuiCol_ChildBg] = BACKGROUND;
@@ -83,6 +103,15 @@ namespace Azimuth
             ImGui::GetStyle().DockingSeparatorSize = 1;
             ImGui::GetStyle().SeparatorTextAlign = ImVec2(0.10f, 0.0f);
         }
+
+        inline static ImVec4 BACKGROUND = ImVec4(0.1014f, 0.1014f, 0.1014f, 1.00f);      // rgb(59, 59, 59)
+        inline static ImVec4 BACKGROUND_DARK = ImVec4(0.2294f, 0.2294f, 0.2294f, 1.00f); // rgb(84, 84, 84)
+        inline static ImVec4 BORDER = ImVec4(0.4588f, 0.4588f, 0.4588f, 1.00f);          // rgb(117, 117, 117)
+        inline static ImVec4 MID = ImVec4(0.3275f, 0.3275f, 0.3275f, 1.00f);             // rgb(160, 160, 160)
+        inline static ImVec4 HIGHLIGHT = ImVec4(0.4f, 0.4f, 0.4f, 1.00f);                // rgb(204, 204, 204)
+        inline static ImVec4 TEXT_PRIMARY = ImVec4(0.8980f, 0.8980f, 0.8980f, 1.00f);    // rgb(229, 229, 229)
+        inline static ImVec4 TEXT_SECONDARY = ImVec4(0.9451f, 0.9451f, 0.9451f, 1.00f);  // rgb(241, 241, 241)
+        inline static ImVec4 TEXT_DISABLED = ImVec4(0.6275f, 0.6275f, 0.6275f, 1.00f);   // rgb(160, 160, 160)
     };
 }
 

@@ -17,6 +17,13 @@ namespace Azimuth
     class MaterialComponent : public IComponent
     {
     public:
+        MaterialComponent() = default;
+        MaterialComponent(const MaterialComponent &other)
+            : shader(other.shader), m_Textures(other.m_Textures)
+        {
+            if (other.m_Uniforms)
+                m_Uniforms = std::make_shared<std::vector<Uniform>>(*other.m_Uniforms);
+        }
         std::shared_ptr<Shader> shader;
         void CreateMaterial();
         void CreateMaterial(std::shared_ptr<Shader> shader);

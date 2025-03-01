@@ -24,7 +24,7 @@ namespace Azimuth
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
-        ImGuiStyling::SetStyling();
+        ImGuiStyling::SetEditorDefaultStyling();
 
         bool success = ImGui_ImplGlfw_InitForOpenGL(Window::GetMainWindow(), true);
         assert(success && "ImGui_ImplGlfw_InitForOpenGL failed!");
@@ -65,7 +65,7 @@ namespace Azimuth
         {
             unsigned int entity = ReadPixelID(entityBuffer);
 
-            if (!m_IsManipulating && entity != -1)
+            if (!m_IsManipulating)
                 m_SelectedEntity = entity;
         }
 
@@ -276,7 +276,9 @@ namespace Azimuth
 
         EditorSceneControlPanel::DrawPanel();
 
-        DrawGizmos(camera);
+        if (m_RenderGizmos)
+            DrawGizmos(camera);
+
         ImGui::End();
     }
 

@@ -10,6 +10,7 @@ namespace Azimuth
     {
     public:
         ScriptContainerComponent() = default;
+        ScriptContainerComponent(const ScriptContainerComponent &other);
 
         void AddScriptComponent(std::shared_ptr<MonoScript> script);
         void Setup(Scene *ECS, Entity entity);

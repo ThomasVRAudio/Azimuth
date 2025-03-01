@@ -8,6 +8,14 @@ namespace Azimuth
     class ComponentManager
     {
     public:
+        ComponentManager() = default;
+        ComponentManager(const ComponentManager &other)
+            : m_ComponentBitTypes(other.m_ComponentBitTypes),
+              m_NextComponentBitType(other.m_NextComponentBitType)
+        {
+            for (const auto &[key, value] : other.m_ComponentArrays)
+                m_ComponentArrays[key] = value->Clone();
+        }
         template <typename T>
         void RegisterComponent()
         {

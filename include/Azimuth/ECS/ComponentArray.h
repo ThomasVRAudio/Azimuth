@@ -9,12 +9,26 @@ namespace Azimuth
     public:
         virtual ~IComponentArray() = default;
         virtual void EntityDestroyed(Entity entity) = 0;
+        virtual std::shared_ptr<IComponentArray> Clone() const = 0;
     };
 
     template <typename T>
     class ComponentArray : public IComponentArray
     {
     public:
+        std::shared_ptr<IComponentArray> Clone() const override
+        {
+            auto newArray = std::make_shared<ComponentArray<T>>();
+            for (size_t i = 0; i < m_ComponentArraySize; ++i)
+                newArray->m_ComponentArray[i] = T(m_ComponentArray[i]);
+
+            newArray->m_ComponentArray = m_ComponentArray;
+            newArray->m_EntityToComponentIndexMap = m_EntityToComponentIndexMap;
+            newArray->m_IndexToEntityMap = m_IndexToEntityMap;
+            newArray->m_ComponentArraySize = m_ComponentArraySize;
+            return newArray;
+        }
+
         void InsertData(Entity entity, T component)
         {
             assert(m_EntityToComponentIndexMap.find(entity) == m_EntityToComponentIndexMap.end() && "Component added to same entity more than once");
@@ -78,5 +92,4 @@ namespace Azimuth
         std::unordered_map<size_t, Entity> m_IndexToEntityMap;
         size_t m_ComponentArraySize;
     };
-
 }

@@ -5,6 +5,13 @@
 namespace Azimuth
 {
 
+    ScriptContainerComponent::ScriptContainerComponent(const ScriptContainerComponent &other)
+        : m_Paths(other.m_Paths), m_Scene(other.m_Scene), m_Entity(other.m_Entity)
+    {
+        for (const auto &ptr : other.m_Scripts)
+            m_Scripts.push_back(ptr->Clone());
+    }
+
     void ScriptContainerComponent::Setup(Scene *scene, Entity entity)
     {
         m_Entity = entity;

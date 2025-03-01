@@ -19,12 +19,6 @@ namespace Azimuth
         ECS->RegisterComponent<LightComponent>();
     }
 
-    Scene::~Scene()
-    {
-        if (ECS)
-            delete ECS;
-    }
-
     Entity Scene::CreateEntity(std::string name)
     {
         Entity entity = ECS->CreateEntity();

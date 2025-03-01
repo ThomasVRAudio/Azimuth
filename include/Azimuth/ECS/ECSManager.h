@@ -10,11 +10,13 @@ namespace Azimuth
     {
     public:
         ECSManager() = default;
+        ECSManager(const ECSManager &other);
+
         void Init()
         {
             m_ComponentManager = std::make_unique<ComponentManager>();
-            m_EntityManager = std::make_unique<EntityManager>();
-            m_SystemManager = std::make_unique<SystemManager>();
+            m_EntityManager = std::make_shared<EntityManager>();
+            m_SystemManager = std::make_shared<SystemManager>();
         }
 
         Entity CreateEntity()
@@ -92,8 +94,8 @@ namespace Azimuth
 
     private:
         std::unique_ptr<ComponentManager> m_ComponentManager;
-        std::unique_ptr<EntityManager> m_EntityManager;
-        std::unique_ptr<SystemManager> m_SystemManager;
+        std::shared_ptr<EntityManager> m_EntityManager;
+        std::shared_ptr<SystemManager> m_SystemManager;
     };
 
 }

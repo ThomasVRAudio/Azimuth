@@ -6,6 +6,7 @@
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/System/Files.h>
 #include <Azimuth/Scripts/ScriptModuleLoader.h>
+#include <Azimuth/Editor/EditorPlayState.h>
 
 namespace Azimuth
 {
@@ -404,6 +405,7 @@ namespace Azimuth
         ImGui::SetCursorPosX(centerX);
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + margin * 0.5f);
 
+        ImGui::BeginDisabled(EditorPlayState::GetPlayState() != PlayState::STOPPED);
         if (ImGui::Button("Add Component", ImVec2(buttonWidth, buttonHeight)))
             ImGui::OpenPopup("Select Component");
 
@@ -418,6 +420,7 @@ namespace Azimuth
             }
             ImGui::EndDragDropTarget();
         }
+        ImGui::EndDisabled();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         if (ImGui::BeginPopup("Select Component"))

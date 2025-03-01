@@ -17,6 +17,7 @@ namespace Azimuth
 {
     struct Light;
     class LightSystem;
+    class Scene;
 #ifdef AZIMUTH_EDITOR
     class EditorSettingsPanel;
 #endif
@@ -25,7 +26,7 @@ namespace Azimuth
     {
     public:
         RenderSystem() = default;
-        void Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, unsigned int width = 3840, unsigned int height = 2160);
+        void Init(Scene *scene, std::shared_ptr<LightSystem> lightSystem, unsigned int width = 3840, unsigned int height = 2160);
         void RenderScene(Camera &camera, unsigned int outputFramebuffer, SceneSettings *settings);
         void RenderEditorPass(Camera &camera, unsigned int framebuffer, Shader *shader, unsigned int texture);
 
@@ -33,7 +34,7 @@ namespace Azimuth
         void RenderLights(std::shared_ptr<Shader> shader, Camera &camera);
         void RenderPass(Camera &camera, SceneSettings *settings = nullptr);
         void RenderScreenQuad(Shader *shader, unsigned int texture, unsigned int activeTexture = 0);
-        ECSManager *m_ECS;
+        Scene *m_Scene = nullptr;
         glm::mat4 m_Model = glm::mat4(1.0f);
         glm::mat4 m_Projection = glm::mat4(1.0f);
         std::shared_ptr<LightSystem> m_LightSystem;

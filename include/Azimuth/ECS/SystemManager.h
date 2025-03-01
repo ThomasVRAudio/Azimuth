@@ -8,6 +8,8 @@ namespace Azimuth
     {
 
     public:
+        SystemManager() = default;
+
         template <typename T>
         typename std::enable_if<std::is_base_of<System, T>::value, std::shared_ptr<T>>::type
         RegisterSystem()

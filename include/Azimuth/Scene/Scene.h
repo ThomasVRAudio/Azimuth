@@ -16,7 +16,7 @@ namespace Azimuth
     {
     public:
         Scene(Application &application);
-        ~Scene();
+        ~Scene() = default;
         void Init();
 
         template <typename T>
@@ -47,17 +47,17 @@ namespace Azimuth
         void DestroyEntity(Entity entity);
         void ClearScene();
 
-        inline ECSManager *GetECSManager() { return ECS; }
+        inline ECSManager *GetECSManager() { return ECS.get(); }
+        inline void SetECSManager(std::unique_ptr<ECSManager> ECS) { this->ECS = std::move(ECS); }
         std::shared_ptr<SceneSettings> Settings = std::make_shared<SceneSettings>();
         inline std::vector<Entity> GetSceneEntities() { return m_Entities; }
 
     private:
-        ECSManager *ECS = new ECSManager();
+        std::unique_ptr<ECSManager> ECS = std::make_unique<ECSManager>();
         Application &m_Application;
         std::vector<Entity> m_Entities;
 #ifdef AZIMUTH_EDITOR
         friend EditorManager;
-        friend class Serializer;
         friend class EditorHierarchyPanel;
 #endif
     };

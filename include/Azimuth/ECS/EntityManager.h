@@ -9,6 +9,11 @@ namespace Azimuth
     {
     public:
         EntityManager();
+        EntityManager(const EntityManager &other)
+            : m_AvailableEntitiesPool(other.m_AvailableEntitiesPool),
+              m_ComponentMasks(other.m_ComponentMasks),
+              m_LivingEntityCount(other.m_LivingEntityCount) {}
+
         ~EntityManager() = default;
         Entity CreateEntity();
         void DestroyEntity(Entity entity);

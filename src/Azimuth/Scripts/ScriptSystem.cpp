@@ -3,13 +3,14 @@
 
 namespace Azimuth
 {
-    void ScriptSystem::Init(ECSManager *ECS)
+    void ScriptSystem::Init(Scene *scene)
     {
-        this->ECS = ECS;
+        m_Scene = scene;
     }
 
     void ScriptSystem::OnStart()
     {
+        ECSManager *ECS = m_Scene->GetECSManager();
         for (auto &entity : m_Entities)
         {
             auto &container = ECS->GetComponent<ScriptContainerComponent>(entity);
@@ -19,9 +20,9 @@ namespace Azimuth
 
     void ScriptSystem::OnUpdate()
     {
+        ECSManager *ECS = m_Scene->GetECSManager();
+
         for (auto &entity : m_Entities)
-        {
             ECS->GetComponent<ScriptContainerComponent>(entity).OnUpdate();
-        };
     }
 }

@@ -15,6 +15,7 @@ namespace Azimuth
         void OnUpdate() override;
 
     private:
+        Scene *m_Scene = nullptr;
         std::shared_ptr<ScriptSystem> m_ScriptSystem;
         std::shared_ptr<ScriptModuleLoader> m_ScriptModuleLoader;
     };

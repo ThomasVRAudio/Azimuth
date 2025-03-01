@@ -41,6 +41,7 @@ namespace Azimuth
         inline static ImVec2 GetSceneWindowSize() { return m_SceneWindowSize; }
         inline static bool IsSceneFocused() { return m_IsSceneWindowFocused; }
         inline static bool IsSceneHovered() { return m_IsSceneWindowHovered; }
+        inline static void RenderGizmos(bool render) { m_RenderGizmos = render; }
 
     private:
         static void SetAspectConstraints(ImGuiSizeCallbackData *data);
@@ -53,6 +54,7 @@ namespace Azimuth
         inline static Entity m_SelectedEntity = -1;
         inline static float m_SceneWindowAspectRatio = 1.778f;
         inline static bool m_IsManipulating = false, m_IsSceneWindowFocused = false, m_IsSceneWindowHovered = false, t_HasOpenedScene = false;
+        inline static bool m_RenderGizmos = true;
         friend class EditorHierarchyPanel;
         friend class EditorPropertiesPanel;
         friend class EditorFilepicker;

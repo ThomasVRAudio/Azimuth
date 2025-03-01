@@ -1,11 +1,12 @@
 #include <Azimuth/Renderer/RenderSystem.h>
+#include <Azimuth/Scene/Scene.h>
 
 namespace Azimuth
 {
 
-    void RenderSystem::Init(ECSManager *ECS, std::shared_ptr<LightSystem> lightSystem, unsigned int width, unsigned int height)
+    void RenderSystem::Init(Scene *scene, std::shared_ptr<LightSystem> lightSystem, unsigned int width, unsigned int height)
     {
-        this->m_ECS = ECS;
+        m_Scene = scene;
         m_LightSystem = lightSystem;
 
         glEnable(GL_DEPTH_TEST);
@@ -91,12 +92,14 @@ namespace Azimuth
 
         HDRCubemap::DrawHDRCubemap(viewMatrix, projectionMatrix, intensity);
 
+        ECSManager *ECS = m_Scene->GetECSManager();
+
         for (auto &entity : m_Entities)
         {
-            MeshComponent &mesh = m_ECS->GetComponent<MeshComponent>(entity);
-            MaterialComponent &material = m_ECS->GetComponent<MaterialComponent>(entity);
+            MeshComponent &mesh = ECS->GetComponent<MeshComponent>(entity);
+            MaterialComponent &material = ECS->GetComponent<MaterialComponent>(entity);
 
-            m_Model = m_ECS->GetComponent<TransformComponent>(entity).GetTransform();
+            m_Model = ECS->GetComponent<TransformComponent>(entity).GetTransform();
 
             material.shader->use();
             material.shader->setMat4("g_Model", m_Model);
@@ -126,11 +129,14 @@ namespace Azimuth
         glm::mat4 viewMatrix = camera.GetViewMatrix();
         glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
 
+        ECSManager *ECS = m_Scene->GetECSManager();
+
         for (auto &entity : m_Entities)
         {
-            MeshComponent &mesh = m_ECS->GetComponent<MeshComponent>(entity);
 
-            m_Model = m_ECS->GetComponent<TransformComponent>(entity).GetTransform();
+            MeshComponent &mesh = ECS->GetComponent<MeshComponent>(entity);
+
+            m_Model = ECS->GetComponent<TransformComponent>(entity).GetTransform();
 
             shader->use();
             shader->setMat4("g_Model", m_Model);

@@ -1,5 +1,5 @@
 #pragma once
-#include <Azimuth/Editor/PlayState.h>
+#ifdef AZIMUTH_EDITOR
 
 namespace Azimuth
 {
@@ -8,8 +8,7 @@ namespace Azimuth
     {
     public:
         static void DrawPanel();
-
-    private:
-        inline static PlayState m_PlayState = PlayState::STOPPED;
     };
 }
+
+#endif

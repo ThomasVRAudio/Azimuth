@@ -3,9 +3,9 @@
 namespace Azimuth
 {
 
-    void LightSystem::Init(ECSManager *ECS)
+    void LightSystem::Init(Scene *scene)
     {
-        m_ECS = ECS;
+        m_Scene = scene;
     };
 
     void LightSystem::UpdateLights()
@@ -16,8 +16,9 @@ namespace Azimuth
         std::vector<Light *> lights;
         for (auto &entity : m_Entities)
         {
-            LightComponent &lightComponent = m_ECS->GetComponent<LightComponent>(entity);
-            TransformComponent &transform = m_ECS->GetComponent<TransformComponent>(entity);
+            ECSManager *ECS = m_Scene->GetECSManager();
+            LightComponent &lightComponent = ECS->GetComponent<LightComponent>(entity);
+            TransformComponent &transform = ECS->GetComponent<TransformComponent>(entity);
 
             std::shared_ptr<Light> light = std::make_shared<Light>(Light{
                 .Transform = &transform,

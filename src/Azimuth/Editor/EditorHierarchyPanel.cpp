@@ -2,6 +2,7 @@
 #include <Azimuth/Editor/EditorHierarchyPanel.h>
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/Editor/EditorManager.h>
+#include <Azimuth/Editor/EditorPlayState.h>
 
 namespace Azimuth
 {
@@ -56,6 +57,7 @@ namespace Azimuth
 
         ImGui::SetCursorPosY(windowHeight - buttonHeight - margin);
 
+        ImGui::BeginDisabled(EditorPlayState::GetPlayState() != PlayState::STOPPED);
         if (ImGui::Button("Add Gameobject", ImVec2(buttonWidth, buttonHeight)))
         {
             Entity entity = EditorManager::m_Scene->CreateEntity("Gameobject");
@@ -63,6 +65,7 @@ namespace Azimuth
             name += std::to_string(entity);
             EditorManager::m_SelectedEntity = entity;
         }
+        ImGui::EndDisabled();
 
         ImGui::Unindent(left_padding);
         ImGui::End();

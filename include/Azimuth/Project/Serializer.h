@@ -12,8 +12,5 @@ namespace Azimuth
         static void SaveProject();
         static void OpenScene(Scene *scene, std::string path = "", std::string *outPath = nullptr);
         static void SaveScene(Scene *scene);
-
-    private:
-        static void ClearScene(Scene *scene);
     };
 }
