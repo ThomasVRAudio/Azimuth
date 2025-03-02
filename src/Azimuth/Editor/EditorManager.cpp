@@ -76,7 +76,6 @@ namespace Azimuth
     {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-        float left_padding = 10.0f;
 
         if (!t_HasOpenedScene)
         {

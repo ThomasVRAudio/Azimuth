@@ -48,6 +48,7 @@ namespace Azimuth
 
         ScriptModuleLoader::LoadModule();
         ImGuiStyling::SetEditorPlayingStyling();
+        Application::s_IsFirstPlayFrame = true;
         Application::s_PlayingEditorScene = true;
     }
 

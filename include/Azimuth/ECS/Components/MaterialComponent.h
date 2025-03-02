@@ -19,16 +19,15 @@ namespace Azimuth
     public:
         MaterialComponent() = default;
         MaterialComponent(const MaterialComponent &other)
-            : shader(other.shader), m_Textures(other.m_Textures)
+            : shader(std::make_shared<Shader>(*other.shader)),
+              m_Textures(other.m_Textures), m_Uniforms(std::make_shared<std::vector<Uniform>>(*other.m_Uniforms))
         {
-            if (other.m_Uniforms)
-                m_Uniforms = std::make_shared<std::vector<Uniform>>(*other.m_Uniforms);
         }
         std::shared_ptr<Shader> shader;
         void CreateMaterial();
         void CreateMaterial(std::shared_ptr<Shader> shader);
         void CreateMaterial(std::shared_ptr<Shader> shader, std::shared_ptr<std::vector<Uniform>> uniforms);
-        std::shared_ptr<std::vector<Uniform>> GetUniforms() { return m_Uniforms; };
+        std::shared_ptr<std::vector<Uniform>> GetUniforms() const { return m_Uniforms; };
         void SetUniforms();
         void BindTextures();
         void AddTexture(const std::string &name, const std::string &path, unsigned int slot);

@@ -61,7 +61,7 @@ namespace Azimuth
     void EditorCamera::ProcessKeyboard()
     {
 
-        const float velocity = 5.0f * Time::deltaTime();
+        const float velocity = 5.0f * Time::DeltaTime();
 
         if (!Input::IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
         {

@@ -58,7 +58,7 @@ namespace Azimuth
         }
 
         ImGui::Text("Framerate");
-        float delta = 1.0f / Time::deltaTime();
+        float delta = 1.0f / Time::DeltaTime();
         ImGui::Text("%.2f", delta);
 
         ImGui::SeparatorText("Project Settings: ");

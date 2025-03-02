@@ -8,13 +8,13 @@ namespace Azimuth
     class Time
     {
     public:
-        static double time()
+        static double TimeInSeconds()
         {
             auto time = std::chrono::high_resolution_clock::now() - m_StartTime;
             return std::chrono::duration<double>(time).count();
         }
 
-        inline static double deltaTime() { return m_DeltaTime; }
+        inline static double DeltaTime() { return m_DeltaTime; }
 
     private:
         static void StartGlobalTime()

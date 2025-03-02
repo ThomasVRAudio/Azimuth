@@ -17,5 +17,5 @@ void Azimuth::PlayerMovement::OnUpdate()
 {
     auto mousePos = Input::GetMouseXYScreen();
     auto &position = GetComponent<TransformComponent>().Position;
-    position.x = glm::sin(Time::time() * glm::radians(360.0f)) * 1.0f;
+    position.x = glm::sin(Time::TimeInSeconds() * glm::radians(360.0f)) * 1.0f;
 }
