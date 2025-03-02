@@ -12,6 +12,7 @@ namespace Azimuth
     class EditorCamera;
     class SceneSettings;
     class RenderSystem;
+    class ShaderRecompileSystem;
     class Shader;
 
     class EditorLayer : public Layer
@@ -25,6 +26,7 @@ namespace Azimuth
     private:
         std::shared_ptr<RenderSystem> m_RenderSystem;
         std::shared_ptr<LightSystem> m_LightSystem;
+        std::shared_ptr<ShaderRecompileSystem> m_ShaderRecompileSystem;
         std::unique_ptr<FrameBufferConfig> m_FrameBufferConfig = nullptr, m_FrameBufferEditorConfig = nullptr;
         std::shared_ptr<Shader> m_EditorShader;
         std::shared_ptr<SceneSettings> m_SceneSettings;
@@ -32,6 +34,7 @@ namespace Azimuth
         unsigned int m_FrameBuffer, m_EditorSceneTexture, m_EditorIDTexture;
         unsigned int m_EditorSceneTextureWidth = 3840;
         EditorCamera m_EditorCamera;
+        float m_Time;
     };
 }
 

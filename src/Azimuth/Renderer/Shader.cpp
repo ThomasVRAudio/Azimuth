@@ -86,6 +86,11 @@ namespace Azimuth
     Shader::Shader(const std::filesystem::path &path)
         : m_VertPath(path.string()), m_FragPath(path.string())
     {
+        LoadSingleFile(path);
+    }
+
+    void Shader::LoadSingleFile(const std::filesystem::path &path)
+    {
         auto [vertex, fragment] = ProcessSingleFile(path);
 
         ID = glCreateProgram();
@@ -209,6 +214,11 @@ namespace Azimuth
             while ((pos = code.find(placeholder)) != std::string::npos)
                 code.replace(pos, placeholder.length(), replacement);
         }
+    }
+
+    void Shader::ReloadShader()
+    {
+        LoadSingleFile(std::filesystem::path(m_VertPath));
     }
 
     void Shader::use()

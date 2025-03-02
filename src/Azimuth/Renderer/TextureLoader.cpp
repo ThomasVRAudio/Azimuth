@@ -3,32 +3,32 @@
 namespace Azimuth
 {
 
-    unsigned int TextureLoader::LoadTexture(const std::string &path, bool isNormal, bool flip)
+    unsigned int TextureLoader::LoadTexture(const std::string &path, bool isNormal, bool flip, bool sRGB)
     {
         stbi_set_flip_vertically_on_load(flip);
 
         int width, height, nrComponents;
         unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
 
-        return GenerateTexture(TextureLoadData{data, width, height, nrComponents, isNormal});
+        return GenerateTexture(TextureLoadData{data, width, height, nrComponents, isNormal}, sRGB);
     }
 
-    std::vector<unsigned int> TextureLoader::LoadTextures(std::vector<std::filesystem::path> &paths)
+    std::vector<unsigned int> TextureLoader::LoadTextures(std::vector<std::filesystem::path> &paths, bool sRGB)
     {
         std::vector<std::string> stringPaths;
         for (auto &path : paths)
             stringPaths.emplace_back(path.string());
 
-        return LoadTextures(stringPaths);
+        return LoadTextures(stringPaths, sRGB);
     }
 
-    std::vector<unsigned int> TextureLoader::LoadTextures(std::vector<std::string> &paths)
+    std::vector<unsigned int> TextureLoader::LoadTextures(std::vector<std::string> &paths, bool sRGB)
     {
         std::vector<TextureLoadData> data = LoadTextureDataAsync(paths);
         std::vector<unsigned int> textures;
 
         for (auto &d : data)
-            textures.emplace_back(GenerateTexture(d));
+            textures.emplace_back(GenerateTexture(d, sRGB));
 
         return textures;
     }
@@ -55,7 +55,7 @@ namespace Azimuth
         return data;
     }
 
-    unsigned int TextureLoader::GenerateTexture(const TextureLoadData &textureData)
+    unsigned int TextureLoader::GenerateTexture(const TextureLoadData &textureData, bool sRGB)
     {
         unsigned int textureID;
         glGenTextures(1, &textureID);
@@ -75,12 +75,12 @@ namespace Azimuth
             }
             else if (textureData.nrComponents == 3)
             {
-                internalFormat = GL_SRGB;
+                internalFormat = sRGB ? GL_SRGB : GL_RGB;
                 format = GL_RGB;
             }
             else if (textureData.nrComponents == 4)
             {
-                internalFormat = GL_SRGB_ALPHA;
+                internalFormat = sRGB ? GL_SRGB_ALPHA : GL_RGBA;
                 format = GL_RGBA;
             }
             glBindTexture(GL_TEXTURE_2D, textureID);

@@ -93,6 +93,12 @@ namespace Azimuth
                 m_OnTextSubmitFunc = []()
                 { FileGenerator::GenerateScripts(m_CurrentPath, m_InputText); };
             }
+            if (ImGui::MenuItem("New shader"))
+            {
+                m_PopupTitle = "New Shader Name:";
+                m_OnTextSubmitFunc = []()
+                { FileGenerator::GenerateGLSLFile(m_CurrentPath, m_InputText); };
+            }
             if (ImGui::MenuItem("Open in file explorer"))
             {
                 ShellExecute(NULL, "open", m_CurrentPath.string().c_str(), NULL, NULL, SW_SHOWDEFAULT);
@@ -207,7 +213,13 @@ namespace Azimuth
             if (file.path().extension() == ".jpg" || file.path().extension() == ".png")
                 texture = EditorTextureLoader::GetOrLoadTexture(file.path().string());
             else
-                texture = EditorTextureLoader::GetTextureID("file");
+            {
+                std::string textureType = "file";
+                if (file.path().extension() == ".glsl")
+                    textureType = "shader";
+
+                texture = EditorTextureLoader::GetTextureID(textureType);
+            }
 
             if (ImGui::ImageButton(file.path().string().c_str(), texture, buttonSize - image_padding))
             {

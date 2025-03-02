@@ -327,4 +327,55 @@ namespace Azimuth
             return;
         }
     }
+
+    void FileGenerator::GenerateGLSLFile(const std::filesystem::path &directory, const std::string &name)
+    {
+
+        if (std::filesystem::exists(directory / (name + ".glsl")))
+        {
+            std::cerr << "Error: " << name << ".glsl already exists." << std::endl;
+            return;
+        }
+
+        std::string file =
+            "===== VERTEX SHADER =====\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "layout (location = 1) in vec3 aNormal;\n"
+            "layout (location = 2) in vec2 aTexCoords;\n"
+            "\n"
+            "out vec2 TexCoords;\n"
+            "out vec3 FragPos;\n"
+            "out vec3 Normal;\n"
+            "\n"
+            "#define AZIMUTH_MVP_UNIFORMS\n"
+            "\n"
+            "void main()\n"
+            "{\n"
+            "    TexCoords = aTexCoords;\n"
+            "    FragPos = AZIMUTH_FRAG;\n"
+            "    Normal = AZIMUTH_NORMAL;\n"
+            "    gl_Position = AZIMUTH_POSITION;\n"
+            "}\n"
+            "===== FRAGMENT SHADER =====\n"
+            "out vec4 FragColor;\n"
+            "\n"
+            "uniform vec3 u_Color;\n"
+            "uniform float u_HDR;\n"
+            "\n"
+            "void main() {\n"
+            "    FragColor = vec4(u_Color * u_HDR, 1.0);\n"
+            "}\n";
+
+        std::ofstream fileStream(directory / (name + ".glsl"));
+        if (fileStream.is_open())
+        {
+            fileStream << file;
+            fileStream.close();
+        }
+        else
+        {
+            print("Failed to create shader file");
+            return;
+        }
+    }
 }

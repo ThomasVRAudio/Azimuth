@@ -3,11 +3,13 @@
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/ECS/ECSManager.h>
 #include <Azimuth/Renderer/RenderSystem.h>
+#include <Azimuth/System/ShaderRecompileSystem.h>
 #include <Azimuth/Renderer/FrameBuffer.h>
 #include <Azimuth/Editor/EditorManager.h>
 #include <Azimuth/Core/Time.h>
 #include <Azimuth/ECS/Component.h>
 #include <Azimuth/Events/MouseEvents.h>
+#include <Azimuth/Editor/EditorPlayState.h>
 
 namespace Azimuth
 {
@@ -28,11 +30,16 @@ namespace Azimuth
         mask.set(ECS->GetComponentBitType<LightComponent>(), true);
         mask.set(ECS->GetComponentBitType<TransformComponent>(), true);
         m_LightSystem = ECS->RegisterSystem<LightSystem>();
-
         ECS->SetSystemComponentMask<LightSystem>(mask);
+
+        mask.reset();
+        mask.set(ECS->GetComponentBitType<MaterialComponent>(), true);
+        m_ShaderRecompileSystem = ECS->RegisterSystem<ShaderRecompileSystem>();
+        ECS->SetSystemComponentMask<ShaderRecompileSystem>(mask);
 
         m_LightSystem->Init(scene);
         m_RenderSystem->Init(scene, m_LightSystem);
+        m_ShaderRecompileSystem->Init(scene);
 
         EditorManager::Init(scene);
         EditorManager::SetLightsUpdateCallback([&]()
@@ -70,6 +77,13 @@ namespace Azimuth
         EditorManager::OnUpdate(m_EditorCamera, m_FrameBufferConfig.get(), m_FrameBufferEditorConfig.get());
 
         m_EditorCamera.ProcessKeyboard();
+
+        m_Time += Time::DeltaTime();
+        if (m_Time >= 2.0f && EditorPlayState::GetPlayState() != PlayState::PLAYING)
+        {
+            m_Time = 0.0f;
+            m_ShaderRecompileSystem->CheckAndUpdateShaderChanges();
+        }
     }
 }
 

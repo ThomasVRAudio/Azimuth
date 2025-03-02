@@ -7,29 +7,32 @@ namespace Azimuth
 {
     void EditorTextureLoader::LoadEditorTextures()
     {
-        unsigned int texture = TextureLoader::LoadTexture("assets/editor/textures/folder_black.png", false, false);
+        unsigned int texture = TextureLoader::LoadTexture("assets/editor/textures/folder_black.png", false, false, true);
         m_TextureMap["folder"] = texture;
 
-        texture = TextureLoader::LoadTexture("assets/editor/textures/file.png", false, false);
+        texture = TextureLoader::LoadTexture("assets/editor/textures/file.png", false, false, true);
         m_TextureMap["file"] = texture;
 
-        texture = TextureLoader::LoadTexture("assets/editor/textures/back_button.png", false, false);
+        texture = TextureLoader::LoadTexture("assets/editor/textures/file_shader.png", false, false, false);
+        m_TextureMap["shader"] = texture;
+
+        texture = TextureLoader::LoadTexture("assets/editor/textures/back_button.png", false, false, false);
         m_TextureMap["back"] = texture;
 
-        texture = TextureLoader::LoadTexture("assets/editor/textures/play_button.png", false, false);
+        texture = TextureLoader::LoadTexture("assets/editor/textures/play_button.png", false, false, false);
         m_TextureMap["play"] = texture;
 
-        texture = TextureLoader::LoadTexture("assets/editor/textures/pause_button.png", false, false);
+        texture = TextureLoader::LoadTexture("assets/editor/textures/pause_button.png", false, false, false);
         m_TextureMap["pause"] = texture;
 
-        texture = TextureLoader::LoadTexture("assets/editor/textures/stop_button.png", false, false);
+        texture = TextureLoader::LoadTexture("assets/editor/textures/stop_button.png", false, false, false);
         m_TextureMap["stop"] = texture;
     }
 
     void EditorTextureLoader::LoadDirectoryTextures()
     {
         std::vector<std::filesystem::path> textureFiles = Files::GetFilesWithExtension(Application::projectSettings->ProjectFolder.string(), {".png", ".jpg"});
-        std::vector<unsigned int> textures = TextureLoader::LoadTextures(textureFiles);
+        std::vector<unsigned int> textures = TextureLoader::LoadTextures(textureFiles, false);
         for (size_t i = 0; i < textureFiles.size(); ++i)
             m_TextureMap[textureFiles[i].string()] = textures[i];
     }
@@ -39,7 +42,7 @@ namespace Azimuth
         unsigned int texture = GetTextureID(path);
         if (texture == -1)
         {
-            texture = TextureLoader::LoadTexture(path, false, false);
+            texture = TextureLoader::LoadTexture(path, false, false, false);
             m_TextureMap[path] = texture;
         }
 

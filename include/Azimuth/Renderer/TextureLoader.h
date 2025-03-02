@@ -24,12 +24,12 @@ namespace Azimuth
         };
 
     public:
-        static unsigned int LoadTexture(const std::string &path, bool isNormal = false, bool flip = true);
-        static std::vector<unsigned int> LoadTextures(std::vector<std::string> &paths);
-        static std::vector<unsigned int> LoadTextures(std::vector<std::filesystem::path> &paths);
+        static unsigned int LoadTexture(const std::string &path, bool isNormal = false, bool flip = true, bool sRGB = true);
+        static std::vector<unsigned int> LoadTextures(std::vector<std::string> &paths, bool sRGB);
+        static std::vector<unsigned int> LoadTextures(std::vector<std::filesystem::path> &paths, bool sRGB);
 
     private:
         static std::vector<TextureLoadData> LoadTextureDataAsync(std::vector<std::string> &paths);
-        static unsigned int GenerateTexture(const TextureLoadData &textureData);
+        static unsigned int GenerateTexture(const TextureLoadData &textureData, bool sRGB);
     };
 }

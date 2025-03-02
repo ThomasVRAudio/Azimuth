@@ -24,6 +24,7 @@ namespace Azimuth
         void setVec3(const std::string &name, float x, float y, float z) const;
         void setVec3(const std::string &name, const glm::vec3 &vec) const;
         void setVec4(const std::string &name, glm::vec4 &vec) const;
+        void ReloadShader();
         void setUniform(Uniform &uniform);
         inline std::pair<std::string, std::string> GetPaths() { return {m_VertPath, m_FragPath}; };
         inline bool IsLit() { return m_ReceiveLight; }
@@ -31,6 +32,7 @@ namespace Azimuth
     private:
         unsigned int ProcessFile(const char *path, GLenum type);
         void InsertProperties(std::string &code);
+        void LoadSingleFile(const std::filesystem::path &path);
         std::pair<int, int> ProcessSingleFile(const std::filesystem::path &path);
         std::string m_VertPath;
         std::string m_FragPath;
