@@ -12,6 +12,7 @@ namespace Azimuth
         unsigned int ID;
 
         Shader(const std::string &vertexPath, const std::string &fragmentPath, bool receivesLight = false, const std::string &geometryPath = "");
+        Shader(const std::filesystem::path &path);
 
         void use();
         void setBool(const std::string &name, bool value) const;
@@ -29,6 +30,8 @@ namespace Azimuth
 
     private:
         unsigned int ProcessFile(const char *path, GLenum type);
+        void InsertProperties(std::string &code);
+        std::pair<int, int> ProcessSingleFile(const std::filesystem::path &path);
         std::string m_VertPath;
         std::string m_FragPath;
         bool m_ReceiveLight;

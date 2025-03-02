@@ -83,6 +83,134 @@ namespace Azimuth
             glDeleteShader(geometry);
     };
 
+    Shader::Shader(const std::filesystem::path &path)
+        : m_VertPath(path.string()), m_FragPath(path.string())
+    {
+        auto [vertex, fragment] = ProcessSingleFile(path);
+
+        ID = glCreateProgram();
+        glAttachShader(ID, vertex);
+        glAttachShader(ID, fragment);
+
+        glLinkProgram(ID);
+
+        int success;
+        char infoLog[512];
+
+        glGetProgramiv(ID, GL_LINK_STATUS, &success);
+
+        if (!success)
+        {
+            glGetProgramInfoLog(ID, 512, NULL, infoLog);
+            std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
+                      << infoLog << std::endl;
+        }
+
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+    }
+
+    std::pair<int, int> Shader::ProcessSingleFile(const std::filesystem::path &path)
+    {
+        std::string code;
+        std::ifstream file;
+
+        std::string vertexCode;
+        std::string fragmentCode;
+
+        file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+        try
+        {
+            file.open(path);
+            std::stringstream stream;
+            stream << file.rdbuf();
+            file.close();
+
+            code = stream.str();
+            InsertProperties(code);
+
+            std::string vertexMarker = "===== VERTEX SHADER =====";
+            std::string fragmentMarker = "===== FRAGMENT SHADER =====";
+
+            size_t vertexPos = code.find(vertexMarker);
+            size_t fragmentPos = code.find(fragmentMarker);
+
+            if (vertexPos == std::string::npos || fragmentPos == std::string::npos)
+            {
+                std::cerr << "ERROR::SHADER::MARKERS_NOT_FOUND in file: " << path << std::endl;
+                return {-1, -1};
+            }
+
+            size_t vertexLineEnd = code.find('\n', vertexPos);
+            if (vertexLineEnd != std::string::npos)
+                code.replace(vertexPos, vertexLineEnd - vertexPos, "#version 460 core\n");
+
+            size_t fragmentLineEnd = code.find('\n', fragmentPos);
+            if (fragmentLineEnd != std::string::npos)
+                code.replace(fragmentPos, fragmentLineEnd - fragmentPos, "#version 460 core\n");
+
+            vertexCode = code.substr(vertexPos, code.rfind('\n', fragmentPos) - vertexPos);
+            fragmentCode = code.substr(fragmentPos);
+        }
+        catch (std::ifstream::failure e)
+        {
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << path << std::endl;
+        }
+
+        unsigned int vertOutput, fragOutput;
+        int success;
+        char infoLog[512];
+
+        vertOutput = glCreateShader(GL_VERTEX_SHADER);
+        const char *vert = vertexCode.c_str();
+        glShaderSource(vertOutput, 1, &vert, NULL);
+        glCompileShader(vertOutput);
+
+        glGetShaderiv(vertOutput, GL_COMPILE_STATUS, &success);
+
+        if (!success)
+        {
+            glGetShaderInfoLog(vertOutput, 512, NULL, infoLog);
+            std::cout << "ERROR::VERTEX SHADER SINGLE FILE::COMPILATION::FAILED\n"
+                      << infoLog << std::endl;
+        }
+
+        fragOutput = glCreateShader(GL_FRAGMENT_SHADER);
+        const char *frag = fragmentCode.c_str();
+        glShaderSource(fragOutput, 1, &frag, NULL);
+        glCompileShader(fragOutput);
+
+        glGetShaderiv(fragOutput, GL_COMPILE_STATUS, &success);
+
+        if (!success)
+        {
+            glGetShaderInfoLog(fragOutput, 512, NULL, infoLog);
+            std::cout << "ERROR::VERTEX SHADER SINGLE FILE::COMPILATION::FAILED\n"
+                      << infoLog << std::endl;
+        }
+
+        return {vertOutput, fragOutput};
+    }
+
+    void Shader::InsertProperties(std::string &code)
+    {
+        std::unordered_map<std::string, std::string> replacements = {
+            {"#define AZIMUTH_MVP_UNIFORMS", "uniform mat4 g_Model;\n"
+                                             "uniform mat4 g_View;\n"
+                                             "uniform mat4 g_Projection;\n"},
+            {"AZIMUTH_FRAG", "vec3(g_Model * vec4(aPos, 1.0))"},
+            {"AZIMUTH_NORMAL", "mat3(transpose(inverse(g_Model))) * aNormal"},
+            {"AZIMUTH_POSITION", "g_Projection * g_View * g_Model * vec4(aPos, 1.0)"}};
+
+        for (const auto &[placeholder, replacement] : replacements)
+        {
+            size_t pos;
+            while ((pos = code.find(placeholder)) != std::string::npos)
+                code.replace(pos, placeholder.length(), replacement);
+        }
+    }
+
     void Shader::use()
     {
         glUseProgram(ID);

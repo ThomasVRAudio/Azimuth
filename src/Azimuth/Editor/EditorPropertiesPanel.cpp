@@ -165,6 +165,21 @@ namespace Azimuth
             if (ImGui::Button(selectedShader.c_str()))
                 ImGui::OpenPopup("Shader File Explorer");
 
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("glsl"))
+                {
+                    const char *droppedFilePath = static_cast<const char *>(payload->Data);
+
+                    MaterialComponent &material = EditorManager::m_Scene->GetComponent<MaterialComponent>(EditorManager::m_SelectedEntity);
+
+                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(droppedFilePath);
+                    material.shader = shader;
+                    material.SetUniforms();
+                }
+                ImGui::EndDragDropTarget();
+            }
+
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.0f, 10.0f));
             if (ImGui::BeginPopup("Shader File Explorer"))
             {
@@ -189,6 +204,10 @@ namespace Azimuth
                 if (uniform.Name.find("g_") != std::string::npos)
                     continue;
 
+                std::string uniformName = uniform.Name;
+                if (uniformName.substr(0, 2) == "u_")
+                    uniformName = uniformName.substr(2);
+
                 switch (uniform.Type)
                 {
                 case GL_FLOAT:
@@ -202,21 +221,21 @@ namespace Azimuth
                     if (uniform.Name.find("HDR"))
                         max = 10.0f;
 
-                    ImGui::SliderFloat(uniform.Name.c_str(), &value, 0.0f, max);
+                    ImGui::SliderFloat(uniformName.c_str(), &value, 0.0f, max);
                 }
                 break;
 
                 case GL_INT:
                 {
                     int &value = std::get<int>(uniform.Value);
-                    ImGui::SliderInt(uniform.Name.c_str(), &value, -100, 100);
+                    ImGui::SliderInt(uniformName.c_str(), &value, -100, 100);
                 }
                 break;
 
                 case GL_UNSIGNED_INT:
                 {
                     int &value = std::get<int>(uniform.Value);
-                    ImGui::SliderInt(uniform.Name.c_str(), &value, 0, 1000);
+                    ImGui::SliderInt(uniformName.c_str(), &value, 0, 1000);
                 }
                 break;
 
@@ -267,7 +286,7 @@ namespace Azimuth
                 case GL_BOOL:
                 {
                     bool &value = std::get<bool>(uniform.Value);
-                    ImGui::Checkbox(uniform.Name.c_str(), &value);
+                    ImGui::Checkbox(uniformName.c_str(), &value);
                 }
                 break;
 
@@ -277,11 +296,11 @@ namespace Azimuth
                     glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
                     if (uniform.Name.find("u_Color") != std::string::npos)
                     {
-                        ImGui::ColorPicker3(uniform.Name.c_str(), &value[0], ImGuiColorEditFlags_NoInputs);
+                        ImGui::ColorPicker3(uniformName.c_str(), &value[0], ImGuiColorEditFlags_NoInputs);
                     }
                     else
                     {
-                        ImGui::SliderFloat3(uniform.Name.c_str(), &value[0], -1.0f, 1.0f);
+                        ImGui::SliderFloat3(uniformName.c_str(), &value[0], -1.0f, 1.0f);
                     }
                 }
                 break;
@@ -289,7 +308,7 @@ namespace Azimuth
                 case GL_FLOAT_VEC4:
                 {
                     glm::vec4 &value = std::get<glm::vec4>(uniform.Value);
-                    ImGui::SliderFloat4(uniform.Name.c_str(), &value[0], -1.0f, 1.0f);
+                    ImGui::SliderFloat4(uniformName.c_str(), &value[0], -1.0f, 1.0f);
                 }
                 break;
 

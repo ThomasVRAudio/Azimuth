@@ -231,6 +231,8 @@ namespace Azimuth
                 std::string payloadType = "file";
                 if (file.path().extension() == ".h" || file.path().extension() == ".cpp")
                     payloadType = "script";
+                else if (file.path().extension() == ".glsl")
+                    payloadType = "glsl";
 
                 ImGui::SetDragDropPayload(payloadType.c_str(), file.path().string().c_str(), file.path().string().size() + 1);
                 ImGui::Text("%s", file.path().filename().string().c_str());

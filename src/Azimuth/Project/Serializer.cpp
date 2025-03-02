@@ -100,7 +100,10 @@ namespace Azimuth
                     std::string vertexPath = mat["VertexPath"].as<std::string>();
                     std::string fragmentPath = mat["FragmentPath"].as<std::string>();
                     bool receivesLight = mat["IsLit"].as<bool>();
-                    std::shared_ptr<Shader> shader = std::make_shared<Shader>(vertexPath, fragmentPath, receivesLight);
+
+                    std::shared_ptr<Shader> shader = vertexPath == fragmentPath
+                                                         ? std::make_shared<Shader>(vertexPath)
+                                                         : std::make_shared<Shader>(vertexPath, fragmentPath, receivesLight);
 
                     std::shared_ptr<std::vector<Uniform>> uniforms = std::make_shared<std::vector<Uniform>>();
                     for (const auto &uniform : mat["Uniforms"])
