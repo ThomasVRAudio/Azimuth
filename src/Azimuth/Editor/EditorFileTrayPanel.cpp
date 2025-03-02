@@ -143,17 +143,22 @@ namespace Azimuth
             for (const auto &file : std::filesystem::directory_iterator(m_CurrentPath))
             {
                 if (file.is_directory())
+                {
+                    if (std::find(m_HiddenFolders.begin(), m_HiddenFolders.end(), file.path().filename().string()) != m_HiddenFolders.end())
+                        continue;
+
                     m_Folders.emplace_back(file);
+                }
                 else
-                    m_Files.emplace_back(file);
+                {
+                    if (file.path().filename() != "CMakeLists.txt")
+                        m_Files.emplace_back(file);
+                }
             }
         }
 
         for (const auto &folder : m_Folders)
         {
-            if (folder.path().filename().string()[0] == '.' || folder.path().filename().string() == "build")
-                continue;
-
             ImGui::BeginGroup();
 
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));

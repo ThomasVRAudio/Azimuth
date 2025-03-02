@@ -19,6 +19,7 @@ namespace Azimuth
         inline static std::vector<std::filesystem::directory_entry> m_Files;
         inline static std::vector<std::filesystem::directory_entry> m_Folders;
         inline static float m_Time;
+        inline static std::vector<std::string> m_HiddenFolders = {"build", "azimuth"};
     };
 }
 
