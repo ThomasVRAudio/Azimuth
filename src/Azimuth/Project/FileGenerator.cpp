@@ -378,4 +378,221 @@ namespace Azimuth
             return;
         }
     }
+
+    void FileGenerator::GenerateGLSLFileSimpleLit(const std::filesystem::path &directory, const std::string &name)
+    {
+        if (std::filesystem::exists(directory / (name + ".glsl")))
+        {
+            std::cerr << "Error: " << name << ".glsl already exists." << std::endl;
+            return;
+        }
+
+        std::string file =
+            "===== VERTEX SHADER =====\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "layout (location = 1) in vec3 aNormal;\n"
+            "layout (location = 2) in vec2 aTexCoords;\n"
+            "\n"
+            "out vec2 TexCoords;\n"
+            "out vec3 FragPos;\n"
+            "out vec3 Normal;\n"
+            "\n"
+            "#define AZIMUTH_MVP_UNIFORMS\n"
+            "\n"
+            "void main()\n"
+            "{\n"
+            "    TexCoords = aTexCoords;\n"
+            "    FragPos = AZIMUTH_FRAG;\n"
+            "    Normal = AZIMUTH_NORMAL;\n"
+            "    gl_Position = AZIMUTH_POSITION;\n"
+            "}\n"
+            "===== FRAGMENT SHADER =====\n"
+            "out vec4 FragColor;\n"
+            "\n"
+            "in vec3 FragPos;\n"
+            "in vec3 Normal;\n"
+            "\n"
+            "uniform vec3 u_DiffuseColor;\n"
+            "uniform vec3 u_SpecularColor;\n"
+            "uniform vec3 u_AmbientColor;\n"
+            "\n"
+            "uniform float u_AmbientStrength;\n"
+            "uniform float u_DiffuseStrength;\n"
+            "uniform float u_SpecularStrength;\n"
+            "\n"
+            "uniform float u_SpecularAmount;\n"
+            "uniform float u_HDR;\n"
+            "\n"
+            "#define AZIMUTH_LIT_PROPERTIES\n"
+            "\n"
+            "vec3 CalcDirLight(vec3 viewDir) {\n"
+            "    vec3 lightDir = normalize(-AZIMUTH_DIR_LIGHT.direction);\n"
+            "    float diff = max(dot(Normal, lightDir), 0.0);\n"
+            "\n"
+            "    vec3 reflectDir = reflect(-lightDir, Normal);\n"
+            "    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_SpecularAmount);\n"
+            "\n"
+            "    vec3 ambient = AZIMUTH_DIR_LIGHT.ambient * u_AmbientColor * u_AmbientStrength;\n"
+            "    vec3 diffuse = AZIMUTH_DIR_LIGHT.diffuse * diff * u_DiffuseColor * u_DiffuseStrength;\n"
+            "    vec3 specular = AZIMUTH_DIR_LIGHT.diffuse * spec * u_SpecularColor * u_SpecularStrength;\n"
+            "\n"
+            "    return (ambient + diffuse + specular);\n"
+            "}\n"
+            "\n"
+            "vec3 CalcPointLight(AZIMUTH_POINT_LIGHT light, vec3 fragPos, vec3 viewDir) {\n"
+            "    vec3 lightDir = normalize(light.position - fragPos);\n"
+            "    float diff = max(dot(Normal, lightDir), 0.0);\n"
+            "\n"
+            "    vec3 reflectDir = reflect(-lightDir, Normal);\n"
+            "    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_SpecularAmount);\n"
+            "\n"
+            "    vec3 ambient = light.ambient * u_AmbientColor * u_AmbientStrength;\n"
+            "    vec3 diffuse = light.diffuse * diff * u_DiffuseColor * u_DiffuseStrength;\n"
+            "    vec3 specular = light.diffuse * spec * u_SpecularColor * u_SpecularStrength;\n"
+            "\n"
+            "    float distance = length(light.position - fragPos);\n"
+            "    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+            "\n"
+            "    diffuse *= attenuation;\n"
+            "    specular *= attenuation;\n"
+            "    ambient *= attenuation;\n"
+            "\n"
+            "    return (ambient + diffuse + specular);\n"
+            "}\n"
+            "\n"
+            "void main() \n"
+            "{\n"
+            "    vec3 viewDir = normalize(AZIMUTH_VIEW_POS - FragPos);\n"
+            "\n"
+            "    vec3 result = CalcDirLight(viewDir);\n"
+            "\n"
+            "    for (int i = 0; i < AZIMUTH_NUM_POINT_LIGHTS; ++i)\n"
+            "    {\n"
+            "        result += CalcPointLight(AZIMUTH_POINT_LIGHTS[i], FragPos, viewDir);\n"
+            "    };\n"
+            "\n"
+            "    result *= u_HDR;\n"
+            "\n"
+            "    FragColor = vec4(result, 1.0f);\n"
+            "}\n";
+
+        std::ofstream fileStream(directory / (name + ".glsl"));
+        if (fileStream.is_open())
+        {
+            fileStream << file;
+            fileStream.close();
+        }
+        else
+        {
+            std::cerr << "Failed to create shader file" << std::endl;
+            return;
+        }
+    }
+
+    void FileGenerator::GenerateGLSLFileTexturedLit(const std::filesystem::path &directory, const std::string &name)
+    {
+        if (std::filesystem::exists(directory / (name + ".glsl")))
+        {
+            std::cerr << "Error: " << name << ".glsl already exists." << std::endl;
+            return;
+        }
+
+        std::string file =
+            "===== VERTEX SHADER =====\n"
+            "layout (location = 0) in vec3 aPos;\n"
+            "layout (location = 1) in vec3 aNormal;\n"
+            "layout (location = 2) in vec2 aTexCoords;\n"
+            "\n"
+            "out vec2 TexCoords;\n"
+            "out vec3 FragPos;\n"
+            "out vec3 Normal;\n"
+            "\n"
+            "#define AZIMUTH_MVP_UNIFORMS\n"
+            "\n"
+            "void main()\n"
+            "{\n"
+            "    TexCoords = aTexCoords;\n"
+            "    FragPos = AZIMUTH_FRAG;\n"
+            "    Normal = AZIMUTH_NORMAL;\n"
+            "    gl_Position = AZIMUTH_POSITION;\n"
+            "}\n"
+            "===== FRAGMENT SHADER =====\n"
+            "out vec4 FragColor;\n"
+            "\n"
+            "in vec2 TexCoords;\n"
+            "in vec3 FragPos;\n"
+            "in vec3 Normal;\n"
+            "\n"
+            "uniform vec3 u_Color;\n"
+            "uniform float u_SpecularAmount;\n"
+            "uniform float u_HDR;\n"
+            "\n"
+            "uniform sampler2D texture_diffuse;\n"
+            "\n"
+            "#define AZIMUTH_LIT_PROPERTIES\n"
+            "\n"
+            "vec3 CalcDirLight(vec3 normal, vec3 viewDir) {\n"
+            "    vec3 lightDir = normalize(-AZIMUTH_DIR_LIGHT.direction);\n"
+            "    float diff = max(dot(normal, lightDir), 0.0);\n"
+            "\n"
+            "    vec3 reflectDir = reflect(-lightDir, normal);\n"
+            "    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_SpecularAmount);\n"
+            "\n"
+            "    vec3 ambient = AZIMUTH_DIR_LIGHT.ambient * texture(texture_diffuse, TexCoords).rgb;\n"
+            "    vec3 diffuse = AZIMUTH_DIR_LIGHT.diffuse * diff * texture(texture_diffuse, TexCoords).rgb;\n"
+            "    vec3 specular = AZIMUTH_DIR_LIGHT.diffuse * spec * texture(texture_diffuse, TexCoords).rgb;\n"
+            "\n"
+            "    return (ambient + diffuse + specular);\n"
+            "}\n"
+            "\n"
+            "vec3 CalcPointLight(AZIMUTH_POINT_LIGHT light, vec3 normal, vec3 fragPos, vec3 viewDir) {\n"
+            "    vec3 lightDir = normalize(light.position - fragPos);\n"
+            "    float diff = max(dot(normal, lightDir), 0.0);\n"
+            "\n"
+            "    vec3 reflectDir = reflect(-lightDir, normal);\n"
+            "    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_SpecularAmount);\n"
+            "\n"
+            "    vec3 ambient = light.ambient * vec3(texture(texture_diffuse, TexCoords)).rgb;\n"
+            "    vec3 diffuse = light.diffuse * diff * texture(texture_diffuse, TexCoords).rgb;\n"
+            "    vec3 specular = light.diffuse * spec * texture(texture_diffuse, TexCoords).rgb;\n"
+            "\n"
+            "    float distance = length(light.position - fragPos);\n"
+            "    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));\n"
+            "\n"
+            "    diffuse *= attenuation;\n"
+            "    specular *= attenuation;\n"
+            "    ambient *= attenuation;\n"
+            "\n"
+            "    return (ambient + diffuse + specular);\n"
+            "}\n"
+            "\n"
+            "void main() \n"
+            "{\n"
+            "    vec3 normal = texture(texture_diffuse, TexCoords).rgb;\n"
+            "    vec3 viewDir = normalize(AZIMUTH_VIEW_POS - FragPos);\n"
+            "\n"
+            "    vec3 result = CalcDirLight(normal, viewDir);\n"
+            "\n"
+            "    for (int i = 0; i < AZIMUTH_NUM_POINT_LIGHTS; ++i)\n"
+            "    {\n"
+            "        result += CalcPointLight(AZIMUTH_POINT_LIGHTS[i], normal, FragPos, viewDir);\n"
+            "    };\n"
+            "\n"
+            "    result *= u_HDR;\n"
+            "\n"
+            "    FragColor = vec4(result, 1.0f);\n"
+            "}\n";
+
+        std::ofstream fileStream(directory / (name + ".glsl"));
+        if (fileStream.is_open())
+        {
+            fileStream << file;
+            fileStream.close();
+        }
+        else
+        {
+            std::cerr << "Failed to create shader file" << std::endl;
+            return;
+        }
+    }
 }

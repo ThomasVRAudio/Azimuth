@@ -294,7 +294,7 @@ namespace Azimuth
                 {
 
                     glm::vec3 &value = std::get<glm::vec3>(uniform.Value);
-                    if (uniform.Name.find("u_Color") != std::string::npos)
+                    if (uniform.Name.find("Color") != std::string::npos)
                     {
                         ImGui::ColorPicker3(uniformName.c_str(), &value[0], ImGuiColorEditFlags_NoInputs);
                     }

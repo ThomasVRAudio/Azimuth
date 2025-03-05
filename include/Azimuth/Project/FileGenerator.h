@@ -9,6 +9,8 @@ namespace Azimuth
     public:
         static void GenerateScripts(std::filesystem::path path, const std::string &name);
         static void GenerateGLSLFile(const std::filesystem::path &path, const std::string &name);
+        static void GenerateGLSLFileSimpleLit(const std::filesystem::path &path, const std::string &name);
+        static void GenerateGLSLFileTexturedLit(const std::filesystem::path &path, const std::string &name);
         static void GenerateProjectFiles(const std::filesystem::path &filePath, Scene *scene);
 
     private:

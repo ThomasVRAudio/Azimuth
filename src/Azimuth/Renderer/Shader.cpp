@@ -157,6 +157,9 @@ namespace Azimuth
 
             vertexCode = code.substr(vertexPos, code.rfind('\n', fragmentPos) - vertexPos);
             fragmentCode = code.substr(fragmentPos);
+
+            if (fragmentCode.find("#define AZIMUTH_LIT_PROPERTIES") != std::string::npos)
+                InsertLitProperties(fragmentCode);
         }
         catch (std::ifstream::failure e)
         {
@@ -207,6 +210,43 @@ namespace Azimuth
             {"AZIMUTH_FRAG", "vec3(g_Model * vec4(aPos, 1.0))"},
             {"AZIMUTH_NORMAL", "mat3(transpose(inverse(g_Model))) * aNormal"},
             {"AZIMUTH_POSITION", "g_Projection * g_View * g_Model * vec4(aPos, 1.0)"}};
+
+        for (const auto &[placeholder, replacement] : replacements)
+        {
+            size_t pos;
+            while ((pos = code.find(placeholder)) != std::string::npos)
+                code.replace(pos, placeholder.length(), replacement);
+        }
+    }
+
+    void Shader::InsertLitProperties(std::string &code)
+    {
+        std::unordered_map<std::string, std::string> replacements = {
+            {"#define AZIMUTH_LIT_PROPERTIES", "#define MAX_POINT_LIGHTS 10\n"
+                                               "struct DirLight {\n"
+                                               "    vec3 direction;\n"
+                                               "    vec3 ambient;\n"
+                                               "    vec3 diffuse;\n"
+                                               "    vec3 specular;\n"
+                                               "};\n\n"
+                                               "struct PointLight {\n"
+                                               "    vec3 position;\n"
+                                               "    float constant;\n"
+                                               "    float linear;\n"
+                                               "    float quadratic;\n"
+                                               "    vec3 ambient;\n"
+                                               "    vec3 diffuse;\n"
+                                               "    vec3 specular;\n"
+                                               "};\n\n"
+                                               "uniform vec3 g_ViewPos;\n"
+                                               "uniform DirLight g_DirLight;\n"
+                                               "uniform int g_NumPointLights;\n"
+                                               "uniform PointLight g_PointLights[MAX_POINT_LIGHTS];\n"},
+            {"AZIMUTH_DIR_LIGHT", "g_DirLight"},
+            {"AZIMUTH_VIEW_POS", "g_ViewPos"},
+            {"AZIMUTH_NUM_POINT_LIGHTS", "g_NumPointLights"},
+            {"AZIMUTH_POINT_LIGHT", "PointLight"},
+            {"AZIMUTH_POINT_LIGHTS", "g_PointLights"}};
 
         for (const auto &[placeholder, replacement] : replacements)
         {

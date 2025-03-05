@@ -93,11 +93,29 @@ namespace Azimuth
                 m_OnTextSubmitFunc = []()
                 { FileGenerator::GenerateScripts(m_CurrentPath, m_InputText); };
             }
-            if (ImGui::MenuItem("New shader"))
+            if (ImGui::BeginMenu("New Shader"))
             {
-                m_PopupTitle = "New Shader Name:";
-                m_OnTextSubmitFunc = []()
-                { FileGenerator::GenerateGLSLFile(m_CurrentPath, m_InputText); };
+                if (ImGui::MenuItem("Simple Unlit"))
+                {
+                    m_PopupTitle = "New Shader Name:";
+                    m_OnTextSubmitFunc = []()
+                    { FileGenerator::GenerateGLSLFile(m_CurrentPath, m_InputText); };
+                }
+
+                if (ImGui::MenuItem("Simple Lit"))
+                {
+                    m_PopupTitle = "New Shader Name:";
+                    m_OnTextSubmitFunc = []()
+                    { FileGenerator::GenerateGLSLFileSimpleLit(m_CurrentPath, m_InputText); };
+                }
+
+                if (ImGui::MenuItem("Textured Lit"))
+                {
+                    m_PopupTitle = "New Shader Name:";
+                    m_OnTextSubmitFunc = []()
+                    { FileGenerator::GenerateGLSLFileTexturedLit(m_CurrentPath, m_InputText); };
+                }
+                ImGui::EndMenu();
             }
             if (ImGui::MenuItem("Open in file explorer"))
             {

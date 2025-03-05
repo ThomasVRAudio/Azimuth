@@ -33,6 +33,7 @@ namespace Azimuth
         void InsertProperties(std::string &code);
         void LoadSingleFile(const std::filesystem::path &path);
         std::pair<int, int> ProcessSingleFile(const std::filesystem::path &path);
+        void InsertLitProperties(std::string &code);
         std::string m_VertPath;
         std::string m_FragPath;
         bool m_ReceiveLight;
