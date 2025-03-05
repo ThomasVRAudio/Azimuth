@@ -156,4 +156,16 @@ namespace Azimuth
 
         m_Uniforms = std::make_shared<std::vector<Uniform>>(newUniforms);
     }
+
+    void MaterialComponent::SetUniformVec3(const std::string &name, const glm::vec3 &vec) const
+    {
+        auto it = std::find_if(m_Uniforms->begin(), m_Uniforms->end(),
+                               [&](const Uniform &uniform)
+                               {
+                                   return uniform.Name == name;
+                               });
+
+        if (it != m_Uniforms->end())
+            it->Value = vec;
+    }
 }

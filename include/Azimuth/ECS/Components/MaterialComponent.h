@@ -1,5 +1,6 @@
 #pragma once
 #include <Azimuth/ECS/Components/IComponent.h>
+#include <Azimuth/API/GameComponent.h>
 #include <Azimuth/Renderer/Shader.h>
 #include <Azimuth/Renderer/TextureLoader.h>
 #include <variant>
@@ -14,7 +15,7 @@ namespace Azimuth
         std::variant<int, bool, float, glm::vec3, glm::vec4, unsigned int> Value;
     };
 
-    class MaterialComponent : public IComponent
+    class MaterialComponent : public Material, public IComponent
     {
     public:
         MaterialComponent() = default;
@@ -34,6 +35,7 @@ namespace Azimuth
         void AddTexture(const std::string &name, const std::string &path, unsigned int slot);
         void AddTexture(Texture &texture);
         void Use() { shader->use(); }
+        void SetUniformVec3(const std::string &name, const glm::vec3 &vec) const override;
 
     private:
         std::vector<Texture> m_Textures;

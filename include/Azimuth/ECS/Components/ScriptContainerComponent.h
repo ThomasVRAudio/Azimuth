@@ -1,6 +1,7 @@
 #pragma once
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/ECS/Components/IComponent.h>
+#include <Azimuth/API/GameComponent.h>
 
 namespace Azimuth
 {
@@ -55,5 +56,4 @@ namespace Azimuth
         Entity m_Entity;
         Scene *m_Scene;
     };
-
 }

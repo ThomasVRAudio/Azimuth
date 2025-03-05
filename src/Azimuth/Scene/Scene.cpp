@@ -1,5 +1,6 @@
 #include <Azimuth/Scene/Scene.h>
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/ECS/Component.h>
 
 namespace Azimuth
 {

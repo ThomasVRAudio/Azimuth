@@ -1,6 +1,5 @@
 #pragma once
 #include <Azimuth/ECS/ECSManager.h>
-#include <Azimuth/ECS/Component.h>
 #include <Azimuth/Scene/SceneSettings.h>
 
 namespace Azimuth

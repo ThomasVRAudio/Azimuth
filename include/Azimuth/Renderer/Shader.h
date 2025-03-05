@@ -3,7 +3,6 @@
 
 namespace Azimuth
 {
-
     struct Uniform;
 
     class Shader

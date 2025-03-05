@@ -1,6 +1,10 @@
 #pragma once
+#include <Azimuth/API/GameComponent.h>
 #include <Azimuth/ECS/Components/IComponent.h>
+#include <Azimuth/ECS/Components/MaterialComponent.h>
 #include <Azimuth/ECS/Components/ScriptContainerComponent.h>
+#include <Azimuth/ECS/Components/TransformComponent.h>
+#include <Azimuth/API/GameComponent.h>
 #include <Azimuth/Common.h>
 
 namespace Azimuth
@@ -18,14 +22,14 @@ namespace Azimuth
         virtual std::shared_ptr<MonoScript> Clone() const = 0;
 
         template <typename T>
-        typename std::enable_if<std::is_base_of_v<IComponent, T>, T &>::type
+        typename std::enable_if<std::is_base_of_v<GameComponent, T> && !std::is_base_of_v<IComponent, T>, T &>::type
         GetComponent()
         {
             return m_ScriptContainer->GetComponent<T>();
         }
 
         template <typename T>
-        typename std::enable_if<std::is_base_of_v<IComponent, T>, void>::type
+        typename std::enable_if<std::is_base_of_v<GameComponent, T> && !std::is_base_of_v<IComponent, T>, T &>::type
         AddComponent()
         {
             T component;
@@ -33,7 +37,7 @@ namespace Azimuth
         }
 
         template <typename T>
-        typename std::enable_if<std::is_base_of_v<IComponent, T>, void>::type
+        typename std::enable_if<std::is_base_of_v<GameComponent, T> && !std::is_base_of_v<IComponent, T>, T &>::type
         RemoveComponent()
         {
             return m_ScriptContainer->RemoveComponent<T>();
@@ -56,4 +60,17 @@ namespace Azimuth
         std::filesystem::path m_Path;
         ScriptContainerComponent *m_ScriptContainer;
     };
+
+    template <>
+    inline Material &MonoScript::GetComponent<Material>()
+    {
+        return m_ScriptContainer->GetComponent<MaterialComponent>();
+    }
+
+    template <>
+    inline Transform &MonoScript::GetComponent<Transform>()
+    {
+        return m_ScriptContainer->GetComponent<TransformComponent>();
+    }
+
 }
