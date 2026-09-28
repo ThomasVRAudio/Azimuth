@@ -47,9 +47,11 @@ namespace Azimuth
 
         ImVec2 buttonSize = ImVec2(100, 100);
         ImVec2 windowSize = ImGui::GetWindowSize();
-        int columns = glm::floor(windowSize.x / buttonSize.x);
-
+        
+        int columns = std::max(1, (int)(windowSize.x / buttonSize.x));
         ImGui::Columns(columns, nullptr, false);
+
+
 
         ImVec2 image_padding(2.0f, 2.0f);
 

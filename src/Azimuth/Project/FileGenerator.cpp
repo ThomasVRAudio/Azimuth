@@ -307,13 +307,15 @@ namespace Azimuth
         if (!std::filesystem::exists(targetDirectory))
             std::filesystem::create_directory(targetDirectory);
 
-        std::string file =
-            "Scene:\n"
-            "  Exposure: 1.0\n"
-            "  HDRCubemapIntensity: 1.0\n"
-            "  VSync: true\n"
-            "  BloomThreshold: 1.0\n"
-            "  BloomBlend: 0.5\n";
+    std::string file =
+        "Scene:\n"
+        "  Exposure: 1.0\n"
+        "  HDRCubemapIntensity: 1.0\n"
+        "  VSync: true\n"
+        "  BloomThreshold: 1.0\n"
+        "  BloomBlend: 0.5\n"
+        "Entities:\n";
+
 
         std::ofstream fileStream(targetDirectory / "default_scene.scene");
         if (fileStream.is_open())

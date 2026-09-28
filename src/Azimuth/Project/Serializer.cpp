@@ -8,6 +8,12 @@
 #include <dependencies/yaml-cpp/yaml.h>
 #include <Azimuth/Project/YamlConversions.h>
 #include <Azimuth/System/Files.h>
+#include <Azimuth/ECS/Components/AudioComponent.h>
+#include <Azimuth/ECS/Components/LightComponent.h>
+#include <Azimuth/ECS/Components/MaterialComponent.h>
+#include <Azimuth/ECS/Components/MeshComponent.h>
+#include <Azimuth/ECS/Components/TagComponent.h>
+#include <Azimuth/ECS/Components/TransformComponent.h>
 
 namespace Azimuth
 {

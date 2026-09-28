@@ -13,7 +13,8 @@ namespace Azimuth
 
         try
         {
-            file.open(std::filesystem::current_path() / ".." / path);
+            file.open(std::filesystem::current_path() / path);
+
             std::stringstream stream;
             stream << file.rdbuf();
             file.close();

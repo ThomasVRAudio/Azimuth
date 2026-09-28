@@ -15,6 +15,7 @@
 #include <Azimuth/System/Files.h>
 #include <Azimuth/Project/FileGenerator.h>
 
+
 namespace Azimuth
 {
     void EditorManager::Init(Scene *scene)
@@ -79,7 +80,7 @@ namespace Azimuth
 
         if (!t_HasOpenedScene)
         {
-            Serializer::OpenScene(m_Scene, "D:/Users/Thomas/Documents/Dev/Azimuth_Engine/Engine/build/Scenes/nomodel.scene");
+           Serializer::OpenScene(m_Scene, Application::projectSettings->MainScenePath.string());
             t_HasOpenedScene = true;
         }
 

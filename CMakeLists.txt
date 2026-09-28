@@ -5,8 +5,6 @@ project(Azimuth)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Define the compiler (adjust path if needed)
-set(CMAKE_CXX_COMPILER "D:/MinGW/bin/g++.exe")
 
 # Precompiled Header Function
 function(setup_precompiled_headers target pch_file output_file)

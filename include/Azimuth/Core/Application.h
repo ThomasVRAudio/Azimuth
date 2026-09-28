@@ -20,9 +20,11 @@ namespace Azimuth
         void Start();
         void Run();
         void AddLayer(Layer *layer);
+
         inline static Scene *GetActiveScene() { return m_ActiveScene; }
+
         inline static std::shared_ptr<Azimuth::ProjectSettings> projectSettings =
-            std::make_shared<Azimuth::ProjectSettings>(std::filesystem::path(R"(D:\Users\Thomas\Documents\Dev\Azimuth_Engine\ProjectAssets)"));
+            std::make_shared<Azimuth::ProjectSettings>(std::filesystem::current_path());
 
 #ifdef AZIMUTH_EDITOR
         inline static bool s_PlayingEditorScene = false;
